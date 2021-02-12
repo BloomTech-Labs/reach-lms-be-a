@@ -10,13 +10,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
+// Joel can work below in order to modify which roles have access to which endpoints
 // This allows us to further restrict access to an endpoint inside of a controller.
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
 {
     @Bean
-    // see https://www.devglan.com/spring-security/spring-boot-jwt-auth
     public JwtAuthenticationFilter authenticationTokenFilterBean()
     {
         return new JwtAuthenticationFilter();
