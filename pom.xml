@@ -117,7 +117,7 @@
     </dependencies>
 
     <build>
-        <finalName>jrmmba-oktafoundation</finalName>
+        <finalName>reach-project</finalName>
 
         <plugins>
             <plugin>
