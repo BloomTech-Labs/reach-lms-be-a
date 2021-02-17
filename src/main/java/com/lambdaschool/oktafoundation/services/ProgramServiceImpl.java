@@ -5,10 +5,12 @@ import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Transactional
 @Service(value = "programService")
 public class ProgramServiceImpl implements ProgramService
 {
@@ -52,7 +54,7 @@ public class ProgramServiceImpl implements ProgramService
     @Override
     public Program findProgramsByName(String name)
     {
-        Program pp = programRepository.findProgramsWithName(name.toLowerCase());
+        Program pp = programRepository.findByNameContainingIgnoreCase(name);
         if (pp == null)
         {
             throw new ResourceNotFoundException("Program name " + name + " not found.");
