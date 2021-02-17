@@ -24,6 +24,7 @@ public class User
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "userid")
     private long userid;
 
     /**
@@ -32,6 +33,12 @@ public class User
     @NotNull
     @Column(unique = true)
     private String username;
+
+    private String firstname;
+
+    private String lastname;
+
+    private String phonenumber;
 
     /**
      * A list of emails for this user
@@ -42,6 +49,13 @@ public class User
     @JsonIgnoreProperties(value = "user",
         allowSetters = true)
     private List<Useremail> useremails = new ArrayList<>();
+
+    @OneToMany(mappedBy = "admin",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true)
+    @JsonIgnoreProperties(value = "admin",
+            allowSetters = true)
+    private List<Program> programs = new ArrayList<>();
 
     /**
      * Part of the join relationship between user and role
@@ -62,6 +76,14 @@ public class User
     {
     }
 
+    public User(@NotNull String username, String firstname, String lastname, String phonenumber)
+    {
+        this.username = username;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.phonenumber = phonenumber;
+    }
+
     /**
      * Given the params, create a new user object
      * <p>
@@ -72,6 +94,46 @@ public class User
     public User(String username)
     {
         setUsername(username);
+    }
+
+    public String getFirstname()
+    {
+        return firstname;
+    }
+
+    public void setFirstname(String firstname)
+    {
+        this.firstname = firstname;
+    }
+
+    public String getLastname()
+    {
+        return lastname;
+    }
+
+    public void setLastname(String lastname)
+    {
+        this.lastname = lastname;
+    }
+
+    public String getPhonenumber()
+    {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber)
+    {
+        this.phonenumber = phonenumber;
+    }
+
+    public List<Program> getPrograms()
+    {
+        return programs;
+    }
+
+    public void setPrograms(List<Program> programs)
+    {
+        this.programs = programs;
     }
 
     /**

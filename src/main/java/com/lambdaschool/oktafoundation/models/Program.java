@@ -1,5 +1,7 @@
 package com.lambdaschool.oktafoundation.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +19,13 @@ public class Program extends Auditable
     private String programtype;
 
     private String programdescription;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "userid")
+    @JsonIgnoreProperties(value = {"programs"},
+            allowSetters = true)
+    private User admin;
 
     public Program()
     {
@@ -67,5 +76,15 @@ public class Program extends Auditable
     public void setProgramdescription(String programdescription)
     {
         this.programdescription = programdescription;
+    }
+
+    public User getAdmin()
+    {
+        return admin;
+    }
+
+    public void setAdmin(User admin)
+    {
+        this.admin = admin;
     }
 }
