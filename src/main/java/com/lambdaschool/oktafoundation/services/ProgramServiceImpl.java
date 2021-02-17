@@ -54,7 +54,7 @@ public class ProgramServiceImpl implements ProgramService
     @Override
     public Program findProgramsByName(String name)
     {
-        Program pp = programRepository.findByNameContainingIgnoreCase(name);
+        Program pp = programRepository.findByProgramnameIgnoreCase(name);
         if (pp == null)
         {
             throw new ResourceNotFoundException("Program name " + name + " not found.");
