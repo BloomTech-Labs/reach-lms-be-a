@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ProgramRepository extends CrudRepository<Program, Long>
 {
-    Program findProgramsWithName(String name);
+    Program findByNameContainingIgnoreCase(String name);
 }
