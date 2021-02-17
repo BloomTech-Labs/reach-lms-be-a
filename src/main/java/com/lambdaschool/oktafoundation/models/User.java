@@ -50,10 +50,10 @@ public class User
         allowSetters = true)
     private List<Useremail> useremails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user",
+    @OneToMany(mappedBy = "admin",
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    @JsonIgnoreProperties(value = "user",
+    @JsonIgnoreProperties(value = "admin",
             allowSetters = true)
     private List<Program> programs = new ArrayList<>();
 
