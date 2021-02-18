@@ -55,8 +55,8 @@ public class SeedData
     {
         roleService.deleteAll();
         Role r1 = new Role("admin");
-        Role r2 = new Role("user");
-        Role r3 = new Role("data");
+        Role r2 = new Role("teacher");
+        Role r3 = new Role("student");
 
         r1 = roleService.save(r1);
         r2 = roleService.save(r2);
