@@ -1,5 +1,6 @@
 package com.lambdaschool.oktafoundation;
 
+import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.models.Role;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
@@ -55,8 +56,8 @@ public class SeedData
     {
         roleService.deleteAll();
         Role r1 = new Role("admin");
-        Role r2 = new Role("user");
-        Role r3 = new Role("data");
+        Role r2 = new Role("teacher");
+        Role r3 = new Role("student");
 
         r1 = roleService.save(r1);
         r2 = roleService.save(r2);
@@ -66,12 +67,22 @@ public class SeedData
         u1.getRoles()
             .add(new UserRoles(u1,
                 r1));
+        u1.getRoles()
+                .add(new UserRoles(u1,
+                        r2));
+        u1.getRoles()
+                .add(new UserRoles(u1,
+                        r3));
+        u1.getPrograms()
+                .add(new Program("coding", "12th grade", "Something Something Doing this stuff"));
         userService.save(u1);
 
         User u2 = new User("barnbarn@maildrop.cc");
         u2.getRoles()
             .add(new UserRoles(u2,
                 r2));
+        u2.getRoles()
+                .add(new UserRoles(u2,r3));
         userService.save(u2);
 
         // The following is an example user!
