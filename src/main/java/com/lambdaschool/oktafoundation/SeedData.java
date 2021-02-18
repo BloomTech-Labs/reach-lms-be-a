@@ -1,9 +1,6 @@
 package com.lambdaschool.oktafoundation;
 
-import com.lambdaschool.oktafoundation.models.Program;
-import com.lambdaschool.oktafoundation.models.Role;
-import com.lambdaschool.oktafoundation.models.User;
-import com.lambdaschool.oktafoundation.models.UserRoles;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.services.RoleService;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,8 +70,10 @@ public class SeedData
         u1.getRoles()
                 .add(new UserRoles(u1,
                         r3));
+        u1.getUseremails()
+                .add(new Useremail(u1, "llama001@maildrop.cc"));
         u1.getPrograms()
-                .add(new Program("coding", "12th grade", "Something Something Doing this stuff"));
+                .add(new Program("Coding", "12th grade", "Something Something Doing this stuff"));
         userService.save(u1);
 
         User u2 = new User("barnbarn@maildrop.cc");
@@ -89,6 +88,16 @@ public class SeedData
         u3.getRoles()
                 .add(new UserRoles(u3, r3));
 
+        User u4 = new User("fakeadmin2@email.com", "Fake", "Admin", "(456)123-7890");
+        u4.getRoles()
+                .add(new UserRoles(u4,
+                        r1));
+        u4.getRoles()
+                .add(new UserRoles(u4,
+                        r2));
+        u4.getRoles()
+                .add(new UserRoles(u4,
+                        r3));
         // The following is an example user!
         /*
         // admin, data, user
