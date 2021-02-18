@@ -63,7 +63,7 @@ public class SeedData
         r2 = roleService.save(r2);
         r3 = roleService.save(r3);
 
-        User u1 = new User("llama001@maildrop.cc");
+        User u1 = new User("llama001@maildrop.cc", "llama", "001", "(987)654-3210");
         u1.getRoles()
             .add(new UserRoles(u1,
                 r1));
@@ -84,6 +84,10 @@ public class SeedData
         u2.getRoles()
                 .add(new UserRoles(u2,r3));
         userService.save(u2);
+
+        User u3 = new User("johndoe@email.co", "John", "Doe", "(123)456-7890");
+        u3.getRoles()
+                .add(new UserRoles(u3, r3));
 
         // The following is an example user!
         /*
