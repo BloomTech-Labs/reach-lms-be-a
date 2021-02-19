@@ -64,12 +64,6 @@ public class SeedData
         u1.getRoles()
             .add(new UserRoles(u1,
                 r1));
-        u1.getRoles()
-                .add(new UserRoles(u1,
-                        r2));
-        u1.getRoles()
-                .add(new UserRoles(u1,
-                        r3));
         u1.getUseremails()
                 .add(new Useremail(u1, "llama001@maildrop.cc"));
         u1.getPrograms()
@@ -92,12 +86,6 @@ public class SeedData
         u4.getRoles()
                 .add(new UserRoles(u4,
                         r1));
-        u4.getRoles()
-                .add(new UserRoles(u4,
-                        r2));
-        u4.getRoles()
-                .add(new UserRoles(u4,
-                        r3));
         // The following is an example user!
         /*
         // admin, data, user
