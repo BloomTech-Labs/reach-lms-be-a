@@ -3,6 +3,9 @@ package com.lambdaschool.oktafoundation.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "programs")
@@ -20,12 +23,15 @@ public class Program extends Auditable
 
     private String programdescription;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "userid")
     @JsonIgnoreProperties(value = {"programs"},
             allowSetters = true)
     private User admin;
+
+    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties(value = {"program"}, allowSetters = true)
+    private Set<UserPrograms> userPrograms = new HashSet<>();
 
     public Program()
     {
@@ -87,4 +93,15 @@ public class Program extends Auditable
     {
         this.admin = admin;
     }
+
+    public Set<UserPrograms> getUserPrograms()
+    {
+        return userPrograms;
+    }
+
+    public void setUserPrograms(Set<UserPrograms> userPrograms)
+    {
+        this.userPrograms = userPrograms;
+    }
 }
+
