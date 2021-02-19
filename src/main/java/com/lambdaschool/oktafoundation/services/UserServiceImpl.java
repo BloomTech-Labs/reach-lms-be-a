@@ -66,7 +66,7 @@ public class UserServiceImpl
 
     @Transactional
     @Override
-    public void delete(long id)
+    public void delete(long id) throws ResourceNotFoundException
     {
         userrepos.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
@@ -104,6 +104,7 @@ public class UserServiceImpl
         newUser.setFirstname(user.getFirstname());
         newUser.setLastname(user.getLastname());
         newUser.setPhonenumber(user.getPhonenumber());
+        newUser.setSub(user.getSub());
 
         newUser.getRoles()
             .clear();
@@ -115,6 +116,7 @@ public class UserServiceImpl
                 .add(new UserRoles(newUser,
                     addRole));
         }
+
 
         newUser.getUseremails()
             .clear();

@@ -20,7 +20,6 @@ public class Program extends Auditable
 
     private String programdescription;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "userid")
     @JsonIgnoreProperties(value = {"programs"},
