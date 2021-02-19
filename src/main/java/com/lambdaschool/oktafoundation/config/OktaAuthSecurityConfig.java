@@ -43,6 +43,8 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
             // *** Handled at UseremailService Level
             .antMatchers("/useremails/**")
             .authenticated()
+            .antMatchers("/programs/**")
+            .authenticated()
             .antMatchers("/roles/**")
             .hasAnyRole("ADMIN")
 

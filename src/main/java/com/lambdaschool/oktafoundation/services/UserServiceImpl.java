@@ -104,7 +104,6 @@ public class UserServiceImpl
         newUser.setFirstname(user.getFirstname());
         newUser.setLastname(user.getLastname());
         newUser.setPhonenumber(user.getPhonenumber());
-        newUser.setSub(user.getSub());
 
         newUser.getRoles()
             .clear();
