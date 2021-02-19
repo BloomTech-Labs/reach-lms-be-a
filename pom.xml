@@ -117,7 +117,7 @@
     </dependencies>
 
     <build>
-        <finalName>reach-project</finalName>
+        <finalName>reach-team-a-be</finalName>
 
         <plugins>
             <plugin>

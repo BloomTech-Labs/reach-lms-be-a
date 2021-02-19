@@ -40,6 +40,7 @@ public class User
 
     private String phonenumber;
 
+
     /**
      * A list of emails for this user
      */
@@ -84,6 +85,7 @@ public class User
         this.phonenumber = phonenumber;
     }
 
+
     /**
      * Given the params, create a new user object
      * <p>
@@ -91,10 +93,12 @@ public class User
      *
      * @param username The username (String) of the user
      */
+
     public User(String username)
     {
         setUsername(username);
     }
+
 
     public String getFirstname()
     {
@@ -215,6 +219,7 @@ public class User
     {
         this.roles = roles;
     }
+
 
     /**
      * Internally, user security requires a list of authorities, roles, that the user has. This method is a simple way to provide those.

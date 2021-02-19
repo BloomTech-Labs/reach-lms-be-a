@@ -1,15 +1,18 @@
 package com.lambdaschool.oktafoundation.config;
 
+import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import com.lambdaschool.oktafoundation.services.RoleService;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.objenesis.ObjenesisException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -17,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -53,12 +57,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
 
             if (workingUser == null)
             {
+
                 workingUser = new User(authentication.getName());
 
                 // adds a default USER role to this new user
                 Set<UserRoles> newRoles = new HashSet<>();
                 newRoles.add(new UserRoles(workingUser,
-                    roleService.findByName("user")));
+                    roleService.findByName("admin")));
                 workingUser.setRoles(newRoles);
 
                 workingUser = userService.save(workingUser);
