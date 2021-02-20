@@ -24,14 +24,10 @@ public class Program extends Auditable
     private String programdescription;
 
     @ManyToOne
-    @JoinColumn(name = "userid")
-    @JsonIgnoreProperties(value = {"programs"},
-            allowSetters = true)
-    private User admin;
+    @JoinColumn(name = "userid", nullable = false)
+    @JsonIgnoreProperties(value = "programs")
+    private User user;
 
-    @OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties(value = {"program"}, allowSetters = true)
-    private Set<UserPrograms> userPrograms = new HashSet<>();
 
     public Program()
     {
@@ -84,24 +80,14 @@ public class Program extends Auditable
         this.programdescription = programdescription;
     }
 
-    public User getAdmin()
+    public User getUser()
     {
-        return admin;
+        return user;
     }
 
-    public void setAdmin(User admin)
+    public void setUser(User user)
     {
-        this.admin = admin;
-    }
-
-    public Set<UserPrograms> getUserPrograms()
-    {
-        return userPrograms;
-    }
-
-    public void setUserPrograms(Set<UserPrograms> userPrograms)
-    {
-        this.userPrograms = userPrograms;
+        this.user = user;
     }
 }
 
