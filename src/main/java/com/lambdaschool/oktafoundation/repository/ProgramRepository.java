@@ -10,7 +10,7 @@ public interface ProgramRepository extends CrudRepository<Program, Long>
 {
     Program findByProgramnameIgnoreCase(String name);
 
-    @Query(value = "SELECT * FROM PROGRAMS\n" +
-        "WHERE u.userid = :userid\n", nativeQuery = true)
+    @Query(value = "SELECT * FROM PROGRAMS p\n" +
+        "WHERE p.userid = :userid\n", nativeQuery = true)
     List<Program> findProgramsByUserid(long userid);
 }
