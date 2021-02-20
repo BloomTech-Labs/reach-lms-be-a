@@ -24,7 +24,6 @@ public class User
      */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "userid")
     private long userid;
 
     /**
@@ -51,12 +50,12 @@ public class User
         allowSetters = true)
     private List<Useremail> useremails = new ArrayList<>();
 
-    @OneToMany(mappedBy = "admin",
+    @OneToMany(mappedBy = "user",
         cascade = CascadeType.ALL,
         orphanRemoval = true)
-    @JsonIgnoreProperties(value = "admin",
+    @JsonIgnoreProperties(value = "user",
             allowSetters = true)
-    private List<Program> programs = new ArrayList<>();
+    private Set<Program> programs = new HashSet<>();
 
     /**
      * Part of the join relationship between user and role
@@ -130,12 +129,12 @@ public class User
         this.phonenumber = phonenumber;
     }
 
-    public List<Program> getPrograms()
+    public Set<Program> getPrograms()
     {
         return programs;
     }
 
-    public void setPrograms(List<Program> programs)
+    public void setPrograms(Set<Program> programs)
     {
         this.programs = programs;
     }

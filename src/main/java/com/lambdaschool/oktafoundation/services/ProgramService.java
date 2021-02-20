@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ProgramService
 {
-    Program save(Program program);
+    Program save(long userid, Program program);
 
     List<Program> findAll();
 
