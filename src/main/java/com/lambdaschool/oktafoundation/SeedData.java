@@ -60,29 +60,25 @@ public class SeedData
         r2 = roleService.save(r2);
         r3 = roleService.save(r3);
 
-        User u1 = new User("llama001@maildrop.cc", "llama", "001", "(987)654-3210");
+        User u1 = new User("llama001@maildrop.cc", "llama001@email.com", "llama", "001", "(987)654-3210");
         u1.getRoles()
             .add(new UserRoles(u1,
                 r1));
-        u1.getUseremails()
-                .add(new Useremail(u1, "llama001@maildrop.cc"));
         u1.getPrograms()
                 .add(new Program("Coding", "12th grade", "Something Something Doing this stuff"));
         userService.save(u1);
 
-        User u2 = new User("barnbarn@maildrop.cc");
+        User u2 = new User("barnbarn@maildrop.cc", "barnbarn@maildrop.cc","barnbarn", "teacher", "(987)665-4423");
         u2.getRoles()
             .add(new UserRoles(u2,
                 r2));
-        u2.getRoles()
-                .add(new UserRoles(u2,r3));
         userService.save(u2);
 
-        User u3 = new User("johndoe@email.co", "John", "Doe", "(123)456-7890");
+        User u3 = new User("johndoe@email.co", "barnbarn@maildrop.cc", "John", "Doe", "(123)456-7890");
         u3.getRoles()
                 .add(new UserRoles(u3, r3));
 
-        User u4 = new User("fakeadmin2@email.com", "Fake", "Admin", "(456)123-7890");
+        User u4 = new User("fakeadmin2@email.com", "barnbarn@maildrop.cc", "Fake", "Admin", "(456)123-7890");
         u4.getRoles()
                 .add(new UserRoles(u4,
                         r1));

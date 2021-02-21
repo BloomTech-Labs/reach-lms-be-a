@@ -163,8 +163,7 @@ public class UserController
         @PathVariable
             long userid)
     {
-        updateUser.setUserid(userid);
-        userService.save(updateUser);
+        userService.update(updateUser, userid);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

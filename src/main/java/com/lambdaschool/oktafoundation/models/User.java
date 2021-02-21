@@ -33,22 +33,14 @@ public class User
     @Column(unique = true)
     private String username;
 
+    private String email;
+
     private String firstname;
 
     private String lastname;
 
     private String phonenumber;
 
-
-    /**
-     * A list of emails for this user
-     */
-    @OneToMany(mappedBy = "user",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true)
-    @JsonIgnoreProperties(value = "user",
-        allowSetters = true)
-    private List<Useremail> useremails = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
         cascade = CascadeType.ALL,
@@ -76,10 +68,11 @@ public class User
     {
     }
 
-    public User(@NotNull String username, String firstname, String lastname, String phonenumber)
+    public User(@NotNull String username, String email, String firstname, String lastname, String phonenumber)
     {
         this.username = username;
         this.firstname = firstname;
+        this.email = email;
         this.lastname = lastname;
         this.phonenumber = phonenumber;
     }
@@ -117,6 +110,16 @@ public class User
     public void setLastname(String lastname)
     {
         this.lastname = lastname;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
     }
 
     public String getPhonenumber()
@@ -179,25 +182,7 @@ public class User
         this.username = username.toLowerCase();
     }
 
-    /**
-     * Getter for the list of useremails for this user
-     *
-     * @return the list of useremails (List(Useremail)) for this user
-     */
-    public List<Useremail> getUseremails()
-    {
-        return useremails;
-    }
 
-    /**
-     * Setter for list of useremails for this user
-     *
-     * @param useremails the new list of useremails (List(Useremail)) for this user
-     */
-    public void setUseremails(List<Useremail> useremails)
-    {
-        this.useremails = useremails;
-    }
 
     /**
      * Getter for user role combinations
