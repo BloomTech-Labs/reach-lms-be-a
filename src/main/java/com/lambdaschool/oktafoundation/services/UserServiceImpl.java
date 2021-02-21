@@ -4,7 +4,6 @@ import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Role;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
-import com.lambdaschool.oktafoundation.models.Useremail;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,6 +99,7 @@ public class UserServiceImpl
 
         newUser.setUsername(user.getUsername()
             .toLowerCase());
+        newUser.setEmail(user.getEmail());
 
         newUser.setFirstname(user.getFirstname());
         newUser.setLastname(user.getLastname());
@@ -114,16 +114,6 @@ public class UserServiceImpl
             newUser.getRoles()
                 .add(new UserRoles(newUser,
                     addRole));
-        }
-
-
-        newUser.getUseremails()
-            .clear();
-        for (Useremail ue : user.getUseremails())
-        {
-            newUser.getUseremails()
-                .add(new Useremail(newUser,
-                    ue.getUseremail()));
         }
 
 
@@ -145,6 +135,12 @@ public class UserServiceImpl
             if (user.getUsername() != null)
             {
                 currentUser.setUsername(user.getUsername()
+                    .toLowerCase());
+            }
+
+            if (user.getEmail() != null)
+            {
+                currentUser.setEmail(user.getEmail()
                     .toLowerCase());
             }
 
@@ -175,19 +171,6 @@ public class UserServiceImpl
                     currentUser.getRoles()
                         .add(new UserRoles(currentUser,
                             addRole));
-                }
-            }
-
-            if (user.getUseremails()
-                .size() > 0)
-            {
-                currentUser.getUseremails()
-                    .clear();
-                for (Useremail ue : user.getUseremails())
-                {
-                    currentUser.getUseremails()
-                        .add(new Useremail(currentUser,
-                            ue.getUseremail()));
                 }
             }
 
