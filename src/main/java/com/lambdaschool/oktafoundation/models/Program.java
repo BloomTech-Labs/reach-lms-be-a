@@ -3,6 +3,7 @@ package com.lambdaschool.oktafoundation.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +23,13 @@ public class Program extends Auditable
     private String programtype;
 
     private String programdescription;
+
+    @OneToMany(mappedBy = "program",
+    cascade = CascadeType.ALL,
+    orphanRemoval = true)
+    @JsonIgnoreProperties(value = "program",
+        allowSetters = true)
+    List<Course> courses = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "userid", nullable = false)
@@ -88,6 +96,16 @@ public class Program extends Auditable
     public void setUser(User user)
     {
         this.user = user;
+    }
+
+    public List<Course> getCourses()
+    {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses)
+    {
+        this.courses = courses;
     }
 }
 

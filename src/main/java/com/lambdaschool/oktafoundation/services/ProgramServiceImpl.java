@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
@@ -39,6 +40,19 @@ public class ProgramServiceImpl
         newProgram.setProgramtype(program.getProgramtype());
         newProgram.setProgramdescription(program.getProgramdescription());
 
+        newProgram.getCourses()
+            .clear();
+
+        for(Course course : program.getCourses())
+        {
+            newProgram.getCourses()
+                .add(new Course(course.getCoursename(),
+                    course.getCoursedescription(),
+                    course.getCoursedescription(),
+                    newProgram));
+        }
+
+
         User currentUser = userrepos.findById(userid)
             .orElseThrow(() -> new ResourceNotFoundException("User with id " + userid + "not found !"));
         if(currentUser != null){
@@ -52,7 +66,6 @@ public class ProgramServiceImpl
     {
         List<Program> programs = new ArrayList<>();
         programRepository.findAll().iterator().forEachRemaining(programs::add);
-        System.out.println(programs);
         return programs;
     }
 
