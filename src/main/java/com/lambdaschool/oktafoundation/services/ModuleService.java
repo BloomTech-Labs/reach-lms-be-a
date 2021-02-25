@@ -8,11 +8,13 @@ public interface ModuleService
 {
     List<Module> findAll();
 
-    Module findModuleById(long moduleid);
+    Module findModulesById(long id);
 
-    Module save(long moduleid, Module module);
+    Module findModulesByName(String name);
 
-    Module update(long moduleid, Module module);
+    Module save(long id, Module module);
 
-    void delete(long moduleid);
+    Module update(long id, Module module);
+
+    void delete(long id);
 }

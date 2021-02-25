@@ -9,18 +9,18 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "modules")
-public class Module
+public class Module extends Auditable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long moduleid;
 
-    @NotNull
+    @Column(nullable = false)
     private String modulename;
 
     private String moduledescription;
 
-    @NotNull
+    @Column(nullable = false)
     private String modulecontent;
 
     @ManyToOne
@@ -32,7 +32,7 @@ public class Module
     {
     }
 
-    public Module(@NotNull String modulename, String moduledescription, @NotNull String modulecontent, Course course)
+    public Module(String modulename, String moduledescription, String modulecontent, Course course)
     {
         this.modulename = modulename;
         this.moduledescription = moduledescription;
