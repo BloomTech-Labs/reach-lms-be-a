@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -53,6 +54,7 @@ public class CourseController
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PostMapping(value = "/courses/{programid}/course", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addNewCourse(@PathVariable long programid, @Valid @RequestBody Course newCourse) throws URISyntaxException
     {
@@ -70,7 +72,7 @@ public class CourseController
 
         return new ResponseEntity<>(newCourse, responseHeaders, HttpStatus.CREATED);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PatchMapping(value = "/courses/{courseid}", consumes = "application/json")
     public ResponseEntity<?> updateCourse(@PathVariable long courseid,
                                           @RequestBody Course newCourse)
@@ -80,7 +82,7 @@ public class CourseController
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PutMapping(value = "/courses/{courseid}", consumes = "application/json")
     public ResponseEntity<?> updateFullCourse(@PathVariable long courseid,
                                           @RequestBody Course newCourse)
@@ -90,7 +92,7 @@ public class CourseController
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @DeleteMapping(value = "/courses/{courseid}")
     public ResponseEntity<?> deleteCourseById(@PathVariable long courseid)
     {
