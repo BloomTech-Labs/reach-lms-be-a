@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.swing.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -26,6 +28,24 @@ public class Course
     @JoinColumn(name = "programid", nullable = false)
     @JsonIgnoreProperties(value = "courses")
     private Program program;
+
+    @OneToMany(
+        mappedBy = "course",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JsonIgnoreProperties(value = "course",
+        allowSetters = true)
+    private Set<StudentCourses> students = new HashSet<>();
+
+    @OneToMany(
+        mappedBy = "course",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    @JsonIgnoreProperties(value = "course",
+        allowSetters = true)
+    private Set<Module> Modules = new HashSet<>();
 
     public Course()
     {
@@ -91,5 +111,25 @@ public class Course
     public void setProgram(Program program)
     {
         this.program = program;
+    }
+
+    public Set<StudentCourses> getStudents()
+    {
+        return students;
+    }
+
+    public void setStudents(Set<StudentCourses> students)
+    {
+        this.students = students;
+    }
+
+    public Set<Module> getModules()
+    {
+        return Modules;
+    }
+
+    public void setModules(Set<Module> modules)
+    {
+        Modules = modules;
     }
 }
