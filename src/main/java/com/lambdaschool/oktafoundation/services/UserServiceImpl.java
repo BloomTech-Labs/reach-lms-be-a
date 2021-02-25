@@ -2,8 +2,10 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Role;
+import com.lambdaschool.oktafoundation.models.Student;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
+import com.lambdaschool.oktafoundation.repository.StudentRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,9 @@ public class UserServiceImpl
 
     @Autowired
     private HelperFunctions helperFunctions;
+
+    @Autowired
+    private StudentRepository studentrepos;
 
     public User findUserById(long id) throws
                                       ResourceNotFoundException
@@ -114,8 +119,12 @@ public class UserServiceImpl
             newUser.getRoles()
                 .add(new UserRoles(newUser,
                     addRole));
+            if(addRole.getRoleid() == 3)
+            {
+               Student newStudent = new Student(newUser.getUsername());
+               studentrepos.save(newStudent);
+            }
         }
-
 
         return userrepos.save(newUser);
     }
@@ -173,7 +182,6 @@ public class UserServiceImpl
                             addRole));
                 }
             }
-
             return userrepos.save(currentUser);
         } else
         {

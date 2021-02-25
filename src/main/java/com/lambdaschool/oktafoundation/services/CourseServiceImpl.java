@@ -2,6 +2,7 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
+import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
@@ -54,6 +55,18 @@ public class CourseServiceImpl
         newCourse.setCoursedescription(course.getCoursedescription());
         newCourse.setCoursecode(course.getCoursecode());
 
+        newCourse.getModules()
+            .clear();
+
+        for(Module module : course.getModules())
+        {
+            newCourse.getModules()
+                .add(new Module(module.getModulename(),
+                    module.getModuledescription(),
+                    module.getModulecontent(),
+                    newCourse));
+        }
+
         Program program = programrepos.findById(programid)
             .orElseThrow(() -> new ResourceNotFoundException("Program with id " + programid + "Not Found!"));
         if (program != null)
@@ -61,8 +74,8 @@ public class CourseServiceImpl
             newCourse.setProgram(program);
         }
 
-        return courserepos.save(newCourse);
 
+        return courserepos.save(newCourse);
 
     }
 
