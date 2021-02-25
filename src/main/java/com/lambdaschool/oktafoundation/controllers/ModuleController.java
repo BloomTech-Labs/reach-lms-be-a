@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -58,6 +59,7 @@ public class ModuleController
         return new ResponseEntity<>(allModules, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PostMapping(value = "/modules/{courseId}/module", produces = "application/json")
     public ResponseEntity<?> addNewModule(@PathVariable long courseId, @Valid @RequestBody Module newModule) throws URISyntaxException
     {
@@ -74,6 +76,7 @@ public class ModuleController
         return new ResponseEntity<>(newModule, responseHeaders, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PatchMapping(value = "/modules/{moduleId}", consumes = "application/json")
     public ResponseEntity<?> updateModule(@PathVariable long moduleId, @RequestBody Module newModule)
     {
@@ -83,6 +86,7 @@ public class ModuleController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PutMapping(value = "/modules/{moduleId}", consumes = "application/json")
     public ResponseEntity<?> updateFullModule(@PathVariable long moduleId, @RequestBody Module newModule)
     {
@@ -92,6 +96,7 @@ public class ModuleController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @DeleteMapping(value = "/modules/{moduleId}")
     public ResponseEntity<?> deleteModuleById(@PathVariable long moduleId)
     {
