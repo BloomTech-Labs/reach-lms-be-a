@@ -40,7 +40,6 @@ public class StudentServiceImpl
         Course currCourse = courserepos.findById(courseid)
             .orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + " Not found!"));
 
-
         currStudent.getCourses()
             .clear();
 

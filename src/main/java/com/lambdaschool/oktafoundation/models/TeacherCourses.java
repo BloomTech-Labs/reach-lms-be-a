@@ -8,47 +8,49 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "studentcourses")
-@IdClass(StudentCoursesId.class)
-public class StudentCourses extends Auditable implements Serializable
+@Table(name = "teachercourses")
+@IdClass(TeacherCoursesId.class)
+public class TeacherCourses extends Auditable
+    implements Serializable
 {
 
     @Id
     @ManyToOne
     @NotNull
-    @JoinColumn(name = "studentid")
+    @JoinColumn(name = "teacherid")
     @JsonIgnoreProperties(value = "courses",
-    allowSetters = true)
-    private Student student;
+        allowSetters = true)
+    private Teacher teacher;
 
     @Id
     @ManyToOne
     @NotNull
     @JoinColumn(name = "courseid")
-    @JsonIgnoreProperties(value = "students",
-    allowSetters = true)
+    @JsonIgnoreProperties(value = "teachers",
+        allowSetters = true)
     private Course course;
 
-    public StudentCourses()
+
+    public TeacherCourses()
     {
     }
 
-    public StudentCourses(
-         Student student,
-         Course course)
+    public TeacherCourses(
+        @NotNull Teacher teacher,
+        @NotNull Course course)
     {
-        this.student = student;
+        this.teacher = teacher;
         this.course = course;
     }
 
-    public Student getStudent()
+    public Teacher getTeacher()
     {
-        return student;
+        return teacher;
     }
 
-    public void setStudent(Student student)
+    public void setTeacher(Teacher teacher)
     {
-        this.student = student;
+        this.teacher = teacher;
     }
 
     public Course getCourse()
@@ -67,12 +69,12 @@ public class StudentCourses extends Auditable implements Serializable
         {
             return true;
         }
-        if (!(o instanceof StudentCourses))
+        if (!(o instanceof TeacherCourses))
         {
             return false;
         }
-        StudentCourses that = (StudentCourses) o;
-        return ((student == null) ? 0 : student.getStudentid()) == ((that.student == null) ? 0 : that.student.getStudentid()) &&
+        TeacherCourses that = (TeacherCourses) o;
+        return ((teacher == null) ? 0 : teacher.getTeacherid()) == ((that.teacher == null) ? 0 : that.teacher.getTeacherid()) &&
             ((course == null) ? 0 : course.getCourseid()) == ((that.course == null) ? 0 : that.course.getCourseid());
     }
 

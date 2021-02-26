@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
                 // adds a default USER role to this new user
                 Set<UserRoles> newRoles = new HashSet<>();
                 newRoles.add(new UserRoles(workingUser,
-                    roleService.findByName("student")));
+                    roleService.findByName("teacher")));
                 workingUser.setRoles(newRoles);
 
                 workingUser = userService.save(workingUser);
