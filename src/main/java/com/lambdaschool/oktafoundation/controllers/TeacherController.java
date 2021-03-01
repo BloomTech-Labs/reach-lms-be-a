@@ -49,7 +49,7 @@ public class TeacherController
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    @PutMapping(value = "/teachers/{courseid}",
+    @PostMapping(value = "/teachers/{courseid}",
         consumes = {"application/json"},
         produces = "application/json")
     public ResponseEntity<?> addNewTeacherByCourseid(@PathVariable

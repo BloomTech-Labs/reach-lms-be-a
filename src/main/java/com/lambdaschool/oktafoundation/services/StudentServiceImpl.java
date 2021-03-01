@@ -34,18 +34,17 @@ public class StudentServiceImpl
     }
 
     @Override
-    public Student update(Student student, long courseid)
+    public Student save(Student student, long courseid)
     {
         Student currStudent = studentrepos.findStudentByStudentname(student.getStudentname());
-        Course currCourse = courserepos.findById(courseid)
-            .orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + " Not found!"));
+        Course currCourse = courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
-        currStudent.getCourses()
-            .clear();
+        currStudent.getCourses();
 
 
              currStudent.getCourses()
              .add(new StudentCourses(currStudent, currCourse));
+
 
 
         return studentrepos.save(currStudent);

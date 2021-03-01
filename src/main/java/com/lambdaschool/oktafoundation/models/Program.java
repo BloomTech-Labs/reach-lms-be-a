@@ -29,7 +29,7 @@ public class Program extends Auditable
 
     @OneToMany(fetch = FetchType.LAZY,
     mappedBy = "program",
-    cascade = CascadeType.REMOVE,
+    cascade = CascadeType.ALL,
     orphanRemoval = true)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties(value = "program",

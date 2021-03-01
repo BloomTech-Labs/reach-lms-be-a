@@ -8,7 +8,7 @@ public interface StudentService
 {
     List<Student> findAll();
 
-    Student update(Student student, long courseid);
+    Student save(Student student, long courseid);
 
     /*
     Student deleteBy(long studentid);
