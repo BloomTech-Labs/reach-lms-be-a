@@ -1,6 +1,8 @@
 package com.lambdaschool.oktafoundation.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -16,11 +18,12 @@ public class Student
 
     private String studentname;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    @OneToMany( fetch = FetchType.LAZY,
         mappedBy = "student",
         cascade = CascadeType.ALL,
         orphanRemoval = true
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties(value = "student",
         allowSetters = true)
     private Set<StudentCourses> courses = new HashSet<>();

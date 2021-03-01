@@ -23,7 +23,7 @@ public class Module extends Auditable
     @Column(nullable = false)
     private String modulecontent;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courseid", nullable = false)
     @JsonIgnoreProperties(value = "modules")
     private Course course;

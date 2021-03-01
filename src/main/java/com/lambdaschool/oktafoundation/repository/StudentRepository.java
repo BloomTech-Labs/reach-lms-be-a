@@ -13,7 +13,7 @@ public interface StudentRepository extends CrudRepository<Student, Long>
      Student findStudentByStudentname(String username);
 
      @Modifying      // to mark it's a delete query, same can be done on update but no need
-     @Query(value = "DELETE FROM STUDENTCOURSES p\n" +
+     @Query(value = "DELETE FROM STUDENTCOURSES\n" +
          "WHERE STUDENTID = :studentid AND COURSEID = :courseid\n", nativeQuery = true)
      void deleteStudentByStudentidAndCourseid(long studentid, long courseid);
 }

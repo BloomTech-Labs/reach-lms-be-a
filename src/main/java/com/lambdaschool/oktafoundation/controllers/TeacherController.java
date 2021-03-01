@@ -1,5 +1,6 @@
 package com.lambdaschool.oktafoundation.controllers;
 
+import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Student;
 import com.lambdaschool.oktafoundation.models.Teacher;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
@@ -30,6 +31,7 @@ public class TeacherController
     @Autowired
     private CourseRepository courserepos;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @GetMapping(value = "/teachers", produces = "application/json")
     public ResponseEntity<?> getAllTeachers(){
         List<Teacher> allTeachers = new ArrayList<>();
@@ -58,5 +60,15 @@ public class TeacherController
 
 
         return new ResponseEntity<>(newTeacher, HttpStatus.CREATED);
+    }
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @DeleteMapping(value = "/teachers/{courseid}/{teacherid}")
+    public ResponseEntity<?> deleteCourseTeacher(@PathVariable long courseid,
+                                                 @PathVariable long teacherid)
+    {
+        courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Oops! course with id " + courseid + " Not found!"));
+        teacherrepos.deleteTeacherByTeacheridAndCourseid(teacherid, courseid);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

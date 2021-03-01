@@ -45,11 +45,11 @@ public class Swagger2Config
      */
     private ApiInfo apiEndPointsInfo()
     {
-        return new ApiInfoBuilder().title("Java Spring BE Foundation")
-            .description("Java Spring Backend Foundation and Scaffolding")
-            .contact(new Contact("John Mitchell",
+        return new ApiInfoBuilder().title("Java Spring Reach LMS - API Details")
+            .description("Java Spring Reach Learning Management System Backend")
+            .contact(new Contact("Reach LMS Team-A - Labs 31",
                 "http://www.lambdaschool.com",
-                "john@lambdaschool.com"))
+                "someone@lambdaschool.com"))
             .license("MIT")
             .licenseUrl("https://github.com/LambdaSchool/java-springfoundation/blob/master/LICENSE")
             .version("1.0.0")
