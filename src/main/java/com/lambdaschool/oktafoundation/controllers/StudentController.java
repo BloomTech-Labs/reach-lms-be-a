@@ -68,7 +68,7 @@ public class StudentController
                                                  @PathVariable long studentid)
     {
         courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Oops! course with id " + courseid + " Not found!"));
-        studentrepos.deleteStudentByStudentidAndCourseid(courseid, studentid);
+        studentrepos.deleteStudentByStudentidAndCourseid(studentid, courseid);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

@@ -1,5 +1,6 @@
 package com.lambdaschool.oktafoundation.controllers;
 
+import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import com.lambdaschool.oktafoundation.services.ProgramService;
@@ -89,11 +90,12 @@ public class ProgramController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/programs/program/{programid}", produces = "application/json")
-    public ResponseEntity<?> deleteProgram(@PathVariable Long programid)
+    @DeleteMapping(value = "/programs/program/{programid}")
+    public ResponseEntity<?> deleteProgram(@PathVariable long programid)
     {
-        programService.delete(programid);
+        programRepos.findById(programid).orElseThrow(() -> new ResourceNotFoundException("Program id with id" + programid + " Not found!"));
+        programRepos.deleteById(programid);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

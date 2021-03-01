@@ -87,12 +87,6 @@ public class ProgramServiceImpl
         return pp;
     }
 
-    @Override
-    public void delete(long id)
-    {
-        programRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Program with id " + id + " not found."));
-        programRepository.deleteById(id);
-    }
 
     @Override
     public Program update(Program program, long id)
@@ -115,6 +109,16 @@ public class ProgramServiceImpl
         }
 
         return programRepository.save(oldProgram);
+
+    }
+
+
+    @Override
+    public void delete(long id) throws ResourceNotFoundException
+    {
+        programRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Program with id " + id + " not found."));
+        programRepository.deleteById(id);
+
 
     }
 

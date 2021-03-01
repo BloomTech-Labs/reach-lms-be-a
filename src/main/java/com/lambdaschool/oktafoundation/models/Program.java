@@ -1,8 +1,11 @@
 package com.lambdaschool.oktafoundation.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -16,17 +19,19 @@ public class Program extends Auditable
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long programid;
 
-    @Column(nullable = false)
+
     private String programname;
 
-    @Column(nullable = false)
+
     private String programtype;
 
     private String programdescription;
 
-    @OneToMany(mappedBy = "program",
-    cascade = CascadeType.ALL,
+    @OneToMany(fetch = FetchType.LAZY,
+    mappedBy = "program",
+    cascade = CascadeType.REMOVE,
     orphanRemoval = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties(value = "program",
         allowSetters = true)
     List<Course> courses = new ArrayList<>();

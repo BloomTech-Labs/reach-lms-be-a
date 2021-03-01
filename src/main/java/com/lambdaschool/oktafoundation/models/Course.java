@@ -1,6 +1,8 @@
 package com.lambdaschool.oktafoundation.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.swing.*;
@@ -26,21 +28,24 @@ public class Course
 
     private String coursedescription;
 
-    @ManyToOne
-    @JoinColumn(name = "programid", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "programid")
     @JsonIgnoreProperties(value = "courses")
     private Program program;
 
     @OneToMany(
+        fetch = FetchType.EAGER,
         mappedBy = "course",
-        cascade = CascadeType.ALL,
+        cascade = CascadeType.REMOVE,
         orphanRemoval = true
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties(value = "course",
         allowSetters = true)
     private Set<StudentCourses> students = new HashSet<>();
 
     @OneToMany(
+        fetch = FetchType.EAGER,
         mappedBy = "course",
         cascade = CascadeType.ALL,
         orphanRemoval = true
