@@ -18,7 +18,7 @@ public class Student
 
     private String studentname;
 
-    @OneToMany( fetch = FetchType.LAZY,
+    @OneToMany( fetch = FetchType.EAGER,
         mappedBy = "student",
         cascade = CascadeType.ALL,
         orphanRemoval = true

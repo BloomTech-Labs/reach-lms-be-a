@@ -36,7 +36,7 @@ public class Course
     @OneToMany(
         fetch = FetchType.EAGER,
         mappedBy = "course",
-        cascade = CascadeType.REMOVE,
+        cascade = CascadeType.ALL,
         orphanRemoval = true
     )
     @OnDelete(action = OnDeleteAction.CASCADE)

@@ -40,10 +40,6 @@ public class TeacherServiceImpl
 
 
         currTeacher.getCourses()
-            .clear();
-
-
-        currTeacher.getCourses()
             .add(new TeacherCourses(currTeacher, currCourse));
 
 

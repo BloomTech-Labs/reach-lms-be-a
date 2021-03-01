@@ -48,7 +48,8 @@ public class StudentController
         return new ResponseEntity<>(currStudent, HttpStatus.OK);
     }
 
-    @PutMapping(value = "/students/{courseid}",
+
+    @PostMapping(value = "/students/{courseid}",
         consumes = {"application/json"},
         produces = "application/json")
     public ResponseEntity<?> addNewStudent(@PathVariable
@@ -57,7 +58,7 @@ public class StudentController
                                                Student newStudent) throws URISyntaxException
     {
         newStudent.setStudentid(0);
-        newStudent = studentService.update(newStudent, courseid);
+        newStudent = studentService.save(newStudent, courseid);
 
 
         return new ResponseEntity<>(newStudent, HttpStatus.CREATED);

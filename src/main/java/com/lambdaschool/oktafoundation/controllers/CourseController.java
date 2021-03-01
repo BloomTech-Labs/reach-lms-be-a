@@ -2,7 +2,9 @@ package com.lambdaschool.oktafoundation.controllers;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
+import com.lambdaschool.oktafoundation.models.Student;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
+import com.lambdaschool.oktafoundation.repository.StudentRepository;
 import com.lambdaschool.oktafoundation.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +27,9 @@ public class CourseController
     CourseRepository courserepos;
 
     @Autowired
+    StudentRepository studentrepos;
+
+    @Autowired
     CourseService courseService;
 
     @GetMapping(value = "/courses", produces = {"application/json"})
@@ -35,6 +40,23 @@ public class CourseController
 
         return new ResponseEntity<>(courses, HttpStatus.OK);
     }
+
+
+    @GetMapping(value = "/courses/student/{studentid}", produces = "application/json")
+    public ResponseEntity<?> getStudentCourses(@PathVariable long studentid){
+        List<Course> courses = courserepos.findCoursesByStudentid(studentid);
+
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/courses/teacher/{teacherid}", produces = "application/json")
+    public ResponseEntity<?> getTeacherCourses(@PathVariable long teacherid){
+        List<Course> courses = courserepos.findCoursesByTeacherid(teacherid);
+
+        return new ResponseEntity<>(courses, HttpStatus.OK);
+    }
+
+
 
     @GetMapping(value = "/courses/course/{courseid}", produces = {"application/json"})
     public ResponseEntity<?> getCourseByCourseId(@PathVariable  long courseid)
@@ -54,7 +76,7 @@ public class CourseController
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+ //   @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PostMapping(value = "/courses/{programid}/course", produces = "application/json", consumes = "application/json")
     public ResponseEntity<?> addNewCourse(@PathVariable long programid, @Valid @RequestBody Course newCourse) throws URISyntaxException
     {
@@ -72,7 +94,7 @@ public class CourseController
 
         return new ResponseEntity<>(newCourse, responseHeaders, HttpStatus.CREATED);
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+   // @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PatchMapping(value = "/courses/{courseid}", consumes = "application/json")
     public ResponseEntity<?> updateCourse(@PathVariable long courseid,
                                           @RequestBody Course newCourse)
@@ -82,7 +104,7 @@ public class CourseController
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+  //  @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     @PutMapping(value = "/courses/{courseid}", consumes = "application/json")
     public ResponseEntity<?> updateFullCourse(@PathVariable long courseid,
                                           @RequestBody Course newCourse)
