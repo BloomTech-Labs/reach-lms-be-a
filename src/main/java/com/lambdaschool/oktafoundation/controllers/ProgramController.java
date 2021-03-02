@@ -41,6 +41,15 @@ public class ProgramController
 
         return new ResponseEntity<>(program, HttpStatus.OK);
     }
+    
+    @GetMapping(value = "/programs/program/name/{programName}", produces = "application/json")
+    public ResponseEntity<?> getProgramByName(@PathVariable String programName)
+    {
+        Program p = programService.findProgramsByName(programName);
+        return new ResponseEntity<>(p, HttpStatus.OK);
+    }
+
+
 
     @GetMapping(value = "/programs/{userid}", produces = "application/json")
     public ResponseEntity<?> getProgramsByUserId(@PathVariable long userid)
