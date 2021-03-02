@@ -1,303 +1,39 @@
-# Java User Model Final Version / Exceptions Final Application / Security Initial Application
+# Java Spring Reach LMS - Team/a Backend Documentation
 
 ## Introduction
 
-This is a basic database scheme with users, user emails, and user roles. This Java Spring REST API application will provide endpoints for clients to read various data sets contained in the application's data. This application will also form the basis of a user authentication application developed elsewhere in the course
+This is database schema which included users, user emails, user roles, program, course, module, admin, student, teacher models. This Java Spring REST API application will provide endpoints for users to read various data sets contained in the application's data. This application will also form the basis for a user authentication with okta and resource authorization to allow only specific featuresets depending on the user role.
 
 ### Database layout
 
-The table layout is similar to the initial version with the following exceptions:
+The table layout is similar to the common @ManyToMany annotation but with the following exceptions:
 
-* The join table userroles is explicitly created. This allows us to add additional columns to the join table
+* Join tables such as userroles, studentcourses, teachercourses is explicitly created. This allows us to add additional columns to the join table
 * Since we are creating the join table ourselves, the Many to Many relationship that formed the join table is now two Many to One relationships
-* All tables now have audit fields
+* All tables now have audit fields (CREATED BY, CREATED DATE, LASTMODIFIED BY, LASTMODIFIED DATE)
 
 Thus the new table layout is as follows
 
 * User is the driving table.
-* Useremails have a Many-To-One relationship with User. Each User has many user email combinations. Each user email combination has only one User.
+* Programs have a Many-To-One relationship with User. Each User (ADMIN) has many user programs combinations. Each user program combination has only one User (ADMIN).
 * Roles have a Many-To-Many relationship with Users.
+---------
+
+* Student is the driving table.
+* Courses have Many-To-Many relationship with Student
+-------
+
+* Program is the driving table.
+* Courses have Many-To-One realtionship with Program. Each Program have many admin courses combinations. Each program courses combination has only one program.
+
+------
+* Course is the driving table.
+* Students have Many-To-Many relationship with Courses.
+* Teachers have Many-To-Many realtionship with Courses
 
 ![Image of Database Layout](usersfinaldb.png)
 
-Using the provided seed data, expand each endpoint below to see the output it generates.
-
-<details>
-<summary>http://localhost:2019/useremails/useremails</summary>
-
-```JSON
-[
-    {
-        "useremailid": 5,
-        "useremail": "admin@email.local",
-        "user": {
-            "userid": 4,
-            "username": "admin",
-            "primaryemail": "admin@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 3,
-                        "name": "DATA"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 1,
-                        "name": "ADMIN"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "useremailid": 6,
-        "useremail": "admin@mymail.local",
-        "user": {
-            "userid": 4,
-            "username": "admin",
-            "primaryemail": "admin@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 3,
-                        "name": "DATA"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 1,
-                        "name": "ADMIN"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "useremailid": 8,
-        "useremail": "cinnamon@mymail.local",
-        "user": {
-            "userid": 7,
-            "username": "cinnamon",
-            "primaryemail": "cinnamon@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 3,
-                        "name": "DATA"
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "useremailid": 9,
-        "useremail": "hops@mymail.local",
-        "user": {
-            "userid": 7,
-            "username": "cinnamon",
-            "primaryemail": "cinnamon@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 3,
-                        "name": "DATA"
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "useremailid": 10,
-        "useremail": "bunny@email.local",
-        "user": {
-            "userid": 7,
-            "username": "cinnamon",
-            "primaryemail": "cinnamon@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                },
-                {
-                    "role": {
-                        "roleid": 3,
-                        "name": "DATA"
-                    }
-                }
-            ]
-        }
-    },
-    {
-        "useremailid": 12,
-        "useremail": "barnbarn@email.local",
-        "user": {
-            "userid": 11,
-            "username": "barnbarn",
-            "primaryemail": "barnbarn@lambdaschool.local",
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 2,
-                        "name": "USER"
-                    }
-                }
-            ]
-        }
-    }
-]
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/useremails/useremail/8</summary>
-
-```JSON
-{
-    "useremailid": 8,
-    "useremail": "cinnamon@mymail.local",
-    "user": {
-        "userid": 7,
-        "username": "cinnamon",
-        "primaryemail": "cinnamon@lambdaschool.local",
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            },
-            {
-                "role": {
-                    "roleid": 3,
-                    "name": "DATA"
-                }
-            }
-        ]
-    }
-}
-```
-
-</details>
-
-<details>
-<summary>DELETE http://localhost:2019/useremails/useremail/8</summary>
-
-```TEXT
-No Body Data
-
-Status OK
-```
-
-</details>
-
-
-<details>
-<summary>PUT http://localhost:2019/useremails/useremail/9/email/favbun@hops.local</summary>
-
-OUTPUT
-
-```TEXT
-Status OK
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/useremails/useremail/9</summary>
-
-```JSON
-{
-    "useremailid": 9,
-    "useremail": "favbun@hops.local",
-    "user": {
-        "userid": 7,
-        "username": "cinnamon",
-        "primaryemail": "cinnamon@lambdaschool.local",
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            },
-            {
-                "role": {
-                    "roleid": 3,
-                    "name": "DATA"
-                }
-            }
-        ]
-    }
-}
-```
-
-</details>
-
-<details>
-<summary>POST http://localhost:2019/useremails/user/14/email/favbun@hops.local</summary>
-
-OUTPUT
-
-```TEXT
-Status CREATED
-
-Location Header: http://localhost:2019/useremails/useremail/15
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/useremails/useremail/15</summary>
-
-```JSON
-{
-    "useremailid": 15,
-    "useremail": "favbun@hops.local",
-    "user": {
-        "userid": 14,
-        "username": "misskitty",
-        "primaryemail": "misskitty@school.lambda",
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            }
-        ]
-    }
-}
-```
-
-</details>
+Using the provided data, expand each endpoint below to see the output it generates.
 
 ---
 
@@ -313,135 +49,48 @@ Location Header: http://localhost:2019/useremails/useremail/15
             {
                 "user": {
                     "userid": 4,
-                    "username": "admin",
-                    "primaryemail": "admin@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 5,
-                            "useremail": "admin@email.local"
-                        },
-                        {
-                            "useremailid": 6,
-                            "useremail": "admin@mymail.local"
-                        }
-                    ]
+                    "username": "llama001@maildrop.cc",
+                    "email": "llama001@email.com",
+                    "firstname": "llama",
+                    "lastname": "001",
+                    "phonenumber": "(987)654-3210",
+                    "programs": []
+                }
+            },
+            {
+                "user": {
+                    "userid": 7,
+                    "username": "llama007@maildrop.cc",
+                    "email": null,
+                    "firstname": null,
+                    "lastname": null,
+                    "phonenumber": null,
+                    "programs": []
                 }
             }
         ]
     },
     {
         "roleid": 2,
-        "name": "USER",
+        "name": "TEACHER",
         "users": [
             {
                 "user": {
-                    "userid": 14,
-                    "username": "misskitty",
-                    "primaryemail": "misskitty@school.lambda",
-                    "useremails": [
-                        {
-                            "useremailid": 15,
-                            "useremail": "favbun@hops.local"
-                        }
-                    ]
-                }
-            },
-            {
-                "user": {
-                    "userid": 13,
-                    "username": "puttat",
-                    "primaryemail": "puttat@school.lambda",
-                    "useremails": []
-                }
-            },
-            {
-                "user": {
-                    "userid": 11,
-                    "username": "barnbarn",
-                    "primaryemail": "barnbarn@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 12,
-                            "useremail": "barnbarn@email.local"
-                        }
-                    ]
-                }
-            },
-            {
-                "user": {
-                    "userid": 7,
-                    "username": "cinnamon",
-                    "primaryemail": "cinnamon@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 9,
-                            "useremail": "favbun@hops.local"
-                        },
-                        {
-                            "useremailid": 10,
-                            "useremail": "bunny@email.local"
-                        }
-                    ]
-                }
-            },
-            {
-                "user": {
-                    "userid": 4,
-                    "username": "admin",
-                    "primaryemail": "admin@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 5,
-                            "useremail": "admin@email.local"
-                        },
-                        {
-                            "useremailid": 6,
-                            "useremail": "admin@mymail.local"
-                        }
-                    ]
+                    "userid": 6,
+                    "username": "barnbarn@maildrop.cc",
+                    "email": "barnbarn@maildrop.cc",
+                    "firstname": "barnbarn",
+                    "lastname": "teacher",
+                    "phonenumber": "(987)665-4423",
+                    "programs": []
                 }
             }
         ]
     },
     {
         "roleid": 3,
-        "name": "DATA",
-        "users": [
-            {
-                "user": {
-                    "userid": 4,
-                    "username": "admin",
-                    "primaryemail": "admin@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 5,
-                            "useremail": "admin@email.local"
-                        },
-                        {
-                            "useremailid": 6,
-                            "useremail": "admin@mymail.local"
-                        }
-                    ]
-                }
-            },
-            {
-                "user": {
-                    "userid": 7,
-                    "username": "cinnamon",
-                    "primaryemail": "cinnamon@lambdaschool.local",
-                    "useremails": [
-                        {
-                            "useremailid": 9,
-                            "useremail": "favbun@hops.local"
-                        },
-                        {
-                            "useremailid": 10,
-                            "useremail": "bunny@email.local"
-                        }
-                    ]
-                }
-            }
-        ]
+        "name": "STUDENT",
+        "users": []
     }
 ]
 ```
@@ -449,45 +98,33 @@ Location Header: http://localhost:2019/useremails/useremail/15
 </details>
 
 <details>
-<summary>http://localhost:2019/roles/role/3</summary>
+<summary>http://localhost:2019/roles/role/1</summary>
 
 ```JSON
 {
-    "roleid": 3,
-    "name": "DATA",
+    "roleid": 1,
+    "name": "ADMIN",
     "users": [
         {
             "user": {
                 "userid": 4,
-                "username": "admin",
-                "primaryemail": "admin@lambdaschool.local",
-                "useremails": [
-                    {
-                        "useremailid": 5,
-                        "useremail": "admin@email.local"
-                    },
-                    {
-                        "useremailid": 6,
-                        "useremail": "admin@mymail.local"
-                    }
-                ]
+                "username": "llama001@maildrop.cc",
+                "email": "llama001@email.com",
+                "firstname": "llama",
+                "lastname": "001",
+                "phonenumber": "(987)654-3210",
+                "programs": []
             }
         },
         {
             "user": {
                 "userid": 7,
-                "username": "cinnamon",
-                "primaryemail": "cinnamon@lambdaschool.local",
-                "useremails": [
-                    {
-                        "useremailid": 9,
-                        "useremail": "favbun@hops.local"
-                    },
-                    {
-                        "useremailid": 10,
-                        "useremail": "bunny@email.local"
-                    }
-                ]
+                "username": "llama007@maildrop.cc",
+                "email": null,
+                "firstname": null,
+                "lastname": null,
+                "phonenumber": null,
+                "programs": []
             }
         }
     ]
@@ -497,45 +134,22 @@ Location Header: http://localhost:2019/useremails/useremail/15
 </details>
 
 <details>
-<summary>http://localhost:2019/roles/role/name/data</summary>
+<summary>http://localhost:2019/roles/role/name/teacher</summary>
 
 ```JSON
 {
-    "roleid": 3,
-    "name": "DATA",
+    "roleid": 2,
+    "name": "TEACHER",
     "users": [
         {
             "user": {
-                "userid": 4,
-                "username": "admin",
-                "primaryemail": "admin@lambdaschool.local",
-                "useremails": [
-                    {
-                        "useremailid": 5,
-                        "useremail": "admin@email.local"
-                    },
-                    {
-                        "useremailid": 6,
-                        "useremail": "admin@mymail.local"
-                    }
-                ]
-            }
-        },
-        {
-            "user": {
-                "userid": 7,
-                "username": "cinnamon",
-                "primaryemail": "cinnamon@lambdaschool.local",
-                "useremails": [
-                    {
-                        "useremailid": 9,
-                        "useremail": "favbun@hops.local"
-                    },
-                    {
-                        "useremailid": 10,
-                        "useremail": "bunny@email.local"
-                    }
-                ]
+                "userid": 6,
+                "username": "barnbarn@maildrop.cc",
+                "email": "barnbarn@maildrop.cc",
+                "firstname": "barnbarn",
+                "lastname": "teacher",
+                "phonenumber": "(987)665-4423",
+                "programs": []
             }
         }
     ]
@@ -606,116 +220,51 @@ Status OK
 [
     {
         "userid": 4,
-        "username": "admin",
-        "primaryemail": "admin@lambdaschool.local",
-        "useremails": [
-            {
-                "useremailid": 5,
-                "useremail": "admin@email.local"
-            },
-            {
-                "useremailid": 6,
-                "useremail": "admin@mymail.local"
-            }
-        ],
+        "username": "llama001@maildrop.cc",
+        "email": "llama001@email.com",
+        "firstname": "llama",
+        "lastname": "001",
+        "phonenumber": "(987)654-3210",
+        "programs": [],
         "roles": [
-            {
-                "role": {
-                    "roleid": 3,
-                    "name": "DATA"
-                }
-            },
             {
                 "role": {
                     "roleid": 1,
                     "name": "ADMIN"
                 }
-            },
+            }
+        ]
+    },
+    {
+        "userid": 6,
+        "username": "barnbarn@maildrop.cc",
+        "email": "barnbarn@maildrop.cc",
+        "firstname": "barnbarn",
+        "lastname": "teacher",
+        "phonenumber": "(987)665-4423",
+        "programs": [],
+        "roles": [
             {
                 "role": {
                     "roleid": 2,
-                    "name": "USER"
+                    "name": "TEACHER"
                 }
             }
         ]
     },
     {
         "userid": 7,
-        "username": "cinnamon",
-        "primaryemail": "cinnamon@lambdaschool.local",
-        "useremails": [
-            {
-                "useremailid": 9,
-                "useremail": "favbun@hops.local"
-            },
-            {
-                "useremailid": 10,
-                "useremail": "bunny@email.local"
-            }
-        ],
+        "username": "llama007@maildrop.cc",
+        "email": null,
+        "firstname": null,
+        "lastname": null,
+        "phonenumber": null,
+        "programs": [],
         "roles": [
             {
                 "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            },
-            {
-                "role": {
-                    "roleid": 3,
-                    "name": "DATA"
-                }
-            }
-        ]
-    },
-    {
-        "userid": 11,
-        "username": "barnbarn",
-        "primaryemail": "barnbarn@lambdaschool.local",
-        "useremails": [
-            {
-                "useremailid": 12,
-                "useremail": "barnbarn@email.local"
-            }
-        ],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            }
-        ]
-    },
-    {
-        "userid": 13,
-        "username": "puttat",
-        "primaryemail": "puttat@school.lambda",
-        "useremails": [],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
-                }
-            }
-        ]
-    },
-    {
-        "userid": 14,
-        "username": "misskitty",
-        "primaryemail": "misskitty@school.lambda",
-        "useremails": [
-            {
-                "useremailid": 15,
-                "useremail": "favbun@hops.local"
-            }
-        ],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "USER"
+                    "roleid": 1,
+                    "name": "ADMIN"
                 }
             }
         ]
@@ -731,29 +280,17 @@ Status OK
 ```JSON
 {
     "userid": 7,
-    "username": "cinnamon",
-    "primaryemail": "cinnamon@lambdaschool.local",
-    "useremails": [
-        {
-            "useremailid": 9,
-            "useremail": "favbun@hops.local"
-        },
-        {
-            "useremailid": 10,
-            "useremail": "bunny@email.local"
-        }
-    ],
+    "username": "llama007@maildrop.cc",
+    "email": null,
+    "firstname": null,
+    "lastname": null,
+    "phonenumber": null,
+    "programs": [],
     "roles": [
         {
             "role": {
-                "roleid": 2,
-                "name": "USER"
-            }
-        },
-        {
-            "role": {
-                "roleid": 3,
-                "name": "DATA"
+                "roleid": 1,
+                "name": "ADMIN"
             }
         }
     ]
@@ -763,34 +300,22 @@ Status OK
 </details>
 
 <details>
-<summary>http://localhost:2019/users/user/name/cinnamon</summary>
+<summary>http://localhost:2019/users/user/name/llama001@maildrop.cc</summary>
 
 ```JSON
 {
-    "userid": 7,
-    "username": "cinnamon",
-    "primaryemail": "cinnamon@lambdaschool.local",
-    "useremails": [
-        {
-            "useremailid": 9,
-            "useremail": "favbun@hops.local"
-        },
-        {
-            "useremailid": 10,
-            "useremail": "bunny@email.local"
-        }
-    ],
+    "userid": 4,
+    "username": "llama001@maildrop.cc",
+    "email": "llama001@email.com",
+    "firstname": "llama",
+    "lastname": "001",
+    "phonenumber": "(987)654-3210",
+    "programs": [],
     "roles": [
         {
             "role": {
-                "roleid": 2,
-                "name": "USER"
-            }
-        },
-        {
-            "role": {
-                "roleid": 3,
-                "name": "DATA"
+                "roleid": 1,
+                "name": "ADMIN"
             }
         }
     ]
@@ -800,10 +325,28 @@ Status OK
 </details>
 
 <details>
-<summary>http://localhost:2019/users/user/name/like/da</summary>
+<summary>http://localhost:2019/users/user/name/like/barn</summary>
 
 ```JSON
-[]
+[
+    {
+        "userid": 6,
+        "username": "barnbarn@maildrop.cc",
+        "email": "barnbarn@maildrop.cc",
+        "firstname": "barnbarn",
+        "lastname": "teacher",
+        "phonenumber": "(987)665-4423",
+        "programs": [],
+        "roles": [
+            {
+                "role": {
+                    "roleid": 2,
+                    "name": "TEACHER"
+                }
+            }
+        ]
+    }
+]
 ```
 
 </details>
@@ -815,29 +358,20 @@ DATA
 
 ```JSON
 {
-    "username": "Mojo",
-    "primaryemail": "mojo@lambdaschool.local",
-    "password" : "Coffee123",
-    "useremails": [
-        {
-            "useremail": "mojo@mymail.local"
-        },
-        {
-            "useremail": "mojo@email.local"
-        }
-        ],
-    "roles": [
-        {
-            "role": {
-                "roleid": 1
+        "username": "SomeNewUser",
+        "email": "somenewuser@maildrop.cc",
+        "firstname": "someonenew",
+        "lastname": "anonymous",
+        "phonenumber": "(987)665-4423",
+        "programs": [],
+        "roles": [
+            {
+                "role": {
+                    "roleid": 2,
+                    "name": "TEACHER"
+                }
             }
-        },
-        {
-            "role": {
-                "roleid": 2
-            }
-        }
-    ]
+        ]
 }
 ```
 
@@ -846,47 +380,37 @@ OUTPUT
 ```TEXT
 No Body Data
 
-Location Header: http://localhost:2019/users/user/17
+Location Header: http://localhost:2019/users/user/9
 Status 201 Created
 ```
 
 </details>
 
 <details>
-<summary>http://localhost:2019/users/user/name/mojo</summary>
+<summary>http://localhost:2019/users/user/name/SomeNewUser</summary>
 
 </details>
 
 <details>
-<summary>PUT http://localhost:2019/users/user/14</summary>
+<summary>PUT http://localhost:2019/users/user/9</summary>
 
 DATA
 
 ```JSON
 {
-    "username": "stumps",
-    "primaryemail": "stumps@lambdaschool.local",
-    "password" : "EarlGray123",
-    "useremails": [
-        {
-            "useremail": "stumps@mymail.local"
-        },
-        {
-            "useremail": "stumps@email.local"
-        }
-        ],
-    "roles": [
-        {  
-            "role": {
-                "roleid": 3
+        "username": "UpdatedNewUser",
+        "email": "somenewuser@maildrop.cc",
+        "firstname": "someonenew",
+        "lastname": "anonymous",
+        "phonenumber": "(987)665-4423",
+        "programs": [],
+        "roles": [
+            {
+                "role": {
+                    "roleid": 3
+                }
             }
-        },
-        {  
-            "role": {
-                "roleid": 1
-            }
-        }
-    ]
+        ]
 }
 ```
 
@@ -900,42 +424,6 @@ Status OK
 
 </details>
 
-<details>
-<summary>http://localhost:2019/users/user/name/stumps</summary>
-
-```JSON
-{
-    "userid": 16,
-    "username": "stumps",
-    "primaryemail": "stumps@lambdaschool.local",
-    "useremails": [
-        {
-            "useremailid": 19,
-            "useremail": "stumps@mymail.local"
-        },
-        {
-            "useremailid": 20,
-            "useremail": "stumps@email.local"
-        }
-    ],
-    "roles": [
-        {
-            "role": {
-                "roleid": 1,
-                "name": "ADMIN"
-            }
-        },
-        {
-            "role": {
-                "roleid": 3,
-                "name": "DATA"
-            }
-        }
-    ]
-}
-```
-
-</details>
 
 <details>
 <summary>PATCH http://localhost:2019/users/user/7</summary>
@@ -944,19 +432,8 @@ DATA
 
 ```JSON
 {
-    "username": "cinabun",
-    "primaryemail": "cinabun@lambdaschool.home",
-    "useremails": [
-    {
-            "useremail": "cinnamon@mymail.home"
-    },
-    {
-            "useremail": "hops@mymail.home"
-    },
-    {
-            "useremail": "bunny@email.home"
-    }
-    ]
+    "username": "BarnBarn",
+    "email": "cinabun@lambdaschool.home"
 }
 ```
 
@@ -970,50 +447,12 @@ Status OK
 
 </details>
 
-<details>
-<summary>http://localhost:2019/users/user/name/cinabun</summary>
-
-```JSON
-{
-    "userid": 7,
-    "username": "cinabun",
-    "primaryemail": "cinabun@lambdaschool.home",
-    "useremails": [
-        {
-            "useremailid": 21,
-            "useremail": "cinnamon@mymail.home"
-        },
-        {
-            "useremailid": 22,
-            "useremail": "hops@mymail.home"
-        },
-        {
-            "useremailid": 23,
-            "useremail": "bunny@email.home"
-        }
-    ],
-    "roles": [
-        {
-            "role": {
-                "roleid": 2,
-                "name": "USER"
-            }
-        },
-        {
-            "role": {
-                "roleid": 3,
-                "name": "DATA"
-            }
-        }
-    ]
-}
-```
 
 </details>
 
 <details>
 
-<summary>DELETE http://localhost:2019/users/user/14</summary>
+<summary>DELETE http://localhost:2019/users/user/7</summary>
 
 ```TEXT
 No Body Data
