@@ -68,9 +68,10 @@ public class StudentController
     public ResponseEntity<?> deleteCourseStudent(@PathVariable long courseid,
                                                  @PathVariable long studentid)
     {
+        List<Student> listStudents = new ArrayList<>();
         courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Oops! course with id " + courseid + " Not found!"));
         studentrepos.deleteStudentByStudentidAndCourseid(studentid, courseid);
-
+        studentrepos.findAll().iterator().forEachRemaining(listStudents::add);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

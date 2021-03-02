@@ -66,9 +66,12 @@ public class TeacherController
     public ResponseEntity<?> deleteCourseTeacher(@PathVariable long courseid,
                                                  @PathVariable long teacherid)
     {
+        List<Teacher> teacherList = new ArrayList<>();
         courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Oops! course with id " + courseid + " Not found!"));
         teacherrepos.deleteTeacherByTeacheridAndCourseid(teacherid, courseid);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        teacherrepos.findAll().iterator().forEachRemaining(teacherList::add);
+
+        return new ResponseEntity<>(teacherList, HttpStatus.OK);
     }
 }
