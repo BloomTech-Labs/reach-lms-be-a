@@ -214,52 +214,84 @@ Status OK
 ---
 
 <details>
-<summary>http://localhost:2019/users/users</summary>
+<summary>http://localhost:2019/programs</summary>
 
 ```JSON
 [
     {
-        "userid": 4,
-        "username": "llama001@maildrop.cc",
-        "email": "llama001@email.com",
-        "firstname": "llama",
-        "lastname": "001",
-        "phonenumber": "(987)654-3210",
-        "programs": [],
-        "roles": [
+        "programid": 11,
+        "programname": "FOR A NEW WAY",
+        "programtype": "K13",
+        "programdescription": "THERE IS A WAY",
+        "courses": [
             {
-                "role": {
-                    "roleid": 1,
-                    "name": "ADMIN"
-                }
+                "courseid": 12,
+                "coursename": "asdsadasa",
+                "coursecode": "adsasdassaa",
+                "coursedescription": "sdasdASAsdsd",
+                "students": [],
+                "teachers": [],
+                "modules": []
             }
-        ]
-    },
-    {
-        "userid": 6,
-        "username": "barnbarn@maildrop.cc",
-        "email": "barnbarn@maildrop.cc",
-        "firstname": "barnbarn",
-        "lastname": "teacher",
-        "phonenumber": "(987)665-4423",
-        "programs": [],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "TEACHER"
+        ],
+        "user": {
+            "userid": 10,
+            "username": "llama007@maildrop.cc",
+            "email": null,
+            "firstname": null,
+            "lastname": null,
+            "phonenumber": null,
+            "roles": [
+                {
+                    "role": {
+                        "roleid": 1,
+                        "name": "ADMIN"
+                    }
                 }
-            }
-        ]
-    },
-    {
+            ]
+        }
+    }
+]
+```
+
+</details>
+
+<details>
+<summary>http://localhost:2019/users/programs/program/8</summary>     [7 is the {programid}]
+
+```JSON
+{
+    "programid": 8,
+    "programname": "FOR A NEW WAY",
+    "programtype": "K13",
+    "programdescription": "THERE IS A WAY",
+    "courses": [
+        {
+            "courseid": 9,
+            "coursename": "asdsadasa",
+            "coursecode": "adsasdassaa",
+            "coursedescription": "sdasdASAsdsd",
+            "students": [],
+            "teachers": [],
+            "modules": []
+        },
+        {
+            "courseid": 10,
+            "coursename": "Eng_Course",
+            "coursecode": "ENG____12",
+            "coursedescription": "Practice english speaking, reading and writing skills",
+            "students": [],
+            "teachers": [],
+            "modules": []
+        }
+    ],
+    "user": {
         "userid": 7,
         "username": "llama007@maildrop.cc",
         "email": null,
         "firstname": null,
         "lastname": null,
         "phonenumber": null,
-        "programs": [],
         "roles": [
             {
                 "role": {
@@ -269,82 +301,58 @@ Status OK
             }
         ]
     }
-]
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/users/user/7</summary>
-
-```JSON
-{
-    "userid": 7,
-    "username": "llama007@maildrop.cc",
-    "email": null,
-    "firstname": null,
-    "lastname": null,
-    "phonenumber": null,
-    "programs": [],
-    "roles": [
-        {
-            "role": {
-                "roleid": 1,
-                "name": "ADMIN"
-            }
-        }
-    ]
 }
 ```
 
 </details>
 
-<details>
-<summary>http://localhost:2019/users/user/name/llama001@maildrop.cc</summary>
-
-```JSON
-{
-    "userid": 4,
-    "username": "llama001@maildrop.cc",
-    "email": "llama001@email.com",
-    "firstname": "llama",
-    "lastname": "001",
-    "phonenumber": "(987)654-3210",
-    "programs": [],
-    "roles": [
-        {
-            "role": {
-                "roleid": 1,
-                "name": "ADMIN"
-            }
-        }
-    ]
-}
-```
-
-</details>
 
 <details>
-<summary>http://localhost:2019/users/user/name/like/barn</summary>
+<summary>http://localhost:2019/programs/7</summary>    (7 is the {userid})
 
 ```JSON
 [
     {
-        "userid": 6,
-        "username": "barnbarn@maildrop.cc",
-        "email": "barnbarn@maildrop.cc",
-        "firstname": "barnbarn",
-        "lastname": "teacher",
-        "phonenumber": "(987)665-4423",
-        "programs": [],
-        "roles": [
+        "programid": 8,
+        "programname": "FOR A NEW WAY",
+        "programtype": "K13",
+        "programdescription": "THERE IS A WAY",
+        "courses": [
             {
-                "role": {
-                    "roleid": 2,
-                    "name": "TEACHER"
-                }
+                "courseid": 9,
+                "coursename": "asdsadasa",
+                "coursecode": "adsasdassaa",
+                "coursedescription": "sdasdASAsdsd",
+                "students": [],
+                "teachers": [],
+                "modules": []
+            },
+            {
+                "courseid": 10,
+                "coursename": "Eng_Course",
+                "coursecode": "ENG____12",
+                "coursedescription": "Practice english speaking, reading and writing skills",
+                "students": [],
+                "teachers": [],
+                "modules": []
             }
-        ]
+        ],
+        "user": {
+            "userid": 7,
+            "username": "llama007@maildrop.cc",
+            "email": null,
+            "firstname": null,
+            "lastname": null,
+            "phonenumber": null,
+            "roles": [
+                {
+                    "role": {
+                        "roleid": 1,
+                        "name": "ADMIN"
+                    }
+                }
+            ]
+        }
     }
 ]
 ```
@@ -352,33 +360,43 @@ Status OK
 </details>
 
 <details>
-<summary>POST http://localhost:2019/users/user</summary>
+<summary>POST http://localhost:2019/programs/7/program</summary>      (7 being the userid)
 
 DATA
 
 ```JSON
-{
-        "username": "SomeNewUser",
-        "email": "somenewuser@maildrop.cc",
-        "firstname": "someonenew",
-        "lastname": "anonymous",
-        "phonenumber": "(987)665-4423",
-        "programs": [],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 2,
-                    "name": "TEACHER"
-                }
-            }
-        ]
-}
+{       "programname": "FOR A NEW WAY",
+        "programtype": "K12",
+        "programdescription": "THERE IS A WAY"
+ }
 ```
 
 OUTPUT
 
 ```TEXT
-No Body Data
+{
+    "programid": 8,
+    "programname": "FOR A NEW WAY",
+    "programtype": "K13",
+    "programdescription": "THERE IS A WAY",
+    "courses": [],
+    "user": {
+        "userid": 7,
+        "username": "llama007@maildrop.cc",
+        "email": null,
+        "firstname": null,
+        "lastname": null,
+        "phonenumber": null,
+        "roles": [
+            {
+                "role": {
+                    "roleid": 1,
+                    "name": "ADMIN"
+                }
+            }
+        ]
+    }
+}
 
 Location Header: http://localhost:2019/users/user/9
 Status 201 Created
@@ -386,54 +404,314 @@ Status 201 Created
 
 </details>
 
-<details>
-<summary>http://localhost:2019/users/user/name/SomeNewUser</summary>
-
-</details>
 
 <details>
-<summary>PUT http://localhost:2019/users/user/9</summary>
+<summary>PUT http://localhost:2019/programs/program/8</summary>    (8 being the programid)
 
 DATA
 
 ```JSON
 {
-        "username": "UpdatedNewUser",
-        "email": "somenewuser@maildrop.cc",
-        "firstname": "someonenew",
-        "lastname": "anonymous",
-        "phonenumber": "(987)665-4423",
-        "programs": [],
-        "roles": [
-            {
-                "role": {
-                    "roleid": 3
+      "programname": "programname-changed"
+}
+```
+
+OUTPUT
+
+```TEXT
+No Body Data
+
+Status OK
+```
+
+</details>
+
+
+</details>
+
+<details>
+
+<summary>DELETE http://localhost:2019/programs/program/8</summary>   (8 being the programid)
+
+```TEXT
+No Body Data
+
+Status No Content (204)
+```
+
+</details>
+
+----
+
+<details>
+<summary>http://localhost:2019/courses</summary>
+
+```JSON
+[
+    {
+        "courseid": 12,
+        "coursename": "Eng_Course",
+        "coursecode": "ENG____12",
+        "coursedescription": "Practice english speaking, reading and writing skills",
+        "program": {
+            "programid": 11,
+            "programname": "FOR A NEW WAY",
+            "programtype": "K13",
+            "programdescription": "THERE IS A WAY",
+            "user": {
+                "userid": 7,
+                "username": "llama007@maildrop.cc",
+                "email": null,
+                "firstname": null,
+                "lastname": null,
+                "phonenumber": null,
+                "roles": [
+                    {
+                        "role": {
+                            "roleid": 1,
+                            "name": "ADMIN"
+                        }
+                    }
+                ]
+            },
+        },
+        "students": [],
+        "teachers": [],
+        "modules": []
+    },
+    {
+        "courseid": 13,
+        "coursename": "Maths",
+        "coursecode": "Math____12",
+        "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
+        "program": {
+            "programid": 11,
+            "programname": "FOR A NEW WAY",
+            "programtype": "K13",
+            "programdescription": "THERE IS A WAY",
+            "user": {
+                "userid": 7,
+                "username": "llama007@maildrop.cc",
+                "email": null,
+                "firstname": null,
+                "lastname": null,
+                "phonenumber": null,
+                "roles": [
+                    {
+                        "role": {
+                            "roleid": 1,
+                            "name": "ADMIN"
+                        }
+                    }
+                ]
+            },
+        },
+        "students": [],
+        "teachers": [],
+        "modules": []
+    }
+]
+```
+
+</details>
+
+<details>
+<summary>http://localhost:2019/courses/11</summary>     [11 is the {programid}]
+
+```JSON
+[
+    {
+        "courseid": 12,
+        "coursename": "Eng_Course",
+        "coursecode": "ENG____12",
+        "coursedescription": "Practice english speaking, reading and writing skills",
+        "program": {
+            "programid": 11,
+            "programname": "FOR A NEW WAY",
+            "programtype": "K13",
+            "programdescription": "THERE IS A WAY",
+            "user": {
+                "userid": 7,
+                "username": "llama007@maildrop.cc",
+                "email": null,
+                "firstname": null,
+                "lastname": null,
+                "phonenumber": null,
+                "roles": [
+                    {
+                        "role": {
+                            "roleid": 1,
+                            "name": "ADMIN"
+                        }
+                    }
+                ]
+            },
+        },
+        "students": [],
+        "teachers": [],
+        "modules": []
+    },
+    {
+        "courseid": 13,
+        "coursename": "Maths",
+        "coursecode": "Math____12",
+        "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
+        "program": {
+            "programid": 11,
+            "programname": "FOR A NEW WAY",
+            "programtype": "K13",
+            "programdescription": "THERE IS A WAY",
+            "user": {
+                "userid": 7,
+                "username": "llama007@maildrop.cc",
+                "email": null,
+                "firstname": null,
+                "lastname": null,
+                "phonenumber": null,
+                "roles": [
+                    {
+                        "role": {
+                            "roleid": 1,
+                            "name": "ADMIN"
+                        }
+                    }
+                ]
+            },
+        },
+        "students": [],
+        "teachers": [],
+        "modules": []
+    }
+]
+```
+
+</details>
+
+
+<details>
+<summary>http://localhost:2019/courses/course/13</summary>    (13 is the {courseid})
+
+```JSON
+{
+    "courseid": 13,
+    "coursename": "Maths",
+    "coursecode": "Math____12",
+    "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
+    "program": {
+        "programid": 11,
+        "programname": "FOR A NEW WAY",
+        "programtype": "K13",
+        "programdescription": "THERE IS A WAY",
+        "user": {
+            "userid": 7,
+            "username": "llama007@maildrop.cc",
+            "email": null,
+            "firstname": null,
+            "lastname": null,
+            "phonenumber": null,
+            "roles": [
+                {
+                    "role": {
+                        "roleid": 1,
+                        "name": "ADMIN"
+                    }
                 }
-            }
-        ]
+            ]
+        },
+    },
+    "students": [],
+    "teachers": [],
+    "modules": []
 }
-```
-
-OUTPUT
-
-```TEXT
-No Body Data
-
-Status OK
 ```
 
 </details>
 
 
 <details>
-<summary>PATCH http://localhost:2019/users/user/7</summary>
+<summary>POST http://localhost:2019/courses/11/course</summary>
+
+DATA
+
+```JSON
+{ 
+  "coursename": "Maths", **REQUIRED**
+  "coursecode": "Math____12",   **REQUIRED**
+  "coursedescription": "Practice english algorithms, arithmetic expressions and geometry"
+}
+```
+
+OUTPUT
+
+```TEXT
+{
+    "courseid": 13,
+    "coursename": "Maths",
+    "coursecode": "Math____12",
+    "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
+    "program": {
+        "programid": 11,
+        "programname": "FOR A NEW WAY",
+        "programtype": "K13",
+        "programdescription": "THERE IS A WAY",
+        "user": {
+            "userid": 7,
+            "username": "llama007@maildrop.cc",
+            "email": null,
+            "firstname": null,
+            "lastname": null,
+            "phonenumber": null,
+            "roles": [
+                {
+                    "role": {
+                        "roleid": 1,
+                        "name": "ADMIN"
+                    }
+                }
+            ]
+        }
+    },
+    "students": [],
+    "teachers": [],
+    "modules": []
+}
+
+Location Header: http://localhost:2019/courses/11/course/13
+Status 201 Created
+```
+
+</details>
+
+
+<details>
+<summary>PUT http://localhost:2019/courses/13</summary>  (13 being the courseid)
 
 DATA
 
 ```JSON
 {
-    "username": "BarnBarn",
-    "email": "cinabun@lambdaschool.home"
+      "coursename": "coursename-changed"
+}
+```
+
+OUTPUT
+
+```TEXT
+No Body Data
+
+Status OK
+```
+
+</details>
+
+<details>
+<summary>PATCH http://localhost:2019/courses/13</summary>  (13 being the courseid)
+
+DATA
+
+```JSON
+{
+      "coursename": "coursenamewithpatch-changed"
 }
 ```
 
@@ -452,12 +730,17 @@ Status OK
 
 <details>
 
-<summary>DELETE http://localhost:2019/users/user/7</summary>
+<summary>DELETE http://localhost:2019/courses/13</summary>   (7 being the programid)
 
 ```TEXT
 No Body Data
 
-Status OK
+Status No Content (204)
 ```
 
 </details>
+
+
+----
+
+See [Swagger Documentation](https://reach-team-a-be.herokuapp.com/swagger-ui.html#) for more documentation
