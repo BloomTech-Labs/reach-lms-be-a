@@ -40,8 +40,6 @@ public class DataSourceConfig
             // Assume Heroku
             HikariConfig config = new HikariConfig();
             config.setDriverClassName("org.postgresql.Driver");
-            boolean isEmptyString = dbURL.equals("");
-            System.out.println("DB_URL" + isEmptyString);
             config.setJdbcUrl(dbURL);
             return new HikariDataSource(config);
         } else
