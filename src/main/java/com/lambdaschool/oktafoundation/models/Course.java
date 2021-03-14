@@ -53,16 +53,7 @@ public class Course
     @JsonIgnoreProperties(value = "course",
         allowSetters = true)
     private Set<TeacherCourses> teachers = new HashSet<>();
-/*
-    @OneToMany
-        (mappedBy = "course",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-        )
-    @JsonIgnoreProperties(value = "course",
-    allowSetters = true)
-    private List<Teacher> teachers = new ArrayList<>();
-*/
+
     @OneToMany(
         mappedBy = "course",
         cascade = CascadeType.ALL,

@@ -39,14 +39,18 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
 
             // *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
             .antMatchers("/users/**")
-            .authenticated()
+//            .authenticated()
+            .permitAll()
             // *** Handled at UseremailService Level
             .antMatchers("/useremails/**")
-            .authenticated()
+//            .authenticated()
+            .permitAll()
             .antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
-            .authenticated()
+//            .authenticated()
+            .permitAll()
             .antMatchers("/teachers/**")
-            .authenticated()
+//            .authenticated()
+            .permitAll()
             /*
             .antMatchers("/roles/**")
             .hasAnyRole("ADMIN")
@@ -55,13 +59,17 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
              */
             .antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**").permitAll()
             .antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
-            .hasAnyRole("ADMIN", "TEACHER")
+            .permitAll()
+//            .hasAnyRole("ADMIN", "TEACHER")
             .antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
-            .hasAnyRole("ADMIN", "TEACHER")
+//            .hasAnyRole("ADMIN", "TEACHER")
+            .permitAll()
             .antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
-            .hasAnyRole("ADMIN", "TEACHER")
+//            .hasAnyRole("ADMIN", "TEACHER")
+            .permitAll()
             .antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
-            .hasAnyRole("ADMIN", "TEACHER")
+//            .hasAnyRole("ADMIN", "TEACHER")
+            .permitAll()
 
             // *** Endpoints not specified above are automatically denied
             .anyRequest()

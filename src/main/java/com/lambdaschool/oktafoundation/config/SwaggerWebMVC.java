@@ -1,6 +1,8 @@
 package com.lambdaschool.oktafoundation.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
+import org.springframework.hateoas.config.EnableHypermediaSupport.HypermediaType;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -9,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * However, we do need some web page generate done for Swagger, so we do that here.
  */
 @Configuration
+
 public class SwaggerWebMVC
     implements WebMvcConfigurer
 {

@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.hateoas.config.EnableHypermediaSupport;
 
 
 /**
@@ -14,6 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  */
 @EnableJpaAuditing
 @SpringBootApplication
+//@EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @PropertySource(value = "~/oktajavaconfig.properties", ignoreResourceNotFound = true)
 public class OktaFoundationApplication {
 

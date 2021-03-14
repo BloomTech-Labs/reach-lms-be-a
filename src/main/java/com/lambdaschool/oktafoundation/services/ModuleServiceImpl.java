@@ -49,7 +49,7 @@ public class ModuleServiceImpl implements ModuleService
 
 
     @Override
-    public Module save(long id, Module module)
+    public Module save(long courseId, Module module)
     {
         Module newModule = new Module();
         if(newModule.getModuleid() != 0)
@@ -61,7 +61,7 @@ public class ModuleServiceImpl implements ModuleService
         newModule.setModuledescription(module.getModuledescription());
         newModule.setModulecontent(module.getModulecontent());
 
-        Course course = courserepos.findById(id).orElseThrow(() -> new ResourceNotFoundException("Course with id " + id + " not found."));
+        Course course = courserepos.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseId + " not found."));
         if (course != null)
         {
             newModule.setCourse(course);
