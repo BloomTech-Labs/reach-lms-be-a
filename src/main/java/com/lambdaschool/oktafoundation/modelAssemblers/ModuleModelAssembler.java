@@ -19,8 +19,8 @@ public class ModuleModelAssembler
 	@Override
 	public EntityModel<Module> toModel(Module module) {
 		return EntityModel.of(module,
-				linkTo(methodOn(ModuleController.class).one(module.getModuleid())).withSelfRel(),
-				linkTo(methodOn(ModuleController.class).all()).withRel("modules"),
+				linkTo(methodOn(ModuleController.class).getModuleById(module.getModuleid())).withSelfRel(),
+				linkTo(methodOn(ModuleController.class).getAllModules()).withRel("modules"),
 				linkTo(methodOn(CourseController.class).getCourseByCourseId(module.getCourse().getCourseid())).withRel(
 						"course")
 		);

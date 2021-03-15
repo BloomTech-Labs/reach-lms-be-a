@@ -37,63 +37,53 @@ public class ModuleController {
 	ModuleService moduleService;
 
 	@Autowired
-	ModuleModelAssembler assembler;
+	ModuleModelAssembler moduleModelAssembler;
 
 	@GetMapping(value = "/modules", produces = "application/json")
-	public ResponseEntity<?> getAllModules() {
-		List<Module> modules = moduleService.findAll();
+	public ResponseEntity<CollectionModel<EntityModel<Module>>> getAllModules() {
+		List<EntityModel<Module>> modules = moduleService.findAll()
+				.stream()
+				.map(moduleModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(modules, HttpStatus.OK);
+		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(modules,
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel());
+
+
+		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/modules/module/{moduleId}", produces = "application/json")
-	public ResponseEntity<?> getModuleById(
-			@PathVariable
-					Long moduleId
-	) {
-		Module module = moduleService.findModulesById(moduleId);
-
-		return new ResponseEntity<>(module, HttpStatus.OK);
-	}
-
-	@GetMapping("/modules/hateoas/{moduleid}")
-	public EntityModel<Module> one(
+	@GetMapping(value = "/modules/module/{moduleid}", produces = "application/json")
+	public ResponseEntity<EntityModel<Module>> getModuleById(
 			@PathVariable
 					Long moduleid
 	) {
 		Module module = moduleService.findModulesById(moduleid);
-		return assembler.toModel(module);
+		return new ResponseEntity<>(moduleModelAssembler.toModel(module), HttpStatus.OK);
 	}
 
-	@GetMapping("/modules/hateoas/all")
-	public CollectionModel<EntityModel<Module>> all() {
-		List<EntityModel<Module>> modules = moduleService.findAll()
-				.stream()
-				.map(assembler::toModel)
-				.collect(Collectors.toList());
-		return CollectionModel.of(modules, linkTo(methodOn(ModuleController.class).all()).withSelfRel());
-	}
-
-	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
-	public ResponseEntity<?> getModuleByName(
-			@PathVariable
-					String moduleName
-	) {
-		Module m = moduleService.findModulesByName(moduleName);
-		return new ResponseEntity<>(m, HttpStatus.OK);
-	}
+//	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
+//	public ResponseEntity<?> getModuleByName(
+//			@PathVariable
+//					String moduleName
+//	) {
+//		Module m = moduleService.findModulesByName(moduleName);
+//		return new ResponseEntity<>(m, HttpStatus.OK);
+//	}
 
 	@GetMapping(value = "/modules/{courseId}", produces = "application/json")
-	public ResponseEntity<?> getModulesByCourseId(
+	public ResponseEntity<CollectionModel<EntityModel<Module>>> getModulesByCourseId(
 			@PathVariable
 					Long courseId
 	) {
-		List<Module> allModules = new ArrayList<>();
-		modulerepos.findModulesByCourse_Courseid(courseId)
-				.iterator()
-				.forEachRemaining(allModules::add);
+		List<EntityModel<Module>> allModules = modulerepos.findModulesByCourse_Courseid(courseId)
+				.stream().map(moduleModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(allModules, HttpStatus.OK);
+		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(allModules,
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel());
+
+		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}
 
 	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
