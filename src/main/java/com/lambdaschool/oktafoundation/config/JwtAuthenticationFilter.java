@@ -53,6 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter
 
         if (!(authentication instanceof AnonymousAuthenticationToken))
         {
+            System.out.println("AUTH.getName()" + authentication.getName());
             User workingUser = userrepos.findByUsername(authentication.getName());
 
             if (workingUser == null)

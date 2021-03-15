@@ -6,6 +6,7 @@ import com.lambdaschool.oktafoundation.repository.StudentRepository;
 import com.lambdaschool.oktafoundation.repository.TeacherRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -198,6 +199,15 @@ public class UserServiceImpl
             throw new ResourceNotFoundException("This user is not authorized to make change");
         }
     }
+
+
+
+//    @Override
+//    public User getCurrentUser() {
+//        User user = userrepos.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+//        System.out.println("USER: "  + user.getUsername());
+//        return user;
+//    }
 
     @Transactional
     @Override

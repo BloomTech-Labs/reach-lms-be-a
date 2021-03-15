@@ -97,6 +97,8 @@ public class SeedData
 		reachRoot.getPrograms()
 				.add(program2);
 
+		reachRoot = userService.save(reachRoot);
+
 		program1 = programService.save(reachRoot.getUserid(), program1);
 		program2 = programService.save(reachRoot.getUserid(), program2);
 
