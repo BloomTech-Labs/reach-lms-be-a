@@ -19,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,7 +46,8 @@ public class ModuleController {
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(modules,
-				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel());
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel()
+		);
 
 
 		return new ResponseEntity<>(entityModules, HttpStatus.OK);
@@ -62,14 +62,14 @@ public class ModuleController {
 		return new ResponseEntity<>(moduleModelAssembler.toModel(module), HttpStatus.OK);
 	}
 
-//	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
-//	public ResponseEntity<?> getModuleByName(
-//			@PathVariable
-//					String moduleName
-//	) {
-//		Module m = moduleService.findModulesByName(moduleName);
-//		return new ResponseEntity<>(m, HttpStatus.OK);
-//	}
+	//	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
+	//	public ResponseEntity<?> getModuleByName(
+	//			@PathVariable
+	//					String moduleName
+	//	) {
+	//		Module m = moduleService.findModulesByName(moduleName);
+	//		return new ResponseEntity<>(m, HttpStatus.OK);
+	//	}
 
 	@GetMapping(value = "/modules/{courseId}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Module>>> getModulesByCourseId(
@@ -77,11 +77,13 @@ public class ModuleController {
 					Long courseId
 	) {
 		List<EntityModel<Module>> allModules = modulerepos.findModulesByCourse_Courseid(courseId)
-				.stream().map(moduleModelAssembler::toModel)
+				.stream()
+				.map(moduleModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(allModules,
-				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel());
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel()
+		);
 
 		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}

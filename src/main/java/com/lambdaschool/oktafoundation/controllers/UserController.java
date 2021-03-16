@@ -16,7 +16,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -115,7 +114,7 @@ public class UserController {
 	 */
 	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/name/like/{userName}", produces = "application/json")
-	public ResponseEntity<?> getUserLikeName(
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getUserLikeName(
 			@PathVariable
 					String userName
 	) {
@@ -123,11 +122,13 @@ public class UserController {
 				.stream()
 				.map(userModelAssembler::toModel)
 				.collect(Collectors.toList());
+
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
 				// Link to SELF (getUserLikeName method)
 				linkTo(methodOn(UserController.class).getUserByName(userName)).withSelfRel()
 		);
-		return new ResponseEntity<>(userEntities, HttpStatus.OK);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
 	/**
@@ -140,7 +141,6 @@ public class UserController {
 	 *
 	 * @return A location header with the URI to the newly created user and a status of CREATED
 	 *
-	 * @throws URISyntaxException Exception if something does not work in creating the location header
 	 * @see UserService#save(User) UserService.save(User)
 	 */
 	@PostMapping(value = "/user", consumes = "application/json")
