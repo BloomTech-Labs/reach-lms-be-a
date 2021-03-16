@@ -74,7 +74,6 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
             // *** Endpoints not specified above are automatically denied
             .anyRequest()
             .denyAll()
-
             .and()
             .exceptionHandling()
             .and()

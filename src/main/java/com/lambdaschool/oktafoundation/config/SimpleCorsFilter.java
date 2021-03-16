@@ -51,6 +51,8 @@ public class SimpleCorsFilter
             "*");
 
         // maximum seconds results can be cached
+//        response.setHeader("Access-Control-Max-Age",
+//            "3600");
         response.setHeader("Access-Control-Max-Age",
             "3600");
 
