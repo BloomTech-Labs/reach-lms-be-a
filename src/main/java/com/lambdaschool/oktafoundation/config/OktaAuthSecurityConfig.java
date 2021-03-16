@@ -39,8 +39,7 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
 
             // *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
             .antMatchers("/users/**")
-            .permitAll()
-            .antMatchers(HttpMethod.POST, "/users/user").permitAll()
+            .authenticated()
             // *** Handled at UseremailService Level
             .antMatchers("/useremails/**")
             .authenticated()
@@ -67,7 +66,6 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
             // *** Endpoints not specified above are automatically denied
             .anyRequest()
             .denyAll()
-
             .and()
             .exceptionHandling()
             .and()
