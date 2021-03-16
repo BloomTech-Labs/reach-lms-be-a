@@ -1,5 +1,6 @@
 package com.lambdaschool.oktafoundation.config;
 
+
 import com.okta.spring.boot.oauth.Okta;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,98 +11,79 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
+
 // Joel can work below in order to modify which roles have access to which endpoints
 // This allows us to further restrict access to an endpoint inside of a controller.
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
-public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
-{
-    @Bean
-    public JwtAuthenticationFilter authenticationTokenFilterBean()
-    {
-        return new JwtAuthenticationFilter();
-    }
+public class OktaAuthSecurityConfig
+		extends WebSecurityConfigurerAdapter {
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	@Bean
+	public JwtAuthenticationFilter authenticationTokenFilterBean() {
+		return new JwtAuthenticationFilter();
+	}
 
-        http.authorizeRequests()
-            .antMatchers("/",
-                "/h2-console/**",
-                "/swagger-resources/**",
-                "/swagger-resource/**",
-                "/swagger-ui.html",
-                "/v2/api-docs",
-                "/webjars/**")
-            .permitAll()
+	@Override
+	protected void configure(HttpSecurity http)
+	throws Exception {
+		http.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-            // *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
-            .antMatchers("/users/**")
-//            .authenticated()
-            .permitAll()
-            // *** Handled at UseremailService Level
-            .antMatchers("/useremails/**")
-//            .authenticated()
-            .permitAll()
-            .antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
-//            .authenticated()
-            .permitAll()
-            .antMatchers("/teachers/**")
-//            .authenticated()
-            .permitAll()
-            /*
-            .antMatchers("/roles/**")
-            .hasAnyRole("ADMIN")
-            .antMatchers("/programs/**")
-                .hasAnyRole("ADMIN")
-             */
-            .antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**").permitAll()
-            .antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
-            .permitAll()
-//            .hasAnyRole("ADMIN", "TEACHER")
-            .antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
-//            .hasAnyRole("ADMIN", "TEACHER")
-            .permitAll()
-            .antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
-//            .hasAnyRole("ADMIN", "TEACHER")
-            .permitAll()
-            .antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
-//            .hasAnyRole("ADMIN", "TEACHER")
-            .permitAll()
+		http.authorizeRequests()
+				.antMatchers("/", "/h2-console/**", "/webjars/**")
+				.permitAll()
 
-            // *** Endpoints not specified above are automatically denied
-            .anyRequest()
-            .denyAll()
-            .and()
-            .exceptionHandling()
-            .and()
-            .oauth2ResourceServer()
-            .jwt();
+				// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
+				.antMatchers("/users/**")
+				.authenticated()
+				// *** Handled at UseremailService Level
+				.antMatchers("/useremails/**")
+				.authenticated()
+				.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
+				.authenticated()
+				.antMatchers("/teachers/**")
+				.authenticated()
+				.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
+				.permitAll()
+				.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
+				.hasAnyRole("ADMIN", "TEACHER")
+				.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
+				.hasAnyRole("ADMIN", "TEACHER")
+				.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
+				.hasAnyRole("ADMIN", "TEACHER")
+				.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
+				.hasAnyRole("ADMIN", "TEACHER")
 
-        // process CORS annotations
-        // http.cors();
+				// *** Endpoints not specified above are automatically denied
+				.anyRequest()
+				.denyAll()
+				.and()
+				.exceptionHandling()
+				.and()
+				.oauth2ResourceServer()
+				.jwt();
 
-        // disable the creation and use of Cross Site Request Forgery Tokens.
-        // These tokens require coordination with the front end client that is beyond the scope of this class.
-        // See https://www.yawintutor.com/how-to-enable-and-disable-csrf/ for more information
-        http
-            .csrf()
-            .disable();
+		// process CORS annotations
+		// http.cors();
 
-        // Insert the JwtAuthenticationFilter so that it can grab credentials from the
-        // local database before they are checked for authorization (fix by Trevor Buchanan)
-        http
-            .addFilterBefore(authenticationTokenFilterBean(),
-                FilterSecurityInterceptor.class);
+		// disable the creation and use of Cross Site Request Forgery Tokens.
+		// These tokens require coordination with the front end client that is beyond the scope of this class.
+		// See https://www.yawintutor.com/how-to-enable-and-disable-csrf/ for more information
+		http.csrf()
+				.disable();
 
-        // force a non-empty response body for 401's to make the response more browser friendly
-        Okta.configureResourceServer401ResponseBody(http);
+		// Insert the JwtAuthenticationFilter so that it can grab credentials from the
+		// local database before they are checked for authorization (fix by Trevor Buchanan)
+		http.addFilterBefore(authenticationTokenFilterBean(), FilterSecurityInterceptor.class);
 
-        // h2 console
-        http.headers()
-            .frameOptions()
-            .disable();
-    }
+		// force a non-empty response body for 401's to make the response more browser friendly
+		Okta.configureResourceServer401ResponseBody(http);
+
+		// h2 console
+		http.headers()
+				.frameOptions()
+				.disable();
+	}
+
 }
