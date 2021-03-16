@@ -17,7 +17,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -95,8 +94,7 @@ public class ProgramController {
 			@Valid
 			@RequestBody
 					Program newProgram
-	)
-	throws URISyntaxException {
+	) {
 		// TODO: check calling user's role permissions before we allow a POST
 		newProgram.setProgramid(0);
 		newProgram = programService.save(userid, newProgram);

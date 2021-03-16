@@ -22,10 +22,10 @@ public class ProgramModelAssembler
 				linkTo(methodOn(ProgramController.class).getProgramById(program.getProgramid())).withSelfRel(),
 				// Link to self by `programname`
 				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramname())).withSelfRel(),
-				// Link to all programs by this program's admin
+				// Link to `GET all programs by this program's admin`
 				linkTo(methodOn(ProgramController.class).getProgramsByUserId(program.getUser()
 						.getUserid())).withRel("admin_programs"),
-				// Link to [GET all programs]
+				// Link to `GET all programs`
 				linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs")
 
 		);

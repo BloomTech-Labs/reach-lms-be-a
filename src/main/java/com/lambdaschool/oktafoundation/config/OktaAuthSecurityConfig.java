@@ -57,7 +57,7 @@ public class OktaAuthSecurityConfig extends WebSecurityConfigurerAdapter
             .antMatchers("/programs/**")
                 .hasAnyRole("ADMIN")
              */
-            .antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**").permitAll()
+            .antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**").permitAll()
             .antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
             .permitAll()
 //            .hasAnyRole("ADMIN", "TEACHER")
