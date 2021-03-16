@@ -1,21 +1,26 @@
 package com.lambdaschool.oktafoundation.controllers;
 
 
+import com.lambdaschool.oktafoundation.modelAssemblers.UserModelAssembler;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 /**
@@ -31,6 +36,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private UserModelAssembler userModelAssembler;
+
 	/**
 	 * Returns a list of all users
 	 * <br>Example: <a href="http://localhost:2019/users/users">http://localhost:2019/users/users</a>
@@ -39,11 +47,19 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	//    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@GetMapping(value = "/users", produces = "application/json")
-	public ResponseEntity<?> listAllUsers() {
-		List<User> myUsers = userService.findAll();
-		return new ResponseEntity<>(myUsers, HttpStatus.OK);
+	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
+		List<EntityModel<User>> myUsers = userService.findAll()
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(myUsers,
+				linkTo(methodOn(UserController.class).listAllUsers()).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
 	/**
@@ -56,14 +72,14 @@ public class UserController {
 	 *
 	 * @see UserService#findUserById(long) UserService.findUserById(long)
 	 */
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/{userId}", produces = "application/json")
-	public ResponseEntity<?> getUserById(
+	public ResponseEntity<EntityModel<User>> getUserById(
 			@PathVariable
 					Long userId
 	) {
-		User u = userService.findUserById(userId);
-		return new ResponseEntity<>(u, HttpStatus.OK);
+		EntityModel<User> user = userModelAssembler.toModel(userService.findUserById(userId));
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	/**
@@ -76,14 +92,14 @@ public class UserController {
 	 *
 	 * @see UserService#findByName(String) UserService.findByName(String)
 	 */
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/name/{userName}", produces = "application/json")
-	public ResponseEntity<?> getUserByName(
+	public ResponseEntity<EntityModel<User>> getUserByName(
 			@PathVariable
 					String userName
 	) {
-		User u = userService.findByName(userName);
-		return new ResponseEntity<>(u, HttpStatus.OK);
+		EntityModel<User> user = userModelAssembler.toModel(userService.findByName(userName));
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 	/**
@@ -96,14 +112,23 @@ public class UserController {
 	 *
 	 * @see UserService#findByNameContaining(String) UserService.findByNameContaining(String)
 	 */
-	@PreAuthorize("hasAnyRole('ADMIN')")
+	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/name/like/{userName}", produces = "application/json")
-	public ResponseEntity<?> getUserLikeName(
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getUserLikeName(
 			@PathVariable
 					String userName
 	) {
-		List<User> u = userService.findByNameContaining(userName);
-		return new ResponseEntity<>(u, HttpStatus.OK);
+		List<EntityModel<User>> userEntities = userService.findByNameContaining(userName)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
+				// Link to SELF (getUserLikeName method)
+				linkTo(methodOn(UserController.class).getUserByName(userName)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
 	/**
@@ -116,7 +141,6 @@ public class UserController {
 	 *
 	 * @return A location header with the URI to the newly created user and a status of CREATED
 	 *
-	 * @throws URISyntaxException Exception if something does not work in creating the location header
 	 * @see UserService#save(User) UserService.save(User)
 	 */
 	@PostMapping(value = "/user", consumes = "application/json")
@@ -124,8 +148,7 @@ public class UserController {
 			@Valid
 			@RequestBody
 					User newuser
-	)
-	throws URISyntaxException {
+	) {
 		newuser.setUserid(0);
 		newuser = userService.save(newuser);
 
@@ -175,20 +198,20 @@ public class UserController {
 	 * <br> Example: <a href="http://localhost:2019/users/user/7">http://localhost:2019/users/user/7</a>
 	 *
 	 * @param updateUser An object containing values for just the fields that are being updated. All other fields are left NULL.
-	 * @param id         The primary key of the user you wish to update.
+	 * @param userid     The primary key of the user you wish to update.
 	 *
 	 * @return A status of OK
 	 *
 	 * @see UserService#update(User, long) UserService.update(User, long)
 	 */
-	@PatchMapping(value = "/user/{id}", consumes = "application/json")
+	@PatchMapping(value = "/user/{userid}", consumes = "application/json")
 	public ResponseEntity<?> updateUser(
 			@RequestBody
 					User updateUser,
 			@PathVariable
-					long id
+					long userid
 	) {
-		userService.update(updateUser, id);
+		userService.update(updateUser, userid);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -196,39 +219,35 @@ public class UserController {
 	 * Deletes a given user along with associated emails and roles
 	 * <br>Example: <a href="http://localhost:2019/users/user/14">http://localhost:2019/users/user/14</a>
 	 *
-	 * @param id the primary key of the user you wish to delete
+	 * @param userid the primary key of the user you wish to delete
 	 *
 	 * @return Status of OK
 	 */
-	@DeleteMapping(value = "/user/{id}")
+	@DeleteMapping(value = "/user/{userid}")
 	public ResponseEntity<?> deleteUserById(
 			@PathVariable
-					long id
+					long userid
 	) {
-		userService.delete(id);
+		userService.delete(userid);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
 	 * Returns the User record for the currently authenticated user based off of the supplied access token
 	 * <br>Example: <a href="http://localhost:2019/users/getuserinfo">http://localhost:2019/users/getuserinfo</a>
-	 * <p>
-	 * authentication The authenticated user object provided by Spring Security
+	 *
+	 * @param authentication The authenticated user object provided by Spring Security
 	 *
 	 * @return JSON of the current user. Status of OK
 	 *
 	 * @see UserService#findByName(String) UserService.findByName(authenticated user)
 	 */
 	@GetMapping(value = "/getuserinfo", produces = {"application/json"})
-	public ResponseEntity<?> getCurrentUserInfo(Authentication authentication) {
-		User currentUser;
+	public ResponseEntity<EntityModel<User>> getCurrentUserInfo(Authentication authentication) {
 
-		if (authentication != null) {
-			currentUser = userService.findByName(authentication.getName());
-		} else {
-			currentUser = userService.findByName("reach.lms.test@gmail.com");
-		}
-		return new ResponseEntity<>(currentUser, HttpStatus.OK);
+		EntityModel<User> user = userModelAssembler.toModel(userService.findByName(authentication.getName()));
+
+		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
 }

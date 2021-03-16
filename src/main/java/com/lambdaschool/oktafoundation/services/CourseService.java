@@ -8,13 +8,13 @@ public interface CourseService
 {
     List<Course> findAll();
 
-    Course findCourseById(long courseid);
+    Course findCourseById(long courseId);
 
-    Course save(long courseid, Course course);
+    Course save(long programId, Course course);
 
-    Course update(long courseid, Course course);
+    Course update(long courseId, Course course);
 
-    void delete(long courseid);
+    void delete(long courseId);
 
 
 

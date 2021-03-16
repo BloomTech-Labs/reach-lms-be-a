@@ -1,10 +1,14 @@
 package com.lambdaschool.oktafoundation.controllers;
 
+
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.modelAssemblers.ModuleModelAssembler;
 import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.repository.ModuleRepository;
 import com.lambdaschool.oktafoundation.services.ModuleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,91 +19,137 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 
 @RestController
-public class ModuleController
-{
-    @Autowired
-    ModuleRepository modulerepos;
+public class ModuleController {
 
-    @Autowired
-    ModuleService moduleService;
+	@Autowired
+	ModuleRepository modulerepos;
 
-    @GetMapping(value = "/modules", produces = "application/json")
-    public ResponseEntity<?> getAllModules()
-    {
-        List<Module> modules = moduleService.findAll();
+	@Autowired
+	ModuleService moduleService;
 
-        return new ResponseEntity<>(modules, HttpStatus.OK);
-    }
+	@Autowired
+	ModuleModelAssembler moduleModelAssembler;
 
-    @GetMapping(value = "/modules/module/{moduleId}", produces = "application/json")
-    public ResponseEntity<?> getModuleById(@PathVariable Long moduleId)
-    {
-        Module module = moduleService.findModulesById(moduleId);
+	@GetMapping(value = "/modules", produces = "application/json")
+	public ResponseEntity<CollectionModel<EntityModel<Module>>> getAllModules() {
+		List<EntityModel<Module>> modules = moduleService.findAll()
+				.stream()
+				.map(moduleModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-        return new ResponseEntity<>(module, HttpStatus.OK);
-    }
+		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(modules,
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel()
+		);
 
-    @GetMapping(value = "/modules/module/{moduleName]", produces = "application/json")
-    public ResponseEntity<?> getModuleByName(@PathVariable String moduleName)
-    {
-        Module m = moduleService.findModulesByName(moduleName);
-        return new ResponseEntity<>(m, HttpStatus.OK);
-    }
 
-    @GetMapping(value = "/modules/{courseId}", produces = "application/json")
-    public ResponseEntity<?> getModulesByCourseId(@PathVariable Long courseId)
-    {
-        List<Module> allModules = new ArrayList<>();
-        modulerepos.findModulesByCourse_Courseid(courseId).iterator().forEachRemaining(allModules::add);
+		return new ResponseEntity<>(entityModules, HttpStatus.OK);
+	}
 
-        return new ResponseEntity<>(allModules, HttpStatus.OK);
-    }
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    @PostMapping(value = "/modules/{courseId}/module", produces = "application/json")
-    public ResponseEntity<?> addNewModule(@PathVariable long courseId, @Valid @RequestBody Module newModule) throws URISyntaxException
-    {
-        newModule.setModuleid(0);
-        newModule = moduleService.save(courseId, newModule);
+	@GetMapping(value = "/modules/module/{moduleid}", produces = "application/json")
+	public ResponseEntity<EntityModel<Module>> getModuleById(
+			@PathVariable
+					Long moduleid
+	) {
+		Module module = moduleService.findModulesById(moduleid);
+		return new ResponseEntity<>(moduleModelAssembler.toModel(module), HttpStatus.OK);
+	}
 
-        HttpHeaders responseHeaders = new HttpHeaders();
-        URI newModuleURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
-                .path("/{moduleid}")
-                .buildAndExpand(newModule.getModuleid())
-                .toUri();
-        responseHeaders.setLocation(newModuleURI);
+	//	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
+	//	public ResponseEntity<?> getModuleByName(
+	//			@PathVariable
+	//					String moduleName
+	//	) {
+	//		Module m = moduleService.findModulesByName(moduleName);
+	//		return new ResponseEntity<>(m, HttpStatus.OK);
+	//	}
 
-        return new ResponseEntity<>(newModule, responseHeaders, HttpStatus.CREATED);
-    }
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    @PatchMapping(value = "/modules/{moduleId}", consumes = "application/json")
-    public ResponseEntity<?> updateModule(@PathVariable long moduleId, @RequestBody Module newModule)
-    {
-        newModule.setModuleid(moduleId);
-        moduleService.update(moduleId, newModule);
+	@GetMapping(value = "/modules/{courseId}", produces = "application/json")
+	public ResponseEntity<CollectionModel<EntityModel<Module>>> getModulesByCourseId(
+			@PathVariable
+					Long courseId
+	) {
+		List<EntityModel<Module>> allModules = modulerepos.findModulesByCourse_Courseid(courseId)
+				.stream()
+				.map(moduleModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    @PutMapping(value = "/modules/{moduleId}", consumes = "application/json")
-    public ResponseEntity<?> updateFullModule(@PathVariable long moduleId, @RequestBody Module newModule)
-    {
-        newModule.setModuleid(moduleId);
-        moduleService.update(moduleId, newModule);
+		CollectionModel<EntityModel<Module>> entityModules = CollectionModel.of(allModules,
+				linkTo(methodOn(ModuleController.class).getAllModules()).withSelfRel()
+		);
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-    
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    @DeleteMapping(value = "/modules/{moduleId}")
-    public ResponseEntity<?> deleteModuleById(@PathVariable long moduleId)
-    {
-        modulerepos.findById(moduleId).orElseThrow(() -> new ResourceNotFoundException("Module with id" + moduleId + " not found."));
-        moduleService.delete(moduleId);
+		return new ResponseEntity<>(entityModules, HttpStatus.OK);
+	}
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PostMapping(value = "/modules/{courseId}/module", produces = "application/json")
+	public ResponseEntity<?> addNewModule(
+			@PathVariable
+					long courseId,
+			@Valid
+			@RequestBody
+					Module newModule
+	)
+	throws URISyntaxException {
+		newModule.setModuleid(0);
+		newModule = moduleService.save(courseId, newModule);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		URI newModuleURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
+				.path("/{moduleid}")
+				.buildAndExpand(newModule.getModuleid())
+				.toUri();
+		responseHeaders.setLocation(newModuleURI);
+
+		return new ResponseEntity<>(newModule, responseHeaders, HttpStatus.CREATED);
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PatchMapping(value = "/modules/{moduleId}", consumes = "application/json")
+	public ResponseEntity<?> updateModule(
+			@PathVariable
+					long moduleId,
+			@RequestBody
+					Module newModule
+	) {
+		newModule.setModuleid(moduleId);
+		moduleService.update(moduleId, newModule);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PutMapping(value = "/modules/{moduleId}", consumes = "application/json")
+	public ResponseEntity<?> updateFullModule(
+			@PathVariable
+					long moduleId,
+			@RequestBody
+					Module newModule
+	) {
+		newModule.setModuleid(moduleId);
+		moduleService.update(moduleId, newModule);
+
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@DeleteMapping(value = "/modules/{moduleId}")
+	public ResponseEntity<?> deleteModuleById(
+			@PathVariable
+					long moduleId
+	) {
+		modulerepos.findById(moduleId)
+				.orElseThrow(() -> new ResourceNotFoundException("Module with id" + moduleId + " not found."));
+		moduleService.delete(moduleId);
+
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
 }

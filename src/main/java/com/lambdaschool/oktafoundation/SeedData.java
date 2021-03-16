@@ -62,7 +62,6 @@ public class SeedData
 		Role teacherRole = new Role("teacher");
 		Role studentRole = new Role("student");
 
-		// ROLES
 		adminRole   = roleService.save(adminRole);
 		teacherRole = roleService.save(teacherRole);
 		studentRole = roleService.save(studentRole);

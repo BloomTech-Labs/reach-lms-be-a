@@ -13,6 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "programs")
+@JsonIgnoreProperties(value={"courses", "user"})
 public class Program extends Auditable
 {
     @Id

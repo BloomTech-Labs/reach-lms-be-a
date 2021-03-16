@@ -6,9 +6,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
+
 
 @Entity
 @Table(name = "modules")
+@JsonIgnoreProperties(value={"course"}, allowSetters = true)
 public class Module extends Auditable
 {
     @Id
@@ -25,7 +28,7 @@ public class Module extends Auditable
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "courseid", nullable = false)
-    @JsonIgnoreProperties(value = "modules")
+//    @JsonIgnoreProperties(value = "modules")
     private Course course;
 
     public Module()
@@ -89,4 +92,29 @@ public class Module extends Auditable
     {
         this.course = course;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Module module = (Module) o;
+        return getModuleid() == module.getModuleid() && Objects.equals(getModulename(), module.getModulename()) &&
+               Objects.equals(getModuledescription(), module.getModuledescription()) &&
+               Objects.equals(getModulecontent(), module.getModulecontent()) &&
+               Objects.equals(getCourse(), module.getCourse());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getModuleid(), getModulename(), getModuledescription(), getModulecontent(), getCourse());
+    }
+
+    @Override
+    public String toString() {
+        return "Module{" + "moduleid=" + moduleid + ", modulename='" + modulename + '\'' + ", moduledescription='" +
+               moduledescription + '\'' + ", modulecontent='" + modulecontent + '\'' + ", course=" + course + '}';
+    }
+
 }
