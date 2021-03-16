@@ -116,8 +116,9 @@ public class UserServiceImpl
             .clear();
         for (UserRoles ur : user.getRoles())
         {
-            Role addRole = roleService.findRoleById(ur.getRole()
-                .getRoleid());
+//            Role addRole = roleService.findRoleById(ur.getRole()
+//                .getRoleid());
+            Role addRole = roleService.findByName(ur.getRole().getName());
             newUser.getRoles()
                 .add(new UserRoles(newUser,
                     addRole));
