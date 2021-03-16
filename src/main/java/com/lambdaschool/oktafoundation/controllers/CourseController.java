@@ -2,11 +2,14 @@ package com.lambdaschool.oktafoundation.controllers;
 
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.modelAssemblers.CourseModelAssembler;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
 import com.lambdaschool.oktafoundation.repository.StudentRepository;
 import com.lambdaschool.oktafoundation.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +22,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 
 @RestController
@@ -33,12 +40,22 @@ public class CourseController {
 	@Autowired
 	CourseService courseService;
 
+	@Autowired
+	CourseModelAssembler courseModelAssembler;
+
 	@GetMapping(value = "/courses", produces = {"application/json"})
-	public ResponseEntity<?> getAllCourses() {
+	public ResponseEntity<CollectionModel<EntityModel<Course>>> getAllCourses() {
 
-		List<Course> courses = courseService.findAll();
+		List<EntityModel<Course>> courses = courseService.findAll()
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		CollectionModel<EntityModel<Course>> entityCourses = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getAllCourses()).withSelfRel()
+		);
+
+		return new ResponseEntity<>(entityCourses, HttpStatus.OK);
 	}
 
 

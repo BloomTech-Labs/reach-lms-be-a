@@ -1,161 +1,128 @@
 package com.lambdaschool.oktafoundation.models;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import javax.swing.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+
 
 @Entity
 @Table(name = "courses")
-public class Course
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long courseid;
+@JsonIgnoreProperties(value = {"program", "teachers", "students", "modules"}, allowSetters = true)
+public class Course {
 
-    @NotNull
-    private String coursename;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long courseid;
 
-    @NotNull
-    private String coursecode;
+	@NotNull
+	private String coursename;
 
-    private String coursedescription;
+	@NotNull
+	private String coursecode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "programid")
-    @JsonIgnoreProperties(value = "courses")
-    private Program program;
+	private String coursedescription;
 
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "course",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnoreProperties(value = "course",
-        allowSetters = true)
-    private Set<StudentCourses> students = new HashSet<>();
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "programid")
+	@JsonIgnoreProperties(value = "courses")
+	private Program program;
 
-    @OneToMany(
-        fetch = FetchType.EAGER,
-        mappedBy = "course",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonIgnoreProperties(value = "course",
-        allowSetters = true)
-    private Set<TeacherCourses> teachers = new HashSet<>();
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "course", allowSetters = true)
+	private Set<StudentCourses> students = new HashSet<>();
 
-    @OneToMany(
-        mappedBy = "course",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    @JsonIgnoreProperties(value = "course",
-        allowSetters = true)
-    private Set<Module> Modules = new HashSet<>();
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties(value = "course", allowSetters = true)
+	private Set<TeacherCourses> teachers = new HashSet<>();
 
-    public Course()
-    {
-    }
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties(value = "course", allowSetters = true)
+	private Set<Module> Modules = new HashSet<>();
 
-    public Course(
-        @NotNull String coursename,
-        @NotNull String coursecode,
-        String coursedescription,
-        Program program)
-    {
-        this.coursename = coursename;
-        this.coursecode = coursecode;
-        this.coursedescription = coursedescription;
-        this.program = program;
-    }
+	public Course() {
+	}
 
-    public long getCourseid()
-    {
-        return courseid;
-    }
+	public Course(
+			@NotNull String coursename,
+			@NotNull String coursecode,
+			String coursedescription,
+			Program program
+	) {
+		this.coursename        = coursename;
+		this.coursecode        = coursecode;
+		this.coursedescription = coursedescription;
+		this.program           = program;
+	}
 
-    public void setCourseid(long courseid)
-    {
-        this.courseid = courseid;
-    }
+	public long getCourseid() {
+		return courseid;
+	}
 
-    public String getCoursename()
-    {
-        return coursename;
-    }
+	public void setCourseid(long courseid) {
+		this.courseid = courseid;
+	}
 
-    public void setCoursename(String coursename)
-    {
-        this.coursename = coursename;
-    }
+	public String getCoursename() {
+		return coursename;
+	}
 
-    public String getCoursecode()
-    {
-        return coursecode;
-    }
+	public void setCoursename(String coursename) {
+		this.coursename = coursename;
+	}
 
-    public void setCoursecode(String coursecode)
-    {
-        this.coursecode = coursecode;
-    }
+	public String getCoursecode() {
+		return coursecode;
+	}
 
-    public String getCoursedescription()
-    {
-        return coursedescription;
-    }
+	public void setCoursecode(String coursecode) {
+		this.coursecode = coursecode;
+	}
 
-    public void setCoursedescription(String coursedescription)
-    {
-        this.coursedescription = coursedescription;
-    }
+	public String getCoursedescription() {
+		return coursedescription;
+	}
 
-    public Program getProgram()
-    {
-        return program;
-    }
+	public void setCoursedescription(String coursedescription) {
+		this.coursedescription = coursedescription;
+	}
 
-    public void setProgram(Program program)
-    {
-        this.program = program;
-    }
+	public Program getProgram() {
+		return program;
+	}
 
-    public Set<StudentCourses> getStudents()
-    {
-        return students;
-    }
+	public void setProgram(Program program) {
+		this.program = program;
+	}
 
-    public void setStudents(Set<StudentCourses> students)
-    {
-        this.students = students;
-    }
+	public Set<StudentCourses> getStudents() {
+		return students;
+	}
 
-    public Set<Module> getModules()
-    {
-        return Modules;
-    }
+	public void setStudents(Set<StudentCourses> students) {
+		this.students = students;
+	}
 
-    public void setModules(Set<Module> modules)
-    {
-        Modules = modules;
-    }
+	public Set<Module> getModules() {
+		return Modules;
+	}
 
-    public Set<TeacherCourses> getTeachers()
-    {
-        return teachers;
-    }
+	public void setModules(Set<Module> modules) {
+		Modules = modules;
+	}
 
-    public void setTeachers(Set<TeacherCourses> teachers)
-    {
-        this.teachers = teachers;
-    }
+	public Set<TeacherCourses> getTeachers() {
+		return teachers;
+	}
+
+	public void setTeachers(Set<TeacherCourses> teachers) {
+		this.teachers = teachers;
+	}
+
 }

@@ -21,9 +21,10 @@ public class ModuleModelAssembler
 		return EntityModel.of(module,
 				linkTo(methodOn(ModuleController.class).getModuleById(module.getModuleid())).withSelfRel(),
 				linkTo(methodOn(ModuleController.class).getAllModules()).withRel("modules"),
-				linkTo(methodOn(CourseController.class).getCourseByCourseId(module.getCourse().getCourseid())).withRel(
-						"course")
+				linkTo(methodOn(CourseController.class).getCourseByCourseId(module.getCourse()
+						.getCourseid())).withRel("course")
 		);
 	}
+	
 
 }

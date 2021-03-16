@@ -5,9 +5,13 @@ import com.lambdaschool.oktafoundation.controllers.CourseController;
 import com.lambdaschool.oktafoundation.controllers.ModuleController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
 import com.lambdaschool.oktafoundation.models.Course;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -22,10 +26,12 @@ public class CourseModelAssembler
 		implements RepresentationModelAssembler<Course, EntityModel<Course>> {
 
 	/**
-	 * Creates a RepresentationModel for the given Course
+	 * Creates a RepresentationModel for the given Course with useful
+	 *
 	 * @param course The course to transform into a representational model
+	 *
 	 * @return An EntityModel<Course> that includes our basic model with additional relative links
-	 * */
+	 */
 	@Override
 	public EntityModel<Course> toModel(Course course) {
 		return EntityModel.of(course,
@@ -41,5 +47,12 @@ public class CourseModelAssembler
 		);
 	}
 
+
+	@Override
+	public CollectionModel<EntityModel<Course>> toCollectionModel(Iterable<? extends Course> courses) {
+		List<EntityModel<Course>> entityCourses = new ArrayList<>();
+		courses.forEach(course -> entityCourses.add(this.toModel(course)));
+		return CollectionModel.of(entityCourses, linkTo(methodOn(CourseController.class).getAllCourses()).withSelfRel());
+	}
 
 }
