@@ -1,7 +1,8 @@
 package com.lambdaschool.oktafoundation;
 
-import com.lambdaschool.oktafoundation.models.*;
+
 import com.lambdaschool.oktafoundation.models.Module;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,11 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
  * after the application context has been loaded.
  */
 @Transactional
-@ConditionalOnProperty(
-    prefix = "command.line.runner",
-    value = "enabled",
-    havingValue = "true",
-    matchIfMissing = true)
+@ConditionalOnProperty(prefix = "command.line.runner", value = "enabled", havingValue = "true", matchIfMissing = true)
 @Component
 public class SeedData
 		implements CommandLineRunner {
@@ -38,42 +35,36 @@ public class SeedData
 	@Autowired
 	UserService userService;
 
-    @Autowired
-    ProgramService programService;
+	@Autowired
+	ProgramService programService;
 
-    @Autowired
-    CourseService courseService;
+	@Autowired
+	CourseService courseService;
 
-    @Autowired
-    ModuleService moduleService;
+	@Autowired
+	ModuleService moduleService;
 
-    /**
-     * Generates test, seed data for our application
-     * First a set of known data is seeded into our database.
-     * Second a random set of data using Java Faker is seeded into our database.
-     * Note this process does not remove data from the database. So if data exists in the database
-     * prior to running this process, that data remains in the database.
-     *
-     * @param args The parameter is required by the parent interface but is not used in this process.
-     */
-    @Transactional
-    @Override
-    public void run(String[] args) throws
-                                   Exception
-    {
-        roleService.deleteAll();
-        Role adminRole = new Role("admin");
-        Role teacherRole = new Role("teacher");
-        Role studentRole = new Role("student");
+	/**
+	 * Generates test, seed data for our application
+	 * First a set of known data is seeded into our database.
+	 * Second a random set of data using Java Faker is seeded into our database.
+	 * Note this process does not remove data from the database. So if data exists in the database
+	 * prior to running this process, that data remains in the database.
+	 *
+	 * @param args The parameter is required by the parent interface but is not used in this process.
+	 */
+	@Transactional
+	@Override
+	public void run(String[] args)
+	throws Exception {
+		roleService.deleteAll();
+		Role adminRole   = new Role("admin");
+		Role teacherRole = new Role("teacher");
+		Role studentRole = new Role("student");
 
-        adminRole = roleService.save(adminRole);
-        teacherRole = roleService.save(teacherRole);
-        studentRole = roleService.save(studentRole);
-
-
-        Program program1 = new Program("Program1", "12th grade", "This is program 1");
-        Program program2 = new Program("Program2", "12th grade", "This is program 2");
-
+		adminRole   = roleService.save(adminRole);
+		teacherRole = roleService.save(teacherRole);
+		studentRole = roleService.save(studentRole);
 
 		// PROGRAMS
 		Program program1 = new Program("Program1", "12th grade", "This is program 1");
