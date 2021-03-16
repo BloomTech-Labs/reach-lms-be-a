@@ -1,5 +1,10 @@
-/Users/bhawnishkumar/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/SeedData.java
-/Users/bhawnishkumar/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/controllers/UserControllerUnitTestNoDB.java
-/Users/bhawnishkumar/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/controllers/UserControllerIntegrationTestWithDB.java
-/Users/bhawnishkumar/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/UserServiceImplUnitTestNoDB.java
-/Users/bhawnishkumar/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/OktaFoundationApplicationTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/SeedData.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/UserServiceImplUnitTestNoDB.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/TeacherServiceImplTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/controllers/UserControllerIntegrationTestWithDB.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/CourseServiceImplTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/ProgramServiceImplTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/StudentServiceImplTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/OktaFoundationApplicationTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/services/ModuleServiceImplTest.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/test/java/com/lambdaschool/oktafoundation/controllers/UserControllerUnitTestNoDB.java

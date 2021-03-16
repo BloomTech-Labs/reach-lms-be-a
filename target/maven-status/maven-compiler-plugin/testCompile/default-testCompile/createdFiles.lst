@@ -1,0 +1,10 @@
+com/lambdaschool/oktafoundation/SeedData.class
+com/lambdaschool/oktafoundation/OktaFoundationApplicationTest.class
+com/lambdaschool/oktafoundation/services/StudentServiceImplTest.class
+com/lambdaschool/oktafoundation/services/ProgramServiceImplTest.class
+com/lambdaschool/oktafoundation/services/UserServiceImplUnitTestNoDB.class
+com/lambdaschool/oktafoundation/services/ModuleServiceImplTest.class
+com/lambdaschool/oktafoundation/controllers/UserControllerUnitTestNoDB.class
+com/lambdaschool/oktafoundation/services/CourseServiceImplTest.class
+com/lambdaschool/oktafoundation/services/TeacherServiceImplTest.class
+com/lambdaschool/oktafoundation/controllers/UserControllerIntegrationTestWithDB.class
