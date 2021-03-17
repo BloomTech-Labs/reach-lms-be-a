@@ -40,6 +40,7 @@ public class CourseModelAssembler
 				linkTo(methodOn(CourseController.class).getAllCourses()).withRel("all_courses"),
 				// link to associated modules
 				linkTo(methodOn(ModuleController.class).getModulesByCourseId(course.getCourseid())).withRel("modules")
+
 		);
 	}
 

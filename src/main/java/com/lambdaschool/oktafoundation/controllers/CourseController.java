@@ -12,14 +12,11 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,15 +51,21 @@ public class CourseController {
 		return new ResponseEntity<>(entityCourses, HttpStatus.OK);
 	}
 
-
 	@GetMapping(value = "/courses/student/{studentid}", produces = "application/json")
-	public ResponseEntity<?> getStudentCourses(
+	public ResponseEntity<CollectionModel<EntityModel<Course>>> getStudentCourses(
 			@PathVariable
 					long studentid
 	) {
-		List<Course> courses = courserepos.findCoursesByStudentid(studentid);
+		List<EntityModel<Course>> courses = courserepos.findCoursesByStudentid(studentid)
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getStudentCourses(studentid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/courses/teacher/{teacherid}", produces = "application/json")
@@ -70,36 +73,44 @@ public class CourseController {
 			@PathVariable
 					long teacherid
 	) {
-		List<Course> courses = courserepos.findCoursesByTeacherid(teacherid);
+		List<EntityModel<Course>> courses = courserepos.findCoursesByTeacherid(teacherid)
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getTeacherCourses(teacherid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-
 	@GetMapping(value = "/courses/course/{courseid}", produces = {"application/json"})
-	public ResponseEntity<?> getCourseByCourseId(
+	public ResponseEntity<EntityModel<Course>> getCourseByCourseId(
 			@PathVariable
 					long courseid
 	) {
-		Course course = courseService.findCourseById(courseid);
-
+		EntityModel<Course> course = courseModelAssembler.toModel(courseService.findCourseById(courseid));
 		return new ResponseEntity<>(course, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/courses/{programid}", produces = {"application/json"})
-	public ResponseEntity<?> getCoursesByProgramid(
+	public ResponseEntity<CollectionModel<EntityModel<Course>>> getCoursesByProgramid(
 			@PathVariable
 					long programid
 	) {
-		List<Course> allCourses = new ArrayList<>();
-		courserepos.findCoursesByProgram_Programid(programid)
-				.iterator()
-				.forEachRemaining(allCourses::add);
+		List<EntityModel<Course>> courses = courserepos.findCoursesByProgram_Programid(programid)
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
 
-		return new ResponseEntity<>(allCourses, HttpStatus.OK);
+		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getCoursesByProgramid(programid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	//   @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@PostMapping(value = "/courses/{programid}/course", produces = "application/json", consumes = "application/json")
 	public ResponseEntity<?> addNewCourse(
 			@PathVariable
@@ -107,13 +118,10 @@ public class CourseController {
 			@Valid
 			@RequestBody
 					Course newCourse
-	)
-	throws URISyntaxException {
+	) {
 		newCourse.setCourseid(0);
 		newCourse = courseService.save(programid, newCourse);
-
 		// location header for the newly created course
-
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newCourseURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
 				.path("/{courseid}")
@@ -124,7 +132,6 @@ public class CourseController {
 		return new ResponseEntity<>(newCourse, responseHeaders, HttpStatus.CREATED);
 	}
 
-	// @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@PatchMapping(value = "/courses/{courseid}", consumes = "application/json")
 	public ResponseEntity<?> updateCourse(
 			@PathVariable
@@ -138,7 +145,6 @@ public class CourseController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	//  @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@PutMapping(value = "/courses/{courseid}", consumes = "application/json")
 	public ResponseEntity<?> updateFullCourse(
 			@PathVariable
@@ -152,7 +158,6 @@ public class CourseController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@DeleteMapping(value = "/courses/{courseid}")
 	public ResponseEntity<?> deleteCourseById(
 			@PathVariable
