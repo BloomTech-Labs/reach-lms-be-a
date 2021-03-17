@@ -1,28 +1,27 @@
 package com.lambdaschool.oktafoundation.models;
 
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
-public class StudentCoursesId
-    implements Serializable
+public class UserCoursesId implements Serializable
 {
-    private long student;
-
+    private long user;
     private long course;
 
-    public StudentCoursesId()
+    public UserCoursesId()
     {
     }
 
-    public long getStudent()
+    public long getUser()
     {
-        return student;
+        return user;
     }
 
-    public void setStudent(long student)
+    public void setUser(long user)
     {
-        this.student = student;
+        this.user = user;
     }
 
     public long getCourse()
@@ -41,18 +40,15 @@ public class StudentCoursesId
         {
             return true;
         }
-        if (o == null || getClass() != o.getClass() )
+        if (o == null || getClass() != o.getClass())
         {
             return false;
         }
-        StudentCoursesId that = (StudentCoursesId) o;
-        return student == that.student &&
-            course == that.course;
+        UserCoursesId that = (UserCoursesId) o;
+        return user == that.user &&
+                course == that.course;
     }
 
     @Override
-    public int hashCode()
-    {
-        return 37;
-    }
+    public int hashCode(){return 37;}
 }
