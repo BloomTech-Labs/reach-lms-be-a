@@ -36,11 +36,7 @@ public class Course {
 	@OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<StudentCourses> students = new HashSet<>();
-
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<TeacherCourses> teachers = new HashSet<>();
+	private Set<UserCourses> users = new HashSet<>();
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
@@ -101,12 +97,14 @@ public class Course {
 		this.program = program;
 	}
 
-	public Set<StudentCourses> getStudents() {
-		return students;
+	public Set<UserCourses> getUsers()
+	{
+		return users;
 	}
 
-	public void setStudents(Set<StudentCourses> students) {
-		this.students = students;
+	public void setUsers(Set<UserCourses> users)
+	{
+		this.users = users;
 	}
 
 	public Set<Module> getModules() {
@@ -115,14 +113,6 @@ public class Course {
 
 	public void setModules(Set<Module> modules) {
 		Modules = modules;
-	}
-
-	public Set<TeacherCourses> getTeachers() {
-		return teachers;
-	}
-
-	public void setTeachers(Set<TeacherCourses> teachers) {
-		this.teachers = teachers;
 	}
 
 }
