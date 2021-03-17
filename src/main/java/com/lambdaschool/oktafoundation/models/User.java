@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties(value = {"programs"})
+@JsonIgnoreProperties(value = {"programs", "courses"}, allowSetters = true)
 public class User
 		extends Auditable {
 
@@ -193,13 +193,11 @@ public class User
 		this.roles = roles;
 	}
 
-	public Set<UserCourses> getCourses()
-	{
+	public Set<UserCourses> getCourses() {
 		return courses;
 	}
 
-	public void setCourses(Set<UserCourses> courses)
-	{
+	public void setCourses(Set<UserCourses> courses) {
 		this.courses = courses;
 	}
 

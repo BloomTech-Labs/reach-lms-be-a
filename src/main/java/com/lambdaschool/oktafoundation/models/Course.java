@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "courses")
-@JsonIgnoreProperties(value = {"program", "teachers", "students", "modules"}, allowSetters = true)
+@JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
 	@Id
@@ -39,8 +39,9 @@ public class Course {
 	private Set<UserCourses> users = new HashSet<>();
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<Module> Modules = new HashSet<>();
+	private Set<Module> modules = new HashSet<>();
 
 	public Course() {
 	}
@@ -97,22 +98,20 @@ public class Course {
 		this.program = program;
 	}
 
-	public Set<UserCourses> getUsers()
-	{
+	public Set<UserCourses> getUsers() {
 		return users;
 	}
 
-	public void setUsers(Set<UserCourses> users)
-	{
+	public void setUsers(Set<UserCourses> users) {
 		this.users = users;
 	}
 
 	public Set<Module> getModules() {
-		return Modules;
+		return modules;
 	}
 
 	public void setModules(Set<Module> modules) {
-		Modules = modules;
+		this.modules = modules;
 	}
 
 }

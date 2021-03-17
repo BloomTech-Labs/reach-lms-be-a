@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.modelAssemblers;
 
 
+import com.lambdaschool.oktafoundation.controllers.CourseController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
 import com.lambdaschool.oktafoundation.models.Program;
 import org.springframework.hateoas.EntityModel;
@@ -26,8 +27,8 @@ public class ProgramModelAssembler
 				linkTo(methodOn(ProgramController.class).getProgramsByUserId(program.getUser()
 						.getUserid())).withRel("admin_programs"),
 				// Link to `GET all programs`
-				linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs")
-
+				linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs"),
+				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramid())).withRel("courses")
 		);
 	}
 
