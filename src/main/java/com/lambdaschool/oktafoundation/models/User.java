@@ -52,6 +52,11 @@ public class User
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<Program> programs = new HashSet<>();
 
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "user", allowSetters = true)
+	private Set<UserCourses> courses = new HashSet<>();
+
 	/**
 	 * Part of the join relationship between user and role
 	 * connects users to the user role combination
@@ -188,6 +193,15 @@ public class User
 		this.roles = roles;
 	}
 
+	public Set<UserCourses> getCourses()
+	{
+		return courses;
+	}
+
+	public void setCourses(Set<UserCourses> courses)
+	{
+		this.courses = courses;
+	}
 
 	/**
 	 * Internally, user security requires a list of authorities, roles, that the user has. This method is a simple way to provide those.
