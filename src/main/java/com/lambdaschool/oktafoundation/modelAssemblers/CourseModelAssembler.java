@@ -4,6 +4,7 @@ package com.lambdaschool.oktafoundation.modelAssemblers;
 import com.lambdaschool.oktafoundation.controllers.CourseController;
 import com.lambdaschool.oktafoundation.controllers.ModuleController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
+import com.lambdaschool.oktafoundation.controllers.TeacherController;
 import com.lambdaschool.oktafoundation.models.Course;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
@@ -40,6 +41,7 @@ public class CourseModelAssembler
 				linkTo(methodOn(CourseController.class).getAllCourses()).withRel("all_courses"),
 				// link to associated modules
 				linkTo(methodOn(ModuleController.class).getModulesByCourseId(course.getCourseid())).withRel("modules")
+
 		);
 	}
 

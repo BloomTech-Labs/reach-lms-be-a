@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+
 @Transactional
 public interface TeacherRepository extends CrudRepository<Teacher, Long>
 {
