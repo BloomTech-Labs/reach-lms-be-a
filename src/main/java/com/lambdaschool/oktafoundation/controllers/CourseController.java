@@ -5,7 +5,6 @@ import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.modelAssemblers.CourseModelAssembler;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
-import com.lambdaschool.oktafoundation.repository.StudentRepository;
 import com.lambdaschool.oktafoundation.services.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -33,9 +32,6 @@ public class CourseController {
 
 	@Autowired
 	CourseRepository courserepos;
-
-	@Autowired
-	StudentRepository studentrepos;
 
 	@Autowired
 	CourseService courseService;

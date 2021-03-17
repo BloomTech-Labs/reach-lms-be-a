@@ -1,116 +1,113 @@
 package com.lambdaschool.oktafoundation.services;
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceFoundException;
+
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.models.Program;
-import com.lambdaschool.oktafoundation.models.Teacher;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service(value = "courseServices")
 @Transactional
 public class CourseServiceImpl
-    implements CourseService
-{
+		implements CourseService {
 
-    @Autowired
-    private CourseRepository courserepos;
+	@Autowired
+	private CourseRepository courserepos;
 
-    @Autowired
-    private ProgramRepository programrepos;
+	@Autowired
+	private ProgramRepository programrepos;
 
-    @Override
-    public List<Course> findAll() {
-        List<Course> courses = new ArrayList<>();
+	@Override
+	public List<Course> findAll() {
+		List<Course> courses = new ArrayList<>();
 
-        courserepos.findAll()
-            .iterator()
-            .forEachRemaining(courses::add);
+		courserepos.findAll()
+				.iterator()
+				.forEachRemaining(courses::add);
 
-        return courses;
-    }
+		return courses;
+	}
 
-    @Override
-    public Course findCourseById(long courseid) throws ResourceNotFoundException
-    {
-      return courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
-    }
+	@Override
+	public Course findCourseById(long courseid)
+	throws ResourceNotFoundException {
+		return courserepos.findById(courseid)
+				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
+	}
 
-    @Override
-    public Course save(long programid, Course course) throws ResourceNotFoundException
-    {
-        Course newCourse = new Course();
-        if(course.getCourseid() != 0)
-        {
-            courserepos.findById(course.getCourseid()).orElseThrow(() -> new ResourceNotFoundException("Course with id" + course.getCourseid() + "Not Found!"));
-            newCourse.setCourseid(course.getCourseid());
-        }
-        newCourse.setCoursename(course.getCoursename());
-        newCourse.setCoursedescription(course.getCoursedescription());
-        newCourse.setCoursecode(course.getCoursecode());
+	@Override
+	public Course save(
+			long programid,
+			Course course
+	)
+	throws ResourceNotFoundException {
+		Course newCourse = new Course();
+		if (course.getCourseid() != 0) {
+			courserepos.findById(course.getCourseid())
+					.orElseThrow(() -> new ResourceNotFoundException("Course with id" + course.getCourseid() + "Not Found!"));
+			newCourse.setCourseid(course.getCourseid());
+		}
+		newCourse.setCoursename(course.getCoursename());
+		newCourse.setCoursedescription(course.getCoursedescription());
+		newCourse.setCoursecode(course.getCoursecode());
 
-        newCourse.getModules()
-            .clear();
+		newCourse.getModules()
+				.clear();
 
-        for(Module module : course.getModules())
-        {
-            newCourse.getModules()
-                .add(new Module(module.getModulename(),
-                    module.getModuledescription(),
-                    module.getModulecontent(),
-                    newCourse));
-        }
+		for (Module module : course.getModules()) {
+			newCourse.getModules()
+					.add(new Module(module.getModulename(), module.getModuledescription(), module.getModulecontent(), newCourse));
+		}
 
-        Program program = programrepos.findById(programid)
-            .orElseThrow(() -> new ResourceNotFoundException("Program with id " + programid + "Not Found!"));
-        if (program != null)
-        {
-            newCourse.setProgram(program);
-        }
+		Program program = programrepos.findById(programid)
+				.orElseThrow(() -> new ResourceNotFoundException("Program with id " + programid + "Not Found!"));
+		if (program != null) {
+			newCourse.setProgram(program);
+		}
 
 
+		return courserepos.save(newCourse);
 
-        return courserepos.save(newCourse);
+	}
 
-    }
+	@Override
+	public Course update(
+			long courseid,
+			Course course
+	) {
+		Course newCourse = findCourseById(courseid);
 
-    @Override
-    public Course update(long courseid, Course course)
-    {
-        Course newCourse = findCourseById(courseid);
+		if (course.getCoursename() != null) {
+			newCourse.setCoursename(course.getCoursename());
+		}
 
-        if(course.getCoursename() != null)
-        {
-           newCourse.setCoursename(course.getCoursename());
-        }
+		if (course.getCoursedescription() != null) {
+			newCourse.setCoursedescription(course.getCoursedescription());
+		}
 
-        if(course.getCoursedescription() != null)
-        {
-            newCourse.setCoursedescription(course.getCoursedescription());
-        }
-
-        if(course.getCoursecode() != null)
-        {
-            newCourse.setCoursecode(course.getCoursecode());
-        }
+		if (course.getCoursecode() != null) {
+			newCourse.setCoursecode(course.getCoursecode());
+		}
 
 
-         return courserepos.save(newCourse);
-    }
+		return courserepos.save(newCourse);
+	}
 
-    @Override
-    public void delete(long courseid) throws ResourceNotFoundException
-    {
-        courserepos.findById(courseid).orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
-        courserepos.deleteById(courseid);
-    }
+	@Override
+	public void delete(long courseid)
+	throws ResourceNotFoundException {
+		courserepos.findById(courseid)
+				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
+		courserepos.deleteById(courseid);
+	}
+
 }
