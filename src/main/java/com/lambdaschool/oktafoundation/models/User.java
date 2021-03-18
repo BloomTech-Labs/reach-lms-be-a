@@ -221,4 +221,36 @@ public class User
 		return rtnList;
 	}
 
+	@JsonIgnore
+	public SimpleGrantedAuthority getPriorityAuthority() {
+		boolean isAdmin   = false;
+		boolean isTeacher = false;
+		boolean isStudent = false;
+
+		for (UserRoles r : this.roles) {
+			RoleType currentRoleType = r.getRole()
+					.getRoleType();
+			if (currentRoleType != null) {
+				if (currentRoleType == RoleType.ADMIN) {
+					isAdmin = true;
+					break;
+				} else if (currentRoleType == RoleType.TEACHER) {
+					isTeacher = true;
+				} else if (currentRoleType == RoleType.STUDENT) {
+					isStudent = true;
+				}
+			}
+		}
+
+		if (isAdmin)
+			return new SimpleGrantedAuthority(RoleType.ADMIN.name());
+		if (isTeacher)
+			return new SimpleGrantedAuthority(RoleType.TEACHER.name());
+		if (isStudent)
+			return new SimpleGrantedAuthority(RoleType.STUDENT.name());
+
+		return null;
+
+	}
+
 }

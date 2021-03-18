@@ -31,16 +31,15 @@ public class CourseModelAssembler
 	@Override
 	public EntityModel<Course> toModel(Course course) {
 		return EntityModel.of(course,
-				// link to self (ALWAYS)
+				// Link to SELF --- GET /courses/course/{courseid}
 				linkTo(methodOn(CourseController.class).getCourseByCourseId(course.getCourseid())).withSelfRel(),
-				// link to associated program
+				// Link to associated program --- GET /programs/program/{programid}
 				linkTo(methodOn(ProgramController.class).getProgramById(course.getProgram()
 						.getProgramid())).withRel("program"),
-				// link to all courses
+				// Link to all courses --- GET /courses
 				linkTo(methodOn(CourseController.class).getAllCourses()).withRel("all_courses"),
-				// link to associated modules
+				// Link to associated modules --- GET /modules/module/{moduleid}
 				linkTo(methodOn(ModuleController.class).getModulesByCourseId(course.getCourseid())).withRel("modules")
-
 		);
 	}
 

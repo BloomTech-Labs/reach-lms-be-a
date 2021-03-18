@@ -58,9 +58,9 @@ public class SeedData
 	public void run(String[] args)
 	throws Exception {
 		roleService.deleteAll();
-		Role adminRole   = new Role("admin");
-		Role teacherRole = new Role("teacher");
-		Role studentRole = new Role("student");
+		Role adminRole   = new Role(RoleType.ADMIN.name());
+		Role teacherRole = new Role(RoleType.TEACHER.name());
+		Role studentRole = new Role(RoleType.STUDENT.name());
 
 		adminRole   = roleService.save(adminRole);
 		teacherRole = roleService.save(teacherRole);
