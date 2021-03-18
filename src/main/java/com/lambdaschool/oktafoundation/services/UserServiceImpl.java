@@ -51,34 +51,6 @@ public class UserServiceImpl
 	}
 
 	@Override
-	public List<User> findAllStudents() {
-		List<User> students = new ArrayList<>();
-		SimpleGrantedAuthority studentAuthority = new  SimpleGrantedAuthority(RoleType.STUDENT.name());
-
-		userrepos.findAll()
-				.iterator()
-				.forEachRemaining(student -> {
-					if (student.getAuthority().contains(studentAuthority)) {
-						students.add(student);
-					}
-				});
-		return students;
-	}
-
-	@Override
-	public List<User> findAllTeachers() {
-		List<User> teachers = new ArrayList<>();
-		userrepos.findAll()
-				.iterator()
-				.forEachRemaining(teacher -> {
-					if (teacher.getAuthority().contains(new SimpleGrantedAuthority(RoleType.TEACHER.name()))) {
-						teachers.add(teacher);
-					}
-				});
-		return teachers;
-	}
-
-	@Override
 	public List<User> findByNameContaining(String username) {
 
 		return userrepos.findByUsernameContainingIgnoreCase(username.toLowerCase());

@@ -127,20 +127,6 @@ public class UserController {
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/students", produces = "application/json")
-	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllStudents() {
-		List<EntityModel<User>> students = userService.findAllStudents()
-				.stream()
-				.map(userModelAssembler::toModel)
-				.collect(Collectors.toList());
-
-		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(students,
-				linkTo(methodOn(UserController.class).getAllStudents()).withSelfRel()
-		);
-
-		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
-	}
-
 	/**
 	 * Given a complete User Object, create a new User record and accompanying useremail records
 	 * and user role records.
