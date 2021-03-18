@@ -1,7 +1,7 @@
 package com.lambdaschool.oktafoundation.config;
 
 
-import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.models.Role;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter
 				workingUser = new User(authentication.getName());
 				// adds a default ADMIN role to this new user... should we default to ADMIN?
 				Set<UserRoles> newRoles = new HashSet<>();
-				newRoles.add(new UserRoles(workingUser, roleService.findByName(RoleType.ADMIN.name())));
+				newRoles.add(new UserRoles(workingUser, roleService.findByName("admin")));
 				workingUser.setRoles(newRoles);
 				workingUser = userService.save(workingUser);
 			}
