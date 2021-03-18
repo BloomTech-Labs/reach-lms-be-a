@@ -22,6 +22,10 @@ public interface UserService {
 	 */
 	List<User> findAll();
 
+	List<User> findAllStudents();
+
+	List<User> findAllTeachers();
+
 	/**
 	 * A list of all users whose username contains the given substring
 	 *

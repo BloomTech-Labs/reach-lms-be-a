@@ -32,7 +32,6 @@ public class Role
 	@Column(unique = true)
 	private String name;
 
-	@Transient
 	private RoleType roleType;
 
 

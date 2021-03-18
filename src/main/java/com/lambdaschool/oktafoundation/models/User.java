@@ -253,4 +253,36 @@ public class User
 
 	}
 
+	@JsonIgnore
+	public RoleType getRole() {
+		boolean isAdmin   = false;
+		boolean isTeacher = false;
+		boolean isStudent = false;
+
+		for (UserRoles r : this.roles) {
+			RoleType currentRoleType = r.getRole()
+					.getRoleType();
+
+			if (currentRoleType != null) {
+				if (currentRoleType == RoleType.ADMIN) {
+					isAdmin = true;
+				} else if (currentRoleType == RoleType.TEACHER) {
+					isTeacher = true;
+				} else if (currentRoleType == RoleType.STUDENT) {
+					isStudent = true;
+				}
+			}
+		}
+
+		if (isAdmin)
+			return RoleType.ADMIN;
+		if (isTeacher)
+			return RoleType.TEACHER;
+		if (isStudent)
+			return RoleType.STUDENT;
+
+		return null;
+
+	}
+
 }

@@ -58,9 +58,9 @@ public class SeedData
 	public void run(String[] args)
 	throws Exception {
 		roleService.deleteAll();
-		Role adminRole   = new Role(RoleType.ADMIN.name());
-		Role teacherRole = new Role(RoleType.TEACHER.name());
-		Role studentRole = new Role(RoleType.STUDENT.name());
+		Role adminRole   = new Role(RoleType.ADMIN.name(), RoleType.ADMIN);
+		Role teacherRole = new Role(RoleType.TEACHER.name(), RoleType.TEACHER);
+		Role studentRole = new Role(RoleType.STUDENT.name(), RoleType.STUDENT);
 
 		adminRole   = roleService.save(adminRole);
 		teacherRole = roleService.save(teacherRole);
@@ -80,7 +80,15 @@ public class SeedData
 		User llama002 = new User("llama002@maildrop.cc", "llama002@maildrop.cc", "llama2", "LLAMA_002", "(987)654-3210");
 
 		llama002.getRoles()
-				.add(new UserRoles(llama002, teacherRole));
+				.add(new UserRoles(llama002, studentRole));
+
+		llama002 = userService.save(llama002);
+
+		User llama003 = new User("llama003@maildrop.cc", "llama003@maildrop.cc", "llama3", "LLAMA_003", "0987654321");
+		llama003.getRoles()
+				.add(new UserRoles(llama003, teacherRole));
+		llama003 = userService.save(llama003);
+
 
 		// USER reach.lms.test@gmail.com
 		User reachRoot = new User("reach.lms.test@gmail.com",

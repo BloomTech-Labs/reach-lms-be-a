@@ -3,10 +3,12 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Role;
+import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,14 +42,40 @@ public class UserServiceImpl
 	@Override
 	public List<User> findAll() {
 		List<User> list = new ArrayList<>();
-		/*
-		 * findAll returns an iterator set.
-		 * iterate over the iterator set and add each element to an array list.
-		 */
+		// findAll returns an iterator set.
+		// iterate over the iterator set and add each element to an array list.
 		userrepos.findAll()
 				.iterator()
 				.forEachRemaining(list::add);
 		return list;
+	}
+
+	@Override
+	public List<User> findAllStudents() {
+		List<User> students = new ArrayList<>();
+		SimpleGrantedAuthority studentAuthority = new  SimpleGrantedAuthority(RoleType.STUDENT.name());
+
+		userrepos.findAll()
+				.iterator()
+				.forEachRemaining(student -> {
+					if (student.getAuthority().contains(studentAuthority)) {
+						students.add(student);
+					}
+				});
+		return students;
+	}
+
+	@Override
+	public List<User> findAllTeachers() {
+		List<User> teachers = new ArrayList<>();
+		userrepos.findAll()
+				.iterator()
+				.forEachRemaining(teacher -> {
+					if (teacher.getAuthority().contains(new SimpleGrantedAuthority(RoleType.TEACHER.name()))) {
+						teachers.add(teacher);
+					}
+				});
+		return teachers;
 	}
 
 	@Override
