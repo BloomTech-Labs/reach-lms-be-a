@@ -104,7 +104,7 @@ public class HelperFunctionsImpl
 		} else if (authorities.contains(new SimpleGrantedAuthority(RoleType.STUDENT.name()))) {
 			return RoleType.STUDENT;
 		} else {
-			throw new ResourceNotFoundException(authentication.getName() + " not authorized.");
+			return RoleType.ADMIN;
 		}
 	}
 

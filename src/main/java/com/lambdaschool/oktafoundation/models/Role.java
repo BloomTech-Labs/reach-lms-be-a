@@ -62,7 +62,7 @@ public class Role
 			String name,
 			RoleType roleType
 	) {
-		this.name     = roleType.name();
+		this.name     = name;
 		this.roleType = roleType;
 	}
 
