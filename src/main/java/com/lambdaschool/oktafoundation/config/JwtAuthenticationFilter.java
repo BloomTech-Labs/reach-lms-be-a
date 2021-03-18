@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.config;
 
 
+import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
@@ -27,10 +28,10 @@ import java.util.Set;
 public class JwtAuthenticationFilter
 		extends OncePerRequestFilter {
 
-	// A very specific implementation of userrepos.findByUserName was needed for this filter,
+	// A very specific implementation of `userRepository.findByUserName` was needed for this filter,
 	// so the repository is used directly.
 	@Autowired
-	UserRepository userrepos;
+	UserRepository userRepository;
 
 	// Using the service is preferred so for save, the service is used
 	@Autowired
@@ -53,24 +54,21 @@ public class JwtAuthenticationFilter
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();
 
+		// if we have an authenticated context, we'll enter into this statement
 		if (!(authentication instanceof AnonymousAuthenticationToken)) {
-			User workingUser = userrepos.findByUsername(authentication.getName());
+			User workingUser = userRepository.findByUsername(authentication.getName());
 
+			// if we don't yet have this user, we should make one
 			if (workingUser == null) {
-
 				workingUser = new User(authentication.getName());
-
-				// adds a default USER role to this new user
+				// adds a default ADMIN role to this new user... should we default to ADMIN?
 				Set<UserRoles> newRoles = new HashSet<>();
-				newRoles.add(new UserRoles(workingUser, roleService.findByName("admin")));
+				newRoles.add(new UserRoles(workingUser, roleService.findByName(RoleType.ADMIN.name())));
 				workingUser.setRoles(newRoles);
-
 				workingUser = userService.save(workingUser);
-
-			} else {
-				// we already have this user so do nothing
 			}
-			// Forcing authentication to recognize the BE authorities not Oktas.
+
+			// Forcing authentication to recognize the BE authorities not Okta's.
 			Authentication newAuth = new UsernamePasswordAuthenticationToken(authentication.getName(),
 					authentication.getCredentials(),
 					workingUser.getAuthority()
@@ -80,9 +78,8 @@ public class JwtAuthenticationFilter
 					.setAuthentication(newAuth);
 
 			// continue the filter chain.
-		} else {
-			// we do not have a user so nothing to check!
 		}
+
 		filterChain.doFilter(httpServletRequest, httpServletResponse);
 	}
 

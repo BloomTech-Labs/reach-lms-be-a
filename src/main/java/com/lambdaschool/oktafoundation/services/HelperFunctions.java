@@ -1,5 +1,6 @@
 package com.lambdaschool.oktafoundation.services;
 
+import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.ValidationError;
 
 import java.util.List;
@@ -26,4 +27,6 @@ public interface HelperFunctions
      * @return true if the user can make the modifications, otherwise an exception is thrown
      */
     boolean isAuthorizedToMakeChange(String username);
+
+    RoleType getCurrentPriorityRole();
 }

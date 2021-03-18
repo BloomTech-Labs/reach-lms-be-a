@@ -47,7 +47,6 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
-	//    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
 	@GetMapping(value = "/users", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
 		List<EntityModel<User>> myUsers = userService.findAll()
@@ -72,7 +71,6 @@ public class UserController {
 	 *
 	 * @see UserService#findUserById(long) UserService.findUserById(long)
 	 */
-	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/{userId}", produces = "application/json")
 	public ResponseEntity<EntityModel<User>> getUserById(
 			@PathVariable
@@ -92,7 +90,6 @@ public class UserController {
 	 *
 	 * @see UserService#findByName(String) UserService.findByName(String)
 	 */
-	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/name/{userName}", produces = "application/json")
 	public ResponseEntity<EntityModel<User>> getUserByName(
 			@PathVariable
@@ -112,7 +109,6 @@ public class UserController {
 	 *
 	 * @see UserService#findByNameContaining(String) UserService.findByNameContaining(String)
 	 */
-	//	@PreAuthorize("hasAnyRole('ADMIN')")
 	@GetMapping(value = "/user/name/like/{userName}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getUserLikeName(
 			@PathVariable
