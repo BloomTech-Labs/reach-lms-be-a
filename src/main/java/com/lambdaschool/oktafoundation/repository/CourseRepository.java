@@ -13,13 +13,8 @@ public interface CourseRepository
 {
     List<Course> findCoursesByProgram_Programid(long programid);
 
-    @Query(value = "SELECT * FROM TEACHERCOURSES SC\n" +
-        "JOIN COURSES C ON SC.COURSEID = C.COURSEID\n" +
-        "WHERE TEACHERID = :teacherid", nativeQuery = true)
-    List<Course> findCoursesByTeacherid(long teacherid);
-
-    @Query(value = "SELECT * FROM STUDENTCOURSES SC\n" +
-        "JOIN COURSES C ON SC.COURSEID = C.COURSEID\n" +
-        "WHERE STUDENTID = :studentid", nativeQuery = true)
-    List<Course> findCoursesByStudentid(long studentid);
+    @Query(value = "SELECT * FROM USERCOURSES UC\n" +
+        "JOIN COURSES C ON UC.COURSEID = C.COURSEID\n" +
+        "WHERE USERID = :userid", nativeQuery = true)
+    List<Course> findCoursesByUserid(long userid);
 }

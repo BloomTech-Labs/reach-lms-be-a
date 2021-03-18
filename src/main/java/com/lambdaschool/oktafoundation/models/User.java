@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "users")
-@JsonIgnoreProperties(value = {"programs", "courses"}, allowSetters = true)
+@JsonIgnoreProperties(value = {"programs", "courses", "roles"}, allowSetters = true)
 public class User
 		extends Auditable {
 
@@ -52,7 +52,7 @@ public class User
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<Program> programs = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<UserCourses> courses = new HashSet<>();
@@ -253,7 +253,6 @@ public class User
 
 	}
 
-	@JsonIgnore
 	public RoleType getRole() {
 		boolean isAdmin   = false;
 		boolean isTeacher = false;

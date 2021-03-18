@@ -18,6 +18,12 @@ public class StudentTeacherServiceImpl
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	UserService userService;
+
+	@Autowired
+	CourseService courseService;
+
 	@Override
 	public List<User> getAllStudents() {
 		List<User> students = new ArrayList<>();
@@ -36,7 +42,6 @@ public class StudentTeacherServiceImpl
 	@Override
 	public List<User> getAllTeachers() {
 		List<User> teachers = new ArrayList<>();
-
 		userRepository.findAll()
 				.iterator()
 				.forEachRemaining(teacher -> {
@@ -44,8 +49,47 @@ public class StudentTeacherServiceImpl
 						teachers.add(teacher);
 					}
 				});
-
 		return teachers;
+	}
+
+	@Override
+	public List<User> getCourseAttachedUsers(Long courseid) {
+		List<User> users = new ArrayList<>();
+		userRepository.findEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(users::add);
+		return users;
+	}
+
+	@Override
+	public List<User> getCourseNotAttachedUsers(Long courseid) {
+		List<User> users = new ArrayList<>();
+		// find any users who are not in Course.users -- this will initially include ADMIN users
+		userRepository.findNotEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(user -> {
+					// we only want users to appear here if they are NOT ADMIN users
+					if (user.getRole() == RoleType.TEACHER || user.getRole() == RoleType.STUDENT) {
+						users.add(user);
+					}
+				});
+		return users;
+	}
+
+	@Override
+	public void attachUserToCourse(
+			Long userid,
+			Long courseid
+	) {
+		// TODO: implement this method and its endpoint
+	}
+
+	@Override
+	public void unattachUserFromCourse(
+			Long userid,
+			Long courseid
+	) {
+		// TODO: implement this method and its endpoint
 	}
 
 }

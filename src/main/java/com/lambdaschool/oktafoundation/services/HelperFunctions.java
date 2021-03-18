@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.ValidationError;
 
 import java.util.List;
@@ -29,4 +30,6 @@ public interface HelperFunctions
     boolean isAuthorizedToMakeChange(String username);
 
     RoleType getCurrentPriorityRole();
+
+    User getCallingUser();
 }

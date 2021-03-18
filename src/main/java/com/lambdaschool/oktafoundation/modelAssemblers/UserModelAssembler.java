@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.modelAssemblers;
 
 
+import com.lambdaschool.oktafoundation.controllers.CourseController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
 import com.lambdaschool.oktafoundation.controllers.UserController;
 import com.lambdaschool.oktafoundation.models.RoleType;
@@ -29,20 +30,38 @@ public class UserModelAssembler
 		EntityModel<User> userEntityModel = EntityModel.of(user,
 				// Link to SELF --- GET /users/user/{userid}
 				linkTo(methodOn(UserController.class).getUserById(user.getUserid())).withSelfRel(),
-				// Link to SELF --- GET /users/user/name/{username}
-				linkTo(methodOn(UserController.class).getUserByName(user.getUsername())).withSelfRel(),
-				// Link to GET Programs by User.userid
-				linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserid())).withRel("programs")
+				// Link to self by name --- GET /users/user/name/{username}
+				linkTo(methodOn(UserController.class).getUserByName(user.getUsername())).withRel("self_by_name")
 		);
 
-		RoleType currentRole = helperFunctions.getCurrentPriorityRole();
+		// this will hold the role of the CALLING USER (i.e., ADMIN calling GET /users
+		RoleType callingUser = helperFunctions.getCurrentPriorityRole();
 
-		if (currentRole == RoleType.ADMIN) {
+		// this will hold the role of the user to be converted into a model
+		RoleType usersRole = user.getRole();
+
+		// if the user to convert to a model is a STUDENT, add the following links
+		if (usersRole == RoleType.STUDENT) {
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getStudentCourses(user.getUserid())).withRel("courses"));
+		}
+
+		// if the user to convert to a model is a TEACHER, add the following links
+		if (usersRole == RoleType.TEACHER) {
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getTeacherCourses(user.getUserid())).withRel("courses"));
+		}
+
+		// if the user to convert to a model is an ADMIN, add the following links
+		if (usersRole == RoleType.ADMIN) {
+			// Link to GET Programs by User.userid
+			userEntityModel.add( //
+					linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserid())).withRel("programs"));
+		}
+
+		// if the CALLING USER (who will SEE this data) is an ADMIN
+		if (callingUser == RoleType.ADMIN) {
 			userEntityModel.add(
 					// Link to DELETE User by User.userid
 					linkTo(methodOn(UserController.class).deleteUserById(user.getUserid())).withRel("delete"),
-					// Link to GET all users
-					linkTo(methodOn(UserController.class).listAllUsers()).withRel("all_users"),
 					// link to POST Program (with userId)
 					linkTo(methodOn(ProgramController.class).addNewProgram(user.getUserid(), null)).withRel("post_program")
 			);

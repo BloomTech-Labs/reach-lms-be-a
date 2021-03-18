@@ -24,13 +24,11 @@ public class ProgramModelAssembler
 
 	@Override
 	public EntityModel<Program> toModel(Program program) {
-
-
 		EntityModel<Program> programEntity =  EntityModel.of(program,
-				// Link to self by `programid`
+				// Link to SELF --- GET /programs/program/{programid}
 				linkTo(methodOn(ProgramController.class).getProgramById(program.getProgramid())).withSelfRel(),
-				// Link to self by `programname`
-				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramname())).withSelfRel(),
+				// Link to self_by_name --- GET /programs/program/{programname}
+				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramname())).withRel("self_by_name"),
 				// Link to associated courses
 				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramid())).withRel("courses")
 		);

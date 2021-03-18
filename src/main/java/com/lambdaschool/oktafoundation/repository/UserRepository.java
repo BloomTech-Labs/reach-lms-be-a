@@ -2,6 +2,7 @@ package com.lambdaschool.oktafoundation.repository;
 
 
 import com.lambdaschool.oktafoundation.models.User;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -30,5 +31,13 @@ public interface UserRepository
 	 * @return List of users whose name contain the given substring ignoring case
 	 */
 	List<User> findByUsernameContainingIgnoreCase(String name);
+
+	@Query(value = "SELECT * FROM usercourses uc JOIN users u ON uc.userid = u.userid WHERE courseid = :courseid",
+			nativeQuery = true)
+	List<User> findEnrolledUsers(long courseid);
+
+	@Query(value = "SELECT * FROM users WHERE userid NOT IN (SELECT userid FROM usercourses WHERE courseid=:courseid)",
+			nativeQuery = true)
+	List<User> findNotEnrolledUsers(long courseid);
 
 }

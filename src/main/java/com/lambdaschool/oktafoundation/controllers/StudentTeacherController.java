@@ -10,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class StudentTeacherController {
 	@Autowired
 	UserModelAssembler userModelAssembler;
 
-	@GetMapping("/students/students")
+	@GetMapping("/users/students")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllStudents() {
 		List<EntityModel<User>> studentEntities = studentTeacherService.getAllStudents()
 				.stream()
@@ -41,7 +42,7 @@ public class StudentTeacherController {
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping("/teachers/teachers")
+	@GetMapping("/users/teachers")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllTeachers() {
 		List<EntityModel<User>> teacherEntities = studentTeacherService.getAllTeachers()
 				.stream()
@@ -53,6 +54,42 @@ public class StudentTeacherController {
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/course/{courseid}/enrolled")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllEnrolled(
+			@PathVariable
+					Long courseid
+	) {
+
+		List<EntityModel<User>> enrolledUsers = studentTeacherService.getCourseAttachedUsers(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(enrolledUsers,
+				linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(courseid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/course/{courseid}/un-enrolled")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllNotEnrolled(
+			@PathVariable
+					Long courseid
+	) {
+		List<EntityModel<User>> notEnrolledUsers = studentTeacherService.getCourseNotAttachedUsers(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(notEnrolledUsers,
+				linkTo(methodOn(StudentTeacherController.class).getAllNotEnrolled(courseid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+
 	}
 
 }

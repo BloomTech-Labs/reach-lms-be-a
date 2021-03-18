@@ -3,8 +3,10 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.ValidationError;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,6 +23,9 @@ import java.util.List;
 @Service(value = "helperFunctions")
 public class HelperFunctionsImpl
 		implements HelperFunctions {
+
+	@Autowired
+	UserService userService;
 
 	public List<ValidationError> getConstraintViolation(Throwable cause) {
 		// Find any data violations that might be associated with the error and report them
@@ -101,6 +106,13 @@ public class HelperFunctionsImpl
 		} else {
 			throw new ResourceNotFoundException(authentication.getName() + " not authorized.");
 		}
+	}
+
+	@Override
+	public User getCallingUser() {
+		Authentication authentication = SecurityContextHolder.getContext()
+				.getAuthentication();
+		return userService.findByName(authentication.getName());
 	}
 
 }
