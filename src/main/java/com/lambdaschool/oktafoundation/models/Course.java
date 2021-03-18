@@ -33,7 +33,7 @@ public class Course {
 	@JsonIgnoreProperties(value = "courses")
 	private Program program;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
 	private Set<UserCourses> users = new HashSet<>();

@@ -50,5 +50,5 @@ public class UserCoursesId implements Serializable
     }
 
     @Override
-    public int hashCode(){return 37;}
+    public int hashCode(){return 42;}
 }

@@ -113,6 +113,11 @@ public class SeedData
 		Course course2 = new Course("Course2", "COURSE_2", "This is course #2", program1);
 		Course course3 = new Course("Course3", "COURSE_3", "This is course #3", program2);
 
+		course1.getUsers().add(new UserCourses(llama002, course1));
+		course2.getUsers().add(new UserCourses(llama002, course2));
+		course1.getUsers().add(new UserCourses(llama003, course1));
+		course2.getUsers().add(new UserCourses(llama003, course2));
+
 		course1 = courseService.save(course1.getProgram()
 				.getProgramid(), course1);
 		course2 = courseService.save(course2.getProgram()

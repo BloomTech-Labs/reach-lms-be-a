@@ -51,35 +51,35 @@ public class CourseController {
 		return new ResponseEntity<>(entityCourses, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/student/{studentid}", produces = "application/json")
+	@GetMapping(value = "/courses/student/{userid}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getStudentCourses(
 			@PathVariable
-					long studentid
+					long userid
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByStudentid(studentid)
+		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getStudentCourses(studentid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getStudentCourses(userid)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/teacher/{teacherid}", produces = "application/json")
+	@GetMapping(value = "/courses/teacher/{userid}", produces = "application/json")
 	public ResponseEntity<?> getTeacherCourses(
 			@PathVariable
-					long teacherid
+					long userid
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByTeacherid(teacherid)
+		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getTeacherCourses(teacherid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getTeacherCourses(userid)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
