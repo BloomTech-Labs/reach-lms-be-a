@@ -36,6 +36,9 @@ public class SeedData
 	UserService userService;
 
 	@Autowired
+	StudentTeacherService studentTeacherService;
+
+	@Autowired
 	ProgramService programService;
 
 	@Autowired
@@ -82,11 +85,12 @@ public class SeedData
 		llama002.getRoles()
 				.add(new UserRoles(llama002, studentRole));
 
-		llama002 = userService.save(llama002);
 
 		User llama003 = new User("llama003@maildrop.cc", "llama003@maildrop.cc", "llama3", "LLAMA_003", "0987654321");
 		llama003.getRoles()
 				.add(new UserRoles(llama003, teacherRole));
+
+		llama002 = userService.save(llama002);
 		llama003 = userService.save(llama003);
 
 
@@ -138,7 +142,6 @@ public class SeedData
 				.getCourseid(), module3);
 		module4 = moduleService.save(module4.getCourse()
 				.getCourseid(), module4);
-
 
 	}
 

@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.services;
 
 
+import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.User;
 
 import java.util.List;
@@ -87,5 +88,13 @@ public interface UserService {
 	 * Deletes all record and their associated records from the database
 	 */
 	public void deleteAll();
+
+	/**
+	 * Updates the role on this user
+	 * @param user The user for which we will reassign role
+	 * @param roleType The new role
+	 * @return
+	 */
+	public User updateRole(User user, RoleType roleType);
 
 }

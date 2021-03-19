@@ -9,26 +9,26 @@ import java.util.List;
 public interface StudentTeacherService {
 
 	// GET all students
-	List<User> getAllStudents();
+	public List<User> getAllStudents();
 
 	// GET all teachers
-	List<User> getAllTeachers();
+	public List<User> getAllTeachers();
 
 	// GET all attached users
-	List<User> getCourseAttachedUsers(Long courseid);
+	public List<User> getCourseAttachedUsers(Long courseid);
 
 	// GET all un-attached (available) users
-	List<User> getCourseNotAttachedUsers(Long courseid);
+	public List<User> getCourseNotAttachedUsers(Long courseid);
 
 	// this user is a student? add as a student
 	// this user is a teacher? add as a teacher
-	void attachUserToCourse(
+	public void attachUserToCourse(
 			Long userid,
 			Long courseid
 	);
 
 	// DELETE user from course (we decide role)
-	void unattachUserFromCourse(
+	public void detachUserFromCourse(
 			Long userid,
 			Long courseid
 	);

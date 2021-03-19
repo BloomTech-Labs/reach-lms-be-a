@@ -52,7 +52,7 @@ public class User
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<Program> programs = new HashSet<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<UserCourses> courses = new HashSet<>();
@@ -199,6 +199,15 @@ public class User
 
 	public void setCourses(Set<UserCourses> courses) {
 		this.courses = courses;
+	}
+
+	@JsonIgnore
+	public void setName(String name) {
+		String[] splitName = name.split(" ");
+		this.firstname = splitName[0];
+		if (splitName.length > 1) {
+			this.lastname = splitName[1];
+		}
 	}
 
 	/**

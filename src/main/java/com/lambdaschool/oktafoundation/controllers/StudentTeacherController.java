@@ -9,9 +9,7 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -92,4 +90,15 @@ public class StudentTeacherController {
 
 	}
 
+	@PutMapping("/courses/course/{courseid}/user/{userid}")
+	public ResponseEntity<?> attachUserToCourse(@PathVariable Long courseid, @PathVariable Long userid) {
+		studentTeacherService.attachUserToCourse(userid, courseid);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@DeleteMapping("/courses/course/{courseid}/user/{userid}")
+	public ResponseEntity<?> detachUserFromCourse(@PathVariable Long courseid, @PathVariable Long userid) {
+		studentTeacherService.detachUserFromCourse(userid, courseid);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }

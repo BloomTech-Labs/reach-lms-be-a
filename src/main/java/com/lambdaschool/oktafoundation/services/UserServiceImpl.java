@@ -170,4 +170,13 @@ public class UserServiceImpl
 		userrepos.deleteAll();
 	}
 
+	@Transactional
+	@Override
+	public User updateRole(User user, RoleType newRole) {
+		// TODO
+		return new User();
+	}
+
+
+
 }
