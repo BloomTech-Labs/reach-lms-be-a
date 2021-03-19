@@ -1,8 +1,12 @@
 package com.lambdaschool.oktafoundation.services;
 
 
+import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
+import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.User;
+import com.lambdaschool.oktafoundation.models.UserCourses;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,9 @@ public class StudentTeacherServiceImpl
 
 	@Autowired
 	CourseService courseService;
+
+	@Autowired
+	HelperFunctions helperFunctions;
 
 	@Override
 	public List<User> getAllStudents() {
@@ -81,15 +88,39 @@ public class StudentTeacherServiceImpl
 			Long userid,
 			Long courseid
 	) {
-		// TODO: implement this method and its endpoint
+		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
+		if (callingUserRole == RoleType.STUDENT) {
+			throw new RoleNotSufficientException("Students are not allowed to attach users to courses");
+		}
+		User   currUser   = userService.findUserById(userid);
+		Course currCourse = courseService.findCourseById(courseid);
+		if (currUser.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users are not attached at the course level");
+		} else {
+			currCourse.getUsers()
+					.add(new UserCourses(currUser, currCourse));
+			courseService.update(currCourse.getCourseid(), currCourse);
+		}
 	}
 
 	@Override
-	public void unattachUserFromCourse(
+	public void detachUserFromCourse(
 			Long userid,
 			Long courseid
 	) {
-		// TODO: implement this method and its endpoint
+		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
+		if (callingUserRole == RoleType.STUDENT) {
+			throw new RoleNotSufficientException("Students are not allowed to detach users to courses");
+		}
+		User   currUser   = userService.findUserById(userid);
+		Course currCourse = courseService.findCourseById(courseid);
+		if (currUser.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users are not attached at the course level");
+		} else {
+			currCourse.getUsers().removeIf(userCourses -> userCourses.equals(new UserCourses(currUser,
+					currCourse)));
+		}
 	}
+
 
 }

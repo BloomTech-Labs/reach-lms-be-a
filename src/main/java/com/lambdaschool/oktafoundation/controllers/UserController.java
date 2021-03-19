@@ -1,8 +1,11 @@
 package com.lambdaschool.oktafoundation.controllers;
 
 
+import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
 import com.lambdaschool.oktafoundation.modelAssemblers.UserModelAssembler;
-import com.lambdaschool.oktafoundation.models.User;
+import com.lambdaschool.oktafoundation.models.*;
+import com.lambdaschool.oktafoundation.services.HelperFunctions;
+import com.lambdaschool.oktafoundation.services.RoleService;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -38,6 +41,12 @@ public class UserController {
 
 	@Autowired
 	private UserModelAssembler userModelAssembler;
+
+	@Autowired
+	private RoleService roleService;
+
+	@Autowired
+	private HelperFunctions helperFunctions;
 
 	/**
 	 * Returns a list of all users
@@ -125,6 +134,45 @@ public class UserController {
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@PostMapping("/create-user")
+	public ResponseEntity<?> addMinUser(
+			@Valid
+			@RequestBody
+					MinimumUser minimumUser
+	) {
+		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
+		if (callingUserRole != RoleType.ADMIN) {
+			throw new RoleNotSufficientException("Your role is not sufficient to create a new user");
+		}
+		User newUser = new User();
+		newUser.setUserid(0);
+		Role role = roleService.findByName(minimumUser.getRoleType()
+				.name());
+		newUser.getRoles()
+				.add(new UserRoles(newUser, role));
+		newUser.setEmail(minimumUser.getEmail());
+		if (minimumUser.getUsername() != null) {
+			newUser.setUsername(minimumUser.getUsername());
+		}
+		if (minimumUser.getFirstname() != null) {
+			newUser.setFirstname(minimumUser.getFirstname());
+		}
+		if (minimumUser.getLastname() != null) {
+			newUser.setLastname(minimumUser.getLastname());
+		}
+
+		newUser = userService.save(newUser);
+
+		HttpHeaders responseHeaders = new HttpHeaders();
+		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{userid}")
+				.buildAndExpand(newUser.getUserid())
+				.toUri();
+		responseHeaders.setLocation(newUserURI);
+
+		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
 	}
 
 	/**
@@ -244,6 +292,25 @@ public class UserController {
 		EntityModel<User> user = userModelAssembler.toModel(userService.findByName(authentication.getName()));
 
 		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+
+	@PatchMapping(value="/user/{userid}/{roleType}")
+	public ResponseEntity<?> updateUserRole(@PathVariable Long userid, @Valid @PathVariable RoleType roleType) {
+		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
+		User userToEdit = userService.findUserById(userid);
+		if (callingUserRole != RoleType.ADMIN) {
+			throw new RoleNotSufficientException("You are not an admin. You may not update another user's role");
+		}
+		else if (userToEdit.getRole() == RoleType.ADMIN) {
+				throw new RoleNotSufficientException("Admin users cannot edit other Admin users");
+		}
+		else {
+			userToEdit = userService.updateRole(userToEdit, roleType);
+		}
+
+
+		return new ResponseEntity<>(userToEdit, HttpStatus.OK);
+
 	}
 
 }
