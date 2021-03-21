@@ -7,8 +7,8 @@ import java.io.Serializable;
 @Embeddable
 public class UserCoursesId implements Serializable
 {
-    private long user;
     private long course;
+    private long user;
 
     public UserCoursesId()
     {

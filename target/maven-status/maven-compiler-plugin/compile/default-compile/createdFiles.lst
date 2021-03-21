@@ -20,7 +20,9 @@ com/lambdaschool/oktafoundation/controllers/CourseController.class
 com/lambdaschool/oktafoundation/models/Course.class
 com/lambdaschool/oktafoundation/models/UserRolesId.class
 com/lambdaschool/oktafoundation/services/UserService.class
+com/lambdaschool/oktafoundation/models/MinimumUser.class
 com/lambdaschool/oktafoundation/services/HelperFunctionsImpl.class
+com/lambdaschool/oktafoundation/exceptions/RoleNotSufficientException.class
 com/lambdaschool/oktafoundation/models/Role.class
 com/lambdaschool/oktafoundation/controllers/UserController.class
 com/lambdaschool/oktafoundation/modelAssemblers/ProgramModelAssembler.class

@@ -56,7 +56,7 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
-	@GetMapping(value = "/users", produces = "application/json")
+	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
 		List<EntityModel<User>> myUsers = userService.findAll()
 				.stream()
@@ -172,7 +172,7 @@ public class UserController {
 				.toUri();
 		responseHeaders.setLocation(newUserURI);
 
-		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<>(newUser, responseHeaders, HttpStatus.CREATED);
 	}
 
 	/**

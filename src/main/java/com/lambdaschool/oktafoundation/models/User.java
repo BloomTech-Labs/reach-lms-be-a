@@ -97,6 +97,13 @@ public class User
 		setUsername(username);
 	}
 
+	public String getFirstName() {
+		return firstname;
+	}
+
+	public String getLastName() {
+		return lastname;
+	}
 
 	public String getFirstname() {
 		return firstname;
