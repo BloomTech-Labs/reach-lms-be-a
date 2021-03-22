@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -20,9 +21,15 @@ public class OktaAuthSecurityConfig
 		extends WebSecurityConfigurerAdapter {
 
 	@Bean
+	GrantedAuthorityDefaults grantedAuthorityDefaults() {
+		return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+	}
+
+	@Bean
 	public JwtAuthenticationFilter authenticationTokenFilterBean() {
 		return new JwtAuthenticationFilter();
 	}
+
 
 	@Override
 	protected void configure(HttpSecurity http)

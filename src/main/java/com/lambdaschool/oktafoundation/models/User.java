@@ -46,6 +46,8 @@ public class User
 
 	private String phonenumber;
 
+	private RoleType roleType;
+
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -97,6 +99,13 @@ public class User
 		setUsername(username);
 	}
 
+	public String getFirstName() {
+		return firstname;
+	}
+
+	public String getLastName() {
+		return lastname;
+	}
 
 	public String getFirstname() {
 		return firstname;
@@ -251,15 +260,26 @@ public class User
 			}
 		}
 
-		if (isAdmin)
+		if (isAdmin) {
+			this.roleType = RoleType.ADMIN;
 			return new SimpleGrantedAuthority(RoleType.ADMIN.name());
-		if (isTeacher)
+		}
+		if (isTeacher) {
+			this.roleType = RoleType.TEACHER;
 			return new SimpleGrantedAuthority(RoleType.TEACHER.name());
-		if (isStudent)
+		}
+		if (isStudent) {
+			this.roleType = RoleType.STUDENT;
 			return new SimpleGrantedAuthority(RoleType.STUDENT.name());
+		}
 
+		this.roleType = null;
 		return null;
 
+	}
+
+	public RoleType getRoleType() {
+		return this.roleType;
 	}
 
 	public RoleType getRole() {
@@ -270,7 +290,6 @@ public class User
 		for (UserRoles r : this.roles) {
 			RoleType currentRoleType = r.getRole()
 					.getRoleType();
-
 			if (currentRoleType != null) {
 				if (currentRoleType == RoleType.ADMIN) {
 					isAdmin = true;
@@ -281,13 +300,18 @@ public class User
 				}
 			}
 		}
-
-		if (isAdmin)
+		if (isAdmin) {
+			this.roleType = RoleType.ADMIN;
 			return RoleType.ADMIN;
-		if (isTeacher)
+		}
+		if (isTeacher) {
+			this.roleType = RoleType.TEACHER;
 			return RoleType.TEACHER;
-		if (isStudent)
+		}
+		if (isStudent) {
+			this.roleType = RoleType.STUDENT;
 			return RoleType.STUDENT;
+		}
 
 		return null;
 

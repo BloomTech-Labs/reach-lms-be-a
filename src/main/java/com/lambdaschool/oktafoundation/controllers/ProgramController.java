@@ -12,6 +12,8 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -35,6 +37,13 @@ public class ProgramController {
 
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
+
+	@GetMapping(value="")
+	public String home(@AuthenticationPrincipal
+	                   OidcUser user
+	                   ) {
+		return "Welcome, " + user.getFullName();
+	}
 
 	@GetMapping(value = "/programs", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Program>>> listAllPrograms() {

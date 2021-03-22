@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter
 				workingUser = new User(authentication.getName());
 				// adds a default ADMIN role to this new user... should we default to ADMIN?
 				Set<UserRoles> newRoles = new HashSet<>();
-				newRoles.add(new UserRoles(workingUser, roleService.findByName("admin")));
+				newRoles.add(new UserRoles(workingUser, roleService.findByName("ADMIN")));
 				workingUser.setRoles(newRoles);
 				workingUser = userService.save(workingUser);
 			}
