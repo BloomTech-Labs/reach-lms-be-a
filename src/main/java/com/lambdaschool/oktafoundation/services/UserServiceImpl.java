@@ -8,7 +8,6 @@ import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,22 +90,31 @@ public class UserServiceImpl
 					.orElseThrow(() -> new ResourceNotFoundException("User id " + user.getUserid() + " not found!"));
 			newUser.setUserid(user.getUserid());
 		}
-
 		newUser.setUsername(user.getUsername()
 				.toLowerCase());
 		newUser.setEmail(user.getEmail());
-
 		newUser.setFirstname(user.getFirstname());
 		newUser.setLastname(user.getLastname());
 		newUser.setPhonenumber(user.getPhonenumber());
 
 		newUser.getRoles()
 				.clear();
-		for (UserRoles ur : user.getRoles()) {
-			Role addRole = roleService.findByName(ur.getRole()
-					.getName());
+		if (user.getRole() != null) {
+			Role newRole = roleService.findByName(user.getRole()
+					.name());
 			newUser.getRoles()
-					.add(new UserRoles(newUser, addRole));
+					.add(new UserRoles(newUser, newRole));
+		}
+
+		if (user.getRoles()
+				    .size() > 0) {
+			for (UserRoles ur : user.getRoles()) {
+				Role addRole = roleService.findByName(ur.getRole()
+						.getName());
+				newUser.getRoles()
+						.add(new UserRoles(newUser, addRole));
+			}
+
 		}
 
 		return userrepos.save(newUser);
@@ -144,17 +152,22 @@ public class UserServiceImpl
 				currentUser.setPhonenumber(user.getPhonenumber());
 			}
 
+			if (user.getRole() != null) {
+				Role newRole = roleService.findByName(user.getRole()
+						.name());
+				currentUser.getRoles()
+						.add(new UserRoles(currentUser, newRole));
+			}
+
 			if (user.getRoles()
 					    .size() > 0) {
-				currentUser.getRoles()
-						.clear();
 				for (UserRoles ur : user.getRoles()) {
-					Role addRole = roleService.findRoleById(ur.getRole()
-							.getRoleid());
-
+					Role addRole = roleService.findByName(ur.getRole()
+							.getName());
 					currentUser.getRoles()
 							.add(new UserRoles(currentUser, addRole));
 				}
+
 			}
 			return userrepos.save(currentUser);
 		} else {
@@ -172,11 +185,13 @@ public class UserServiceImpl
 
 	@Transactional
 	@Override
-	public User updateRole(User user, RoleType newRole) {
+	public User updateRole(
+			User user,
+			RoleType newRole
+	) {
 		// TODO
 		return new User();
 	}
-
 
 
 }

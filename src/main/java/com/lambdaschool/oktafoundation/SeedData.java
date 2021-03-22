@@ -79,20 +79,22 @@ public class SeedData
 				.add(new UserRoles(llama001, adminRole));
 		llama001 = userService.save(llama001);
 
-		// USER llama002@maildrop.cc
-		User llama002 = new User("llama002@maildrop.cc", "llama002@maildrop.cc", "llama2", "LLAMA_002", "(987)654-3210");
+		// TEACHER USER reach.lms.test+Teach001@gmail.com
+		User teacher001 = new User("reach.lms.test+Teach001@gmail.com", "reach.lms.test+Teach001@gmail.com", "Teacher001",
+				"TEACHER_001", null);
 
-		llama002.getRoles()
-				.add(new UserRoles(llama002, studentRole));
+		teacher001.getRoles()
+				.add(new UserRoles(teacher001, teacherRole));
 
+		// STUDENT USER reach.lms.test+Student001@gmail.com
+		User student001 = new User("reach.lms.test+Student001@gmail.com", "reach.lms.test+Student001@gmail.com",
+				"Student001", "STUDENT_001", null);
 
-		User llama003 = new User("llama003@maildrop.cc", "llama003@maildrop.cc", "llama3", "LLAMA_003", "0987654321");
-		llama003.getRoles()
-				.add(new UserRoles(llama003, teacherRole));
+		student001.getRoles()
+				.add(new UserRoles(student001, studentRole));
 
-		llama002 = userService.save(llama002);
-		llama003 = userService.save(llama003);
-
+		teacher001 = userService.save(teacher001);
+		student001 = userService.save(student001);
 
 		// USER reach.lms.test@gmail.com
 		User reachRoot = new User("reach.lms.test@gmail.com",
@@ -117,10 +119,10 @@ public class SeedData
 		Course course2 = new Course("Course2", "COURSE_2", "This is course #2", program1);
 		Course course3 = new Course("Course3", "COURSE_3", "This is course #3", program2);
 
-		course1.getUsers().add(new UserCourses(llama002, course1));
-		course2.getUsers().add(new UserCourses(llama002, course2));
-		course1.getUsers().add(new UserCourses(llama003, course1));
-		course2.getUsers().add(new UserCourses(llama003, course2));
+		course1.getUsers().add(new UserCourses(teacher001, course1));
+		course2.getUsers().add(new UserCourses(teacher001, course2));
+		course1.getUsers().add(new UserCourses(student001, course1));
+		course2.getUsers().add(new UserCourses(student001, course2));
 
 		course1 = courseService.save(course1.getProgram()
 				.getProgramid(), course1);
