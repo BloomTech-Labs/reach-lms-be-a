@@ -13,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -48,6 +49,9 @@ public class UserController {
 	@Autowired
 	private HelperFunctions helperFunctions;
 
+
+
+
 	/**
 	 * Returns a list of all users
 	 * <br>Example: <a href="http://localhost:2019/users/users">http://localhost:2019/users/users</a>
@@ -56,6 +60,7 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
+
 	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
 		List<EntityModel<User>> myUsers = userService.findAll()

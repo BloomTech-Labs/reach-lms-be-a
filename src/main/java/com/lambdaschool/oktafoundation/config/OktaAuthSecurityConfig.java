@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 
@@ -18,6 +19,11 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 @Configuration
 public class OktaAuthSecurityConfig
 		extends WebSecurityConfigurerAdapter {
+
+	@Bean
+	GrantedAuthorityDefaults grantedAuthorityDefaults() {
+		return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+	}
 
 	@Bean
 	public JwtAuthenticationFilter authenticationTokenFilterBean() {
@@ -35,25 +41,26 @@ public class OktaAuthSecurityConfig
 				.permitAll()
 
 				// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
-				.antMatchers("/users/**")
-				.authenticated()
-				// *** Handled at UseremailService Level
+				.antMatchers("/users/**", "/okta/**")
+				.permitAll()
 				.antMatchers("/useremails/**")
-				.authenticated()
+//				.authenticated()
+				// *** Handled at UseremailService Level
+				.permitAll()
 				.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
-				.authenticated()
+				.permitAll()
 				.antMatchers("/teachers/**")
-				.authenticated()
+				.permitAll()
 				.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
 				.permitAll()
 				.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 
 				// *** Endpoints not specified above are automatically denied
 				.anyRequest()
@@ -65,7 +72,7 @@ public class OktaAuthSecurityConfig
 				.jwt();
 
 		// process CORS annotations
-		// http.cors();
+//		 http.cors();
 
 		// disable the creation and use of Cross Site Request Forgery Tokens.
 		// These tokens require coordination with the front end client that is beyond the scope of this class.
