@@ -5,6 +5,7 @@ import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
 import com.lambdaschool.oktafoundation.modelAssemblers.UserModelAssembler;
 import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.services.HelperFunctions;
+import com.lambdaschool.oktafoundation.services.OktaSDKService;
 import com.lambdaschool.oktafoundation.services.RoleService;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -49,7 +49,8 @@ public class UserController {
 	@Autowired
 	private HelperFunctions helperFunctions;
 
-
+	@Autowired
+	private OktaSDKService okta;
 
 
 	/**
@@ -160,15 +161,25 @@ public class UserController {
 		newUser.setEmail(minimumUser.getEmail());
 		if (minimumUser.getUsername() != null) {
 			newUser.setUsername(minimumUser.getUsername());
+		} else {
+			newUser.setUsername(minimumUser.getEmail());
 		}
 		if (minimumUser.getFirstname() != null) {
 			newUser.setFirstname(minimumUser.getFirstname());
+		} else {
+			newUser.setFirstname(minimumUser.getEmail());
 		}
 		if (minimumUser.getLastname() != null) {
 			newUser.setLastname(minimumUser.getLastname());
+		} else {
+			newUser.setLastname(minimumUser.getEmail());
 		}
 
+
 		newUser = userService.save(newUser);
+
+		okta.createOktaUser(newUser.getEmail(), newUser.getFirstname(), newUser.getLastname(), newUser.getRole().name());
+
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -299,17 +310,21 @@ public class UserController {
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-	@PatchMapping(value="/user/{userid}/{roleType}")
-	public ResponseEntity<?> updateUserRole(@PathVariable Long userid, @Valid @PathVariable RoleType roleType) {
+	@PatchMapping(value = "/user/{userid}/{roleType}")
+	public ResponseEntity<?> updateUserRole(
+			@PathVariable
+					Long userid,
+			@Valid
+			@PathVariable
+					RoleType roleType
+	) {
 		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
-		User userToEdit = userService.findUserById(userid);
+		User     userToEdit      = userService.findUserById(userid);
 		if (callingUserRole != RoleType.ADMIN) {
 			throw new RoleNotSufficientException("You are not an admin. You may not update another user's role");
-		}
-		else if (userToEdit.getRole() == RoleType.ADMIN) {
-				throw new RoleNotSufficientException("Admin users cannot edit other Admin users");
-		}
-		else {
+		} else if (userToEdit.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("Admin users cannot edit other Admin users");
+		} else {
 			userToEdit = userService.updateRole(userToEdit, roleType);
 		}
 

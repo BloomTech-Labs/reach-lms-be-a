@@ -30,6 +30,7 @@ public class OktaAuthSecurityConfig
 		return new JwtAuthenticationFilter();
 	}
 
+
 	@Override
 	protected void configure(HttpSecurity http)
 	throws Exception {
@@ -41,26 +42,25 @@ public class OktaAuthSecurityConfig
 				.permitAll()
 
 				// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
-				.antMatchers("/users/**", "/okta/**")
-				.permitAll()
-				.antMatchers("/useremails/**")
-//				.authenticated()
+				.antMatchers("/users/**")
+				.authenticated()
 				// *** Handled at UseremailService Level
-				.permitAll()
+				.antMatchers("/useremails/**")
+				.authenticated()
 				.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
-				.permitAll()
+				.authenticated()
 				.antMatchers("/teachers/**")
-				.permitAll()
+				.authenticated()
 				.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
 				.permitAll()
 				.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
-				.permitAll()
+				.hasAnyRole("ADMIN", "TEACHER")
 				.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
-				.permitAll()
+				.hasAnyRole("ADMIN", "TEACHER")
 				.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
-				.permitAll()
+				.hasAnyRole("ADMIN", "TEACHER")
 				.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
-				.permitAll()
+				.hasAnyRole("ADMIN", "TEACHER")
 
 				// *** Endpoints not specified above are automatically denied
 				.anyRequest()
@@ -72,7 +72,7 @@ public class OktaAuthSecurityConfig
 				.jwt();
 
 		// process CORS annotations
-//		 http.cors();
+		// http.cors();
 
 		// disable the creation and use of Cross Site Request Forgery Tokens.
 		// These tokens require coordination with the front end client that is beyond the scope of this class.

@@ -10,7 +10,9 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/HelperFunctionsImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/config/H2ServerConfiguration.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/package-info.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/RolesServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/UserCourses.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/OktaController.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/ModuleRepository.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Auditable.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/package-info.java
@@ -38,6 +40,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/package-info.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/ProgramService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/UserServiceImpl.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/RolesService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/MinimumUser.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/RoleRepository.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/handlers/package-info.java
@@ -51,6 +54,8 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/RolesController.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/UserAuditing.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Role.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Roles.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/OktaSDKServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/OktaFoundationApplication.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/ProgramController.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/StudentTeacherController.java
@@ -60,6 +65,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/ValidationError.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/ResourceFoundException.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Course.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/OktaSDKService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/UserCoursesId.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/ModuleServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/ProgramRepository.java

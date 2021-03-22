@@ -34,13 +34,14 @@ public class OktaSDKServiceImpl
 			String role
 	) {
 		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
+		// I think we could also add a Group attribute here, but I'm holding off until I'm certain about matching
+		// groups with Okta is the correct choice.
 		return UserBuilder.instance()
 				.setEmail(email)
 				.setFirstName(firstname)
 				.setLastName(lastname)
 				.setPassword(tempPassword)
-				.setActive(true)
-				//				.addGroup(client.getResource())
+				.setActive(false)
 				.buildAndCreate(client);
 	}
 
