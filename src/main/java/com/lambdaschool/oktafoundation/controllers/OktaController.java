@@ -2,9 +2,8 @@ package com.lambdaschool.oktafoundation.controllers;
 
 
 import com.lambdaschool.oktafoundation.models.MinimumUser;
-import com.okta.sdk.client.Client;
+import com.lambdaschool.oktafoundation.services.OktaSDKService;
 import com.okta.sdk.resource.user.User;
-import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-//@RestController
-public class AdminController {
+@RestController
+public class OktaController {
 
 	@Autowired
-	public Client client;
+	OktaSDKService okta;
+
 
 	/**
 	 * Return all users in this Okta application
@@ -25,7 +25,7 @@ public class AdminController {
 	 */
 	@GetMapping("/okta/users")
 	public UserList getUsers() {
-		return client.listUsers();
+		return okta.getUsers();
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class AdminController {
 			@RequestParam
 					String query
 	) {
-		return client.listUsers(query, null, null, null, null);
+		return okta.searchUsersByEmail(query);
 	}
 
 	@PostMapping("okta/createUser")
@@ -49,14 +49,13 @@ public class AdminController {
 			@RequestBody
 					MinimumUser newUser
 	) {
-		char[] tempPassword = {'P', 'a', '$', '$', 'w', '0', 'r', 'd'};
-		return UserBuilder.instance()
-				.setEmail(newUser.getEmail())
-				.setFirstName(newUser.getFirstname())
-				.setLastName(newUser.getLastname())
-				.setPassword(tempPassword)
-				.setActive(true)
-				.buildAndCreate(client);
+		return okta.createOktaUser(
+				newUser.getEmail(),
+				newUser.getFirstname(),
+				newUser.getLastname(),
+				newUser.getRoleType()
+						.name()
+		);
 	}
 
 }

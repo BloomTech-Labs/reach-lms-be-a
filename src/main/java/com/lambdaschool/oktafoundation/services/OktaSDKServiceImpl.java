@@ -30,7 +30,8 @@ public class OktaSDKServiceImpl
 	public User createOktaUser(
 			String email,
 			String firstname,
-			String lastname
+			String lastname,
+			String role
 	) {
 		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
 		return UserBuilder.instance()
@@ -39,6 +40,7 @@ public class OktaSDKServiceImpl
 				.setLastName(lastname)
 				.setPassword(tempPassword)
 				.setActive(true)
+				//				.addGroup(client.getResource())
 				.buildAndCreate(client);
 	}
 
