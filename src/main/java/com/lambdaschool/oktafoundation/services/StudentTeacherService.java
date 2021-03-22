@@ -8,30 +8,38 @@ import java.util.List;
 
 public interface StudentTeacherService {
 
+
+	List<User> getAllAdmins();
 	// GET all students
-	public List<User> getAllStudents();
+	List<User> getAllStudents();
 
 	// GET all teachers
-	public List<User> getAllTeachers();
+	List<User> getAllTeachers();
 
 	// GET all attached users
-	public List<User> getCourseAttachedUsers(Long courseid);
+	List<User> getCourseAttachedUsers(Long courseid);
 
 	// GET all un-attached (available) users
-	public List<User> getCourseNotAttachedUsers(Long courseid);
+	List<User> getCourseNotAttachedUsers(Long courseid);
 
 	// this user is a student? add as a student
 	// this user is a teacher? add as a teacher
-	public void attachUserToCourse(
+	void attachUserToCourse(
 			Long userid,
 			Long courseid
 	);
 
 	// DELETE user from course (we decide role)
-	public void detachUserFromCourse(
+	void detachUserFromCourse(
 			Long userid,
 			Long courseid
 	);
+
+	List<User> getCourseAttachedStudents(Long courseid);
+	List<User> getCourseAttachedTeachers(Long courseid);
+	List<User> getCourseDetachedStudents(Long courseid);
+	List<User> getCourseDetachedTeachers(Long courseid);
+
 
 	// POSSIBLE METHODS WE COULD ADD BELOW
 	// GET teachers by courseid

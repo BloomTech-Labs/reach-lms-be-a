@@ -27,6 +27,18 @@ public class StudentTeacherController {
 	@Autowired
 	UserModelAssembler userModelAssembler;
 
+	@GetMapping("/users/admins")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllAdmins() {
+		List<EntityModel<User>> adminEntities = studentTeacherService.getAllAdmins()
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(adminEntities,
+				linkTo(methodOn(StudentTeacherController.class).getAllAdmins()).withSelfRel()
+		);
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
 	@GetMapping("/users/students")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllStudents() {
 		List<EntityModel<User>> studentEntities = studentTeacherService.getAllStudents()
@@ -72,7 +84,8 @@ public class StudentTeacherController {
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping("/courses/course/{courseid}/un-enrolled")
+
+	@GetMapping("/courses/course/{courseid}/detached")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getAllNotEnrolled(
 			@PathVariable
 					Long courseid
@@ -90,15 +103,90 @@ public class StudentTeacherController {
 
 	}
 
+	@GetMapping("/courses/course/{courseid}/enrolled-students")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getEnrolledStudents(
+			@PathVariable
+					Long courseid
+	) {
+		List<EntityModel<User>> enrolledStudents = studentTeacherService.getCourseAttachedStudents(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(enrolledStudents,
+				linkTo(methodOn(StudentTeacherController.class).getEnrolledStudents(courseid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/course/{courseid}/enrolled-teachers")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getEnrolledTeachers(
+			@PathVariable
+					Long courseid
+	) {
+		List<EntityModel<User>> enrolledTeachers = studentTeacherService.getCourseAttachedTeachers(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(enrolledTeachers,
+				linkTo(methodOn(StudentTeacherController.class).getEnrolledTeachers(courseid)).withSelfRel()
+		);
+
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/course/{courseid}/detached-students")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getDetachedStudents(
+			@PathVariable
+					Long courseid
+	) {
+		List<EntityModel<User>> detachedStudents = studentTeacherService.getCourseDetachedStudents(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(detachedStudents,
+				linkTo(methodOn(StudentTeacherController.class).getDetachedStudents(courseid)).withSelfRel()
+		);
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/course/{courseid}/detached-teachers")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> getDetachedTeachers(
+			@PathVariable
+					Long courseid
+	) {
+		List<EntityModel<User>> detachedTeachers = studentTeacherService.getCourseDetachedTeachers(courseid)
+				.stream()
+				.map(userModelAssembler::toModel)
+				.collect(Collectors.toList());
+		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(detachedTeachers,
+				linkTo(methodOn(StudentTeacherController.class).getDetachedTeachers(courseid)).withSelfRel()
+		);
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
 	@PutMapping("/courses/course/{courseid}/user/{userid}")
-	public ResponseEntity<?> attachUserToCourse(@PathVariable Long courseid, @PathVariable Long userid) {
+	public ResponseEntity<?> attachUserToCourse(
+			@PathVariable
+					Long courseid,
+			@PathVariable
+					Long userid
+	) {
 		studentTeacherService.attachUserToCourse(userid, courseid);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@DeleteMapping("/courses/course/{courseid}/user/{userid}")
-	public ResponseEntity<?> detachUserFromCourse(@PathVariable Long courseid, @PathVariable Long userid) {
+	public ResponseEntity<?> detachUserFromCourse(
+			@PathVariable
+					Long courseid,
+			@PathVariable
+					Long userid
+	) {
 		studentTeacherService.detachUserFromCourse(userid, courseid);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
 }
