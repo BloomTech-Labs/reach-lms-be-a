@@ -1,7 +1,6 @@
 package com.lambdaschool.oktafoundation.services;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.RoleType;
@@ -30,6 +29,19 @@ public class StudentTeacherServiceImpl
 
 	@Autowired
 	HelperFunctions helperFunctions;
+
+	@Override
+	public List<User> getAllAdmins() {
+		List<User> admins = new ArrayList<>();
+		userRepository.findAll()
+				.iterator()
+				.forEachRemaining(user -> {
+					if (user.getRole() == RoleType.ADMIN) {
+						admins.add(user);
+					}
+				});
+		return admins;
+	}
 
 	@Override
 	public List<User> getAllStudents() {
@@ -117,9 +129,61 @@ public class StudentTeacherServiceImpl
 		if (currUser.getRole() == RoleType.ADMIN) {
 			throw new RoleNotSufficientException("ADMIN users are not attached at the course level");
 		} else {
-			currCourse.getUsers().removeIf(userCourses -> userCourses.equals(new UserCourses(currUser,
-					currCourse)));
+			currCourse.getUsers()
+					.removeIf(userCourses -> userCourses.equals(new UserCourses(currUser, currCourse)));
 		}
+	}
+
+	@Override
+	public List<User> getCourseAttachedStudents(Long courseid) {
+		List<User> students = new ArrayList<>();
+		userRepository.findEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(user -> {
+					if (user.getRole() == RoleType.STUDENT) {
+						students.add(user);
+					}
+				});
+		return students;
+	}
+
+	@Override
+	public List<User> getCourseAttachedTeachers(Long courseid) {
+		List<User> teachers = new ArrayList<>();
+		userRepository.findEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(user -> {
+					if (user.getRole() == RoleType.TEACHER) {
+						teachers.add(user);
+					}
+				});
+		return teachers;
+	}
+
+	@Override
+	public List<User> getCourseDetachedStudents(Long courseid) {
+		List<User> students = new ArrayList<>();
+		userRepository.findNotEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(user -> {
+					if (user.getRole() == RoleType.STUDENT) {
+						students.add(user);
+					}
+				});
+		return students;
+	}
+
+	@Override
+	public List<User> getCourseDetachedTeachers(Long courseid) {
+		List<User> detachedTeachers = new ArrayList<>();
+		userRepository.findNotEnrolledUsers(courseid)
+				.iterator()
+				.forEachRemaining(user -> {
+					if (user.getRole() == RoleType.TEACHER) {
+						detachedTeachers.add(user);
+					}
+				});
+		return detachedTeachers;
 	}
 
 

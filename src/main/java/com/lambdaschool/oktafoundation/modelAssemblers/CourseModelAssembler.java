@@ -6,6 +6,9 @@ import com.lambdaschool.oktafoundation.controllers.ModuleController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
 import com.lambdaschool.oktafoundation.controllers.StudentTeacherController;
 import com.lambdaschool.oktafoundation.models.Course;
+import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.services.HelperFunctions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
@@ -22,6 +25,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class CourseModelAssembler
 		implements RepresentationModelAssembler<Course, EntityModel<Course>> {
 
+	@Autowired
+	HelperFunctions helperFunctions;
+
 	/**
 	 * Creates a RepresentationModel for the given Course with useful
 	 *
@@ -31,7 +37,8 @@ public class CourseModelAssembler
 	 */
 	@Override
 	public EntityModel<Course> toModel(Course course) {
-		return EntityModel.of(course,
+
+		EntityModel<Course> courseEntityModel = EntityModel.of(course,
 				// Link to SELF --- GET /courses/course/{courseid}
 				linkTo(methodOn(CourseController.class).getCourseByCourseId(course.getCourseid())).withSelfRel(),
 				// Link to associated program --- GET /programs/program/{programid}
@@ -40,11 +47,36 @@ public class CourseModelAssembler
 				// Link to all courses --- GET /courses
 				linkTo(methodOn(CourseController.class).getAllCourses()).withRel("all_courses"),
 				// Link to associated modules --- GET /modules/module/{moduleid}
-				linkTo(methodOn(ModuleController.class).getModulesByCourseId(course.getCourseid())).withRel("modules"),
-				// Link to associated users --- GET /enrolled/{courseid}
-				linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(course.getCourseid())).withRel("enrolled"),
-				linkTo(methodOn(StudentTeacherController.class).getAllNotEnrolled(course.getCourseid())).withRel("not_enrolled")
+				linkTo(methodOn(ModuleController.class).getModulesByCourseId(course.getCourseid())).withRel("modules")
+
 		);
+
+		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
+		// if the calling user is an ADMIN or a TEACHER, display the following additional links
+		if (callingUserRole == RoleType.ADMIN || callingUserRole == RoleType.TEACHER) {
+			courseEntityModel.add(
+					// Link to associated users --- GET /courses/course/{courseid}/enrolled
+					linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(course.getCourseid())).withRel(
+							"enrolled_users"),
+					// Link to all non-associated users --- GET /courses/course/{courseid}/detached
+					// Link to all enrolled teachers --- GET /courses/course/{courseid}/enrolled-teachers
+					linkTo(methodOn(StudentTeacherController.class).getEnrolledTeachers(course.getCourseid())).withRel(
+							"enrolled_teachers"),
+					// Link to all enrolled students --- GET /courses/course/{courseid}/enrolled-students
+					linkTo(methodOn(StudentTeacherController.class).getEnrolledStudents(course.getCourseid())).withRel(
+							"enrolled_students"),
+					linkTo(methodOn(StudentTeacherController.class).getAllNotEnrolled(course.getCourseid())).withRel(
+							"available_users"),
+					// Link to all non-associated teachers --- GET /courses/course/{courseid}/detached-teachers
+					linkTo(methodOn(StudentTeacherController.class).getDetachedTeachers(course.getCourseid())).withRel(
+							"available_teachers"),
+					// Link to all non-associated students --- GET /courses/course/{courseid}/detached-students
+					linkTo(methodOn(StudentTeacherController.class).getDetachedStudents(course.getCourseid())).withRel(
+							"available_students")
+			);
+		}
+
+		return courseEntityModel;
 	}
 
 }
