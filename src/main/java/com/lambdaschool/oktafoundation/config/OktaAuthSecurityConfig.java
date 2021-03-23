@@ -43,7 +43,7 @@ public class OktaAuthSecurityConfig
 		// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 		// ********************************************************************************
 		// change to "true" if running locally — ABSOLUTELY DO NOT DEPLOY with "true" here
-		if (true) {
+		if (false) {
 			http.sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 			http.authorizeRequests()
