@@ -22,7 +22,7 @@ public class OktaAuthSecurityConfig
 
 	@Bean
 	GrantedAuthorityDefaults grantedAuthorityDefaults() {
-		return new GrantedAuthorityDefaults(""); // Remove the ROLE_ prefix
+		return new GrantedAuthorityDefaults(""); // Removes the ROLE_ prefix
 	}
 
 	@Bean
@@ -37,39 +37,83 @@ public class OktaAuthSecurityConfig
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-		http.authorizeRequests()
-				.antMatchers("/", "/h2-console/**", "/webjars/**")
-				.permitAll()
+		// ********************************************************************************
+		// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+		// ********************************************************************************
+		// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
+		// ********************************************************************************
+		// change to "true" if running locally — ABSOLUTELY DO NOT DEPLOY with "true" here
+		if (false) {
+			http.sessionManagement()
+					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+			http.authorizeRequests()
+					.antMatchers("/",
+							"/h2-console/**",
+							"/v2/api-docs",
+							"/webjars/**",
+							"/users/**",
+							"/useremails/**",
+							"/modules/**",
+							"/programs/**",
+							"/courses/**",
+							"/students/**",
+							"/teachers/**"
+					)
+					.permitAll()
+					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**")
+					.permitAll()
+					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
+					.permitAll()
+					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
+					.permitAll()
+					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
+					.permitAll()
+					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
+					.permitAll()
+					.anyRequest()
+					.denyAll()
+					.and()
+					.exceptionHandling()
+					.and()
+					.oauth2ResourceServer()
+					.jwt();
+		} else {
+			http.authorizeRequests()
+					.antMatchers("/", "/h2-console/**", "/webjars/**")
+					.permitAll()
 
-				// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
-				.antMatchers("/users/**")
-				.authenticated()
-				// *** Handled at UseremailService Level
-				.antMatchers("/useremails/**")
-				.authenticated()
-				.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
-				.authenticated()
-				.antMatchers("/teachers/**")
-				.authenticated()
-				.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
-				.permitAll()
-				.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
-				.hasAnyRole("ADMIN", "TEACHER")
-				.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
-				.hasAnyRole("ADMIN", "TEACHER")
-				.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
-				.hasAnyRole("ADMIN", "TEACHER")
-				.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+					// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
+					.antMatchers("/users/**")
+					.authenticated()
+					// *** Handled at UseremailService Level
+					.antMatchers("/useremails/**")
+					.authenticated()
+					.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
+					.authenticated()
+					.antMatchers("/teachers/**")
+					.authenticated()
+					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
+					.permitAll()
+					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
+					.hasAnyRole("ADMIN", "TEACHER")
+					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
+					.hasAnyRole("ADMIN", "TEACHER")
+					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
+					.hasAnyRole("ADMIN", "TEACHER")
+					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
+					.hasAnyRole("ADMIN", "TEACHER")
 
-				// *** Endpoints not specified above are automatically denied
-				.anyRequest()
-				.denyAll()
-				.and()
-				.exceptionHandling()
-				.and()
-				.oauth2ResourceServer()
-				.jwt();
+					// *** Endpoints not specified above are automatically denied
+					.anyRequest()
+					.denyAll()
+					.and()
+					.exceptionHandling()
+					.and()
+					.oauth2ResourceServer()
+					.jwt();
+
+		}
+
 
 		// process CORS annotations
 		// http.cors();

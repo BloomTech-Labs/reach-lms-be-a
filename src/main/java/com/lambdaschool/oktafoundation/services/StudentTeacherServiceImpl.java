@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.services;
 
 
+import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.RoleType;
@@ -109,8 +110,9 @@ public class StudentTeacherServiceImpl
 		if (currUser.getRole() == RoleType.ADMIN) {
 			throw new RoleNotSufficientException("ADMIN users are not attached at the course level");
 		} else {
+			UserCourses newRelationship = new UserCourses(currUser, currCourse);
 			currCourse.getUsers()
-					.add(new UserCourses(currUser, currCourse));
+					.add(newRelationship);
 			courseService.update(currCourse.getCourseid(), currCourse);
 		}
 	}
@@ -129,8 +131,13 @@ public class StudentTeacherServiceImpl
 		if (currUser.getRole() == RoleType.ADMIN) {
 			throw new RoleNotSufficientException("ADMIN users are not attached at the course level");
 		} else {
-			currCourse.getUsers()
+			boolean removed = currCourse.getUsers()
 					.removeIf(userCourses -> userCourses.equals(new UserCourses(currUser, currCourse)));
+			if (!removed) {
+				throw new ResourceNotFoundException("The user to detach is not part of the course.");
+			}
+			courseService.update(currCourse.getCourseid(), currCourse);
+
 		}
 	}
 
