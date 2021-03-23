@@ -3,6 +3,7 @@ package com.lambdaschool.oktafoundation.controllers;
 
 import com.lambdaschool.oktafoundation.models.MinimumUser;
 import com.lambdaschool.oktafoundation.services.OktaSDKService;
+import com.okta.sdk.resource.group.GroupList;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 
-//@RestController
+@RestController
 public class OktaController {
 
 	@Autowired
@@ -43,7 +44,7 @@ public class OktaController {
 		return okta.searchUsersByEmail(query);
 	}
 
-	@PostMapping("okta/createUser")
+	@PostMapping("/okta/createUser")
 	public User createUser(
 			@Valid
 			@RequestBody
@@ -56,6 +57,11 @@ public class OktaController {
 				newUser.getRoleType()
 						.name()
 		);
+	}
+
+	@GetMapping("/okta/groups")
+	public GroupList getGroups() {
+		return okta.getGroups();
 	}
 
 }

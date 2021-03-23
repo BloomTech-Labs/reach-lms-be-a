@@ -43,7 +43,7 @@ public class OktaAuthSecurityConfig
 		// WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
 		// ********************************************************************************
 		// change to "true" if running locally — ABSOLUTELY DO NOT DEPLOY with "true" here
-		if (false) {
+		if (true) {
 			http.sessionManagement()
 					.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 			http.authorizeRequests()
@@ -57,7 +57,8 @@ public class OktaAuthSecurityConfig
 							"/programs/**",
 							"/courses/**",
 							"/students/**",
-							"/teachers/**"
+							"/teachers/**",
+							"/okta/**"
 					)
 					.permitAll()
 					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**")

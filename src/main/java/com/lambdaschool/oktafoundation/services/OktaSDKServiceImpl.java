@@ -2,6 +2,8 @@ package com.lambdaschool.oktafoundation.services;
 
 
 import com.okta.sdk.client.Client;
+import com.okta.sdk.resource.group.Group;
+import com.okta.sdk.resource.group.GroupList;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserBuilder;
 import com.okta.sdk.resource.user.UserList;
@@ -27,20 +29,27 @@ public class OktaSDKServiceImpl
 	}
 
 	@Override
+	public GroupList getGroups() {
+		return client.listGroups();
+	}
+
+	@Override
 	public User createOktaUser(
 			String email,
 			String firstname,
 			String lastname,
 			String role
 	) {
-		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
+//		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
 		// I think we could also add a Group attribute here, but I'm holding off until I'm certain about matching
 		// groups with Okta is the correct choice.
+		Group groupToAttach = client.getGroup(role, null null, null);
+		System.out.println(groupToAttach);
 		return UserBuilder.instance()
+				.setLogin(email)
 				.setEmail(email)
 				.setFirstName(firstname)
 				.setLastName(lastname)
-				.setPassword(tempPassword)
 				.setActive(false)
 				.buildAndCreate(client);
 	}
