@@ -40,4 +40,6 @@ public interface UserRepository
 			nativeQuery = true)
 	List<User> findNotEnrolledUsers(long courseid);
 
+
+
 }

@@ -62,15 +62,6 @@ public class ModuleController {
 		return new ResponseEntity<>(moduleModelAssembler.toModel(module), HttpStatus.OK);
 	}
 
-	//	@GetMapping(value = "/modules/module/{moduleName}", produces = "application/json")
-	//	public ResponseEntity<?> getModuleByName(
-	//			@PathVariable
-	//					String moduleName
-	//	) {
-	//		Module m = moduleService.findModulesByName(moduleName);
-	//		return new ResponseEntity<>(m, HttpStatus.OK);
-	//	}
-
 	@GetMapping(value = "/modules/{courseId}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Module>>> getModulesByCourseId(
 			@PathVariable
@@ -88,7 +79,7 @@ public class ModuleController {
 		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'ROLE_ADMIN', 'ROLE_TEACHER')")
 	@PostMapping(value = "/modules/{courseId}/module", produces = "application/json")
 	public ResponseEntity<?> addNewModule(
 			@PathVariable
@@ -111,7 +102,7 @@ public class ModuleController {
 		return new ResponseEntity<>(newModule, responseHeaders, HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'ROLE_ADMIN', 'ROLE_TEACHER')")
 	@PatchMapping(value = "/modules/{moduleId}", consumes = "application/json")
 	public ResponseEntity<?> updateModule(
 			@PathVariable
@@ -125,7 +116,7 @@ public class ModuleController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'ROLE_ADMIN', 'ROLE_TEACHER')")
 	@PutMapping(value = "/modules/{moduleId}", consumes = "application/json")
 	public ResponseEntity<?> updateFullModule(
 			@PathVariable
@@ -139,7 +130,7 @@ public class ModuleController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+	@PreAuthorize("hasAnyRole('ADMIN', 'TEACHER', 'ROLE_ADMIN', 'ROLE_TEACHER')")
 	@DeleteMapping(value = "/modules/{moduleId}")
 	public ResponseEntity<?> deleteModuleById(
 			@PathVariable

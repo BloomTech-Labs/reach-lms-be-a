@@ -61,18 +61,15 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
-
 	@GetMapping(value = "", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
 		List<EntityModel<User>> myUsers = userService.findAll()
 				.stream()
 				.map(userModelAssembler::toModel)
 				.collect(Collectors.toList());
-
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(myUsers,
 				linkTo(methodOn(UserController.class).listAllUsers()).withSelfRel()
 		);
-
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
@@ -133,12 +130,10 @@ public class UserController {
 				.stream()
 				.map(userModelAssembler::toModel)
 				.collect(Collectors.toList());
-
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
 				// Link to SELF (getUserLikeName method)
 				linkTo(methodOn(UserController.class).getUserByName(userName)).withSelfRel()
 		);
-
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
@@ -174,20 +169,19 @@ public class UserController {
 		} else {
 			newUser.setLastname(minimumUser.getEmail());
 		}
-
-
 		newUser = userService.save(newUser);
-
-		okta.createOktaUser(newUser.getEmail(), newUser.getFirstname(), newUser.getLastname(), newUser.getRole().name());
-
-
+		okta.createOktaUser(newUser.getEmail(),
+				newUser.getFirstname(),
+				newUser.getLastname(),
+				newUser.getRole()
+						.name()
+		);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{userid}")
 				.buildAndExpand(newUser.getUserid())
 				.toUri();
 		responseHeaders.setLocation(newUserURI);
-
 		return new ResponseEntity<>(newUser, responseHeaders, HttpStatus.CREATED);
 	}
 
@@ -211,7 +205,6 @@ public class UserController {
 	) {
 		newuser.setUserid(0);
 		newuser = userService.save(newuser);
-
 		// set the location header for the newly created resource
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -219,7 +212,6 @@ public class UserController {
 				.buildAndExpand(newuser.getUserid())
 				.toUri();
 		responseHeaders.setLocation(newUserURI);
-
 		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
 	}
 
@@ -304,9 +296,7 @@ public class UserController {
 	 */
 	@GetMapping(value = "/getuserinfo", produces = {"application/json"})
 	public ResponseEntity<EntityModel<User>> getCurrentUserInfo(Authentication authentication) {
-
 		EntityModel<User> user = userModelAssembler.toModel(userService.findByName(authentication.getName()));
-
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
@@ -321,16 +311,26 @@ public class UserController {
 		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
 		User     userToEdit      = userService.findUserById(userid);
 		if (callingUserRole != RoleType.ADMIN) {
-			throw new RoleNotSufficientException("You are not an admin. You may not update another user's role");
+			throw new RoleNotSufficientException("You are not an ADMIN. You may not update another user's role");
 		} else if (userToEdit.getRole() == RoleType.ADMIN) {
-			throw new RoleNotSufficientException("Admin users cannot edit other Admin users");
+			throw new RoleNotSufficientException("ADMIN users cannot edit other ADMIN users");
 		} else {
 			userToEdit = userService.updateRole(userToEdit, roleType);
 		}
-
-
 		return new ResponseEntity<>(userToEdit, HttpStatus.OK);
 
+	}
+
+	@PutMapping("/user/{userid}/replace-courses")
+	public ResponseEntity<?> replaceUserCourses(
+			@PathVariable
+					Long userid,
+			@RequestBody
+					List<Long> courseids
+	) {
+		User              updatedUser = userService.replaceUserEnrollments(userid, courseids);
+		EntityModel<User> entityModel = userModelAssembler.toModel(updatedUser);
+		return new ResponseEntity<>(entityModel, HttpStatus.OK);
 	}
 
 }

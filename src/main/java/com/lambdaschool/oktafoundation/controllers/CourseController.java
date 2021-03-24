@@ -17,7 +17,10 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -53,7 +56,8 @@ public class CourseController {
 
 	@GetMapping("/courses/user/{userid}")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getUserCourses(
-			@PathVariable long userid
+			@PathVariable
+					long userid
 	) {
 		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
 				.stream()
@@ -66,6 +70,41 @@ public class CourseController {
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
+
+	@GetMapping("/courses/anti-user/{userid}")
+	public ResponseEntity<CollectionModel<EntityModel<Course>>> getUserAntiCourses(
+			@PathVariable
+					long userid
+	) {
+		List<EntityModel<Course>> courses = courserepos.findAntiCoursesByUserId(userid)
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
+		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getUserAntiCourses(userid)).withSelfRel()
+		);
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
+	}
+
+	@GetMapping("/courses/mappify-by-user/{userid}")
+	public ResponseEntity<?> getMappifiedCoursesByUser(
+			@PathVariable
+					long userid
+	) {
+		List<Course> enrolledCourses = new ArrayList<>();
+		courserepos.findCoursesByUserid(userid)
+				.iterator()
+				.forEachRemaining(enrolledCourses::add);
+		List<Course> availableCourses = new ArrayList<>();
+		courserepos.findAntiCoursesByUserId(userid)
+				.iterator()
+				.forEachRemaining(availableCourses::add);
+		Map<String, List<Course>> mappedCourses = new HashMap<>();
+		mappedCourses.put("enrolled", enrolledCourses);
+		mappedCourses.put("available", availableCourses);
+		return new ResponseEntity<>(mappedCourses, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/courses/student/{userid}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getStudentCourses(
 			@PathVariable
@@ -143,7 +182,6 @@ public class CourseController {
 				.buildAndExpand(newCourse.getCourseid())
 				.toUri();
 		responseHeaders.setLocation(newCourseURI);
-
 		return new ResponseEntity<>(newCourse, responseHeaders, HttpStatus.CREATED);
 	}
 

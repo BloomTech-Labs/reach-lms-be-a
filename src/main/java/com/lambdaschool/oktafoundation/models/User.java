@@ -99,14 +99,6 @@ public class User
 		setUsername(username);
 	}
 
-	public String getFirstName() {
-		return firstname;
-	}
-
-	public String getLastName() {
-		return lastname;
-	}
-
 	public String getFirstname() {
 		return firstname;
 	}
@@ -278,6 +270,7 @@ public class User
 
 	}
 
+	@JsonIgnore
 	public RoleType getRoleType() {
 		return this.roleType;
 	}
