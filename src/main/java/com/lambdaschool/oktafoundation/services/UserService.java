@@ -87,14 +87,21 @@ public interface UserService {
 	/**
 	 * Deletes all record and their associated records from the database
 	 */
-	public void deleteAll();
+	void deleteAll();
 
 	/**
 	 * Updates the role on this user
-	 * @param user The user for which we will reassign role
+	 *
+	 * @param user     The user for which we will reassign role
 	 * @param roleType The new role
-	 * @return
+	 *
+	 * @return The newly updated user
 	 */
-	public User updateRole(User user, RoleType roleType);
+	User updateRole(
+			User user,
+			RoleType roleType
+	);
+
+	User replaceUserEnrollments(Long userid, List<Long> courseids);
 
 }

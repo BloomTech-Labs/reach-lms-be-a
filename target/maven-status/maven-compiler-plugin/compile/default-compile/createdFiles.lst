@@ -5,6 +5,7 @@ com/lambdaschool/oktafoundation/exceptions/CustomErrorDetails.class
 com/lambdaschool/oktafoundation/models/ErrorDetail.class
 com/lambdaschool/oktafoundation/models/ValidationError.class
 com/lambdaschool/oktafoundation/services/UserAuditing.class
+com/lambdaschool/oktafoundation/exceptions/UserNotFoundException.class
 com/lambdaschool/oktafoundation/controllers/OktaController.class
 com/lambdaschool/oktafoundation/services/CourseServiceImpl.class
 com/lambdaschool/oktafoundation/config/SimpleCorsFilter.class

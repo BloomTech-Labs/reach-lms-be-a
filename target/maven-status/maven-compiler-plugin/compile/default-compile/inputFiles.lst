@@ -12,6 +12,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/config/H2ServerConfiguration.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/package-info.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/RolesServiceImpl.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/UserNotFoundException.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/UserCourses.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/OktaController.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/ModuleRepository.java

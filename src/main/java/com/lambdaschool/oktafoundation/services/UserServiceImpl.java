@@ -2,17 +2,18 @@ package com.lambdaschool.oktafoundation.services;
 
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
-import com.lambdaschool.oktafoundation.models.Role;
-import com.lambdaschool.oktafoundation.models.RoleType;
-import com.lambdaschool.oktafoundation.models.User;
-import com.lambdaschool.oktafoundation.models.UserRoles;
+import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
+import com.lambdaschool.oktafoundation.exceptions.UserNotFoundException;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -36,6 +37,9 @@ public class UserServiceImpl
 	private RoleService roleService;
 
 	@Autowired
+	private CourseService courseService;
+
+	@Autowired
 	private HelperFunctions helperFunctions;
 
 	@Override
@@ -56,9 +60,9 @@ public class UserServiceImpl
 	}
 
 	public User findUserById(long id)
-	throws ResourceNotFoundException {
+	throws UserNotFoundException {
 		return userrepos.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
+				.orElseThrow(() -> new UserNotFoundException(id));
 	}
 
 	@Override
@@ -73,9 +77,8 @@ public class UserServiceImpl
 	@Transactional
 	@Override
 	public void delete(long id)
-	throws ResourceNotFoundException {
-		userrepos.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("User id " + id + " not found!"));
+	throws UserNotFoundException {
+		findUserById(id); // this will throw if user not found
 		userrepos.deleteById(id);
 	}
 
@@ -86,8 +89,7 @@ public class UserServiceImpl
 		User newUser = new User();
 
 		if (user.getUserid() != 0) {
-			userrepos.findById(user.getUserid())
-					.orElseThrow(() -> new ResourceNotFoundException("User id " + user.getUserid() + " not found!"));
+			findUserById(user.getUserid()); // throws if user not found
 			newUser.setUserid(user.getUserid());
 		}
 		newUser.setUsername(user.getUsername()
@@ -189,8 +191,39 @@ public class UserServiceImpl
 			User user,
 			RoleType newRole
 	) {
-		// TODO
-		return new User();
+		User userToUpdate = findUserById(user.getUserid()); // throws if user not found
+		if (userToUpdate.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users cannot be changed from ADMIN");
+		} else {
+			Role roleToUse = roleService.findByName(newRole.name());
+			userToUpdate.getRoles()
+					.add(new UserRoles(userToUpdate, roleToUse));
+		}
+		return userToUpdate;
+	}
+
+	@Transactional
+	@Override
+	public User replaceUserEnrollments(
+			Long userid,
+			List<Long> courseids
+	) {
+		User userToUpdate = findUserById(userid);
+		if (userToUpdate.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users are not attached at the course-level");
+		} else {
+			Set<Long>        hashedIds  = new HashSet<>(courseids);
+			Set<UserCourses> newCourses = new HashSet<>();
+			User             finalUserToUpdate = userToUpdate;
+			hashedIds.forEach(courseid -> {
+//				Course course = courseService.findCourseById(courseid);
+				newCourses.add(new UserCourses(finalUserToUpdate, courseService.findCourseById(courseid)));
+			});
+			userToUpdate.setCourses(newCourses);
+			userToUpdate = update(userToUpdate, userToUpdate.getUserid());
+			return userToUpdate;
+		}
+
 	}
 
 
