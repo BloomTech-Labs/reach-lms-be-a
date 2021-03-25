@@ -9,10 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -36,6 +33,8 @@ public class User
 	@NotNull
 	@Column(unique = true)
 	private String   username;
+	@NotNull
+	@Column(unique = true)
 	private String   email;
 	private String   firstname;
 	private String   lastname;
@@ -68,7 +67,7 @@ public class User
 
 	public User(
 			@NotNull String username,
-			String email,
+			@NotNull String email,
 			String firstname,
 			String lastname,
 			String phonenumber
@@ -300,6 +299,29 @@ public class User
 
 		return null;
 
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		User user = (User) o;
+		return getUserid() == user.getUserid() && getUsername().equals(user.getUsername()) &&
+		       getEmail().equals(user.getEmail());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getUserid(), getUsername(), getEmail());
+	}
+
+	@Override
+	public String toString() {
+		return "User{" + "userid=" + userid + ", username='" + username + '\'' + ", email='" + email + '\'' +
+		       ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", phonenumber='" + phonenumber +
+		       '\'' + ", roleType=" + roleType + " courses=" + courses + '}';
 	}
 
 }

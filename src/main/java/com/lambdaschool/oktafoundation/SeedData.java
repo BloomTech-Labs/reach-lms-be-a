@@ -80,15 +80,23 @@ public class SeedData
 		llama001 = userService.save(llama001);
 
 		// TEACHER USER reach.lms.test+Teach001@gmail.com
-		User teacher001 = new User("reach.lms.test+Teach001@gmail.com", "reach.lms.test+Teach001@gmail.com", "Teacher001",
-				"TEACHER_001", null);
+		User teacher001 = new User("reach.lms.test+Teach001@gmail.com",
+				"reach.lms.test+Teach001@gmail.com",
+				"Teacher001",
+				"TEACHER_001",
+				null
+		);
 
 		teacher001.getRoles()
 				.add(new UserRoles(teacher001, teacherRole));
 
 		// STUDENT USER reach.lms.test+Student001@gmail.com
-		User student001 = new User("reach.lms.test+Student001@gmail.com", "reach.lms.test+Student001@gmail.com",
-				"Student001", "STUDENT_001", null);
+		User student001 = new User("reach.lms.test+Student001@gmail.com",
+				"reach.lms.test+Student001@gmail.com",
+				"Student001",
+				"STUDENT_001",
+				null
+		);
 
 		student001.getRoles()
 				.add(new UserRoles(student001, studentRole));
@@ -119,10 +127,14 @@ public class SeedData
 		Course course2 = new Course("Course2", "COURSE_2", "This is course #2", program1);
 		Course course3 = new Course("Course3", "COURSE_3", "This is course #3", program2);
 
-		course1.getUsers().add(new UserCourses(teacher001, course1));
-		course2.getUsers().add(new UserCourses(teacher001, course2));
-		course1.getUsers().add(new UserCourses(student001, course1));
-		course2.getUsers().add(new UserCourses(student001, course2));
+		course1.getUsers()
+				.add(new UserCourses(teacher001, course1));
+		course2.getUsers()
+				.add(new UserCourses(teacher001, course2));
+		course1.getUsers()
+				.add(new UserCourses(student001, course1));
+		course2.getUsers()
+				.add(new UserCourses(student001, course2));
 
 		course1 = courseService.save(course1.getProgram()
 				.getProgramid(), course1);
@@ -144,7 +156,6 @@ public class SeedData
 				.getCourseid(), module3);
 		module4 = moduleService.save(module4.getCourse()
 				.getCourseid(), module4);
-
 	}
 
 }

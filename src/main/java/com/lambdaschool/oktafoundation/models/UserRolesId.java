@@ -74,7 +74,6 @@ public class UserRolesId
 		if (this == o) {
 			return true;
 		}
-		// boolean temp = (o.getClass() instanceof Class);
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}

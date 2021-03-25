@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 
 
@@ -33,7 +35,7 @@ public class Course {
 	@JsonIgnoreProperties(value = "courses")
 	private Program program;
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
 	private Set<UserCourses> users = new HashSet<>();
@@ -112,6 +114,39 @@ public class Course {
 
 	public void setModules(Set<Module> modules) {
 		this.modules = modules;
+	}
+
+	public void removeUser(User user) {
+
+		Iterator<UserCourses> iterator = users.iterator();
+		while (iterator.hasNext()) {
+			UserCourses userCourses = iterator.next();
+			if (userCourses.getCourse().equals(this)
+					&& userCourses.getUser().equals(user)
+			) {
+				iterator.remove();
+				userCourses.getUser().getCourses().remove(userCourses);
+				userCourses.setCourse(null);
+				userCourses.setUser(null);
+			}
+		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Course course = (Course) o;
+		return getCourseid() == course.getCourseid() && getCoursename().equals(course.getCoursename()) &&
+		       Objects.equals(getCoursecode(), course.getCoursecode()) &&
+		       Objects.equals(getCoursedescription(), course.getCoursedescription());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getCourseid(), getCoursename(), getCoursecode(), getCoursedescription());
 	}
 
 }

@@ -3,6 +3,7 @@ package com.lambdaschool.oktafoundation.models;
 
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Embeddable
@@ -32,7 +33,7 @@ public class UserCoursesId
 	}
 
 	@Override
-	public int hashCode() {return 42;}
+	public int hashCode() {return Objects.hash(user, course);}
 
 	public boolean equals(Object o) {
 		if (this == o) {
@@ -43,6 +44,11 @@ public class UserCoursesId
 		}
 		UserCoursesId that = (UserCoursesId) o;
 		return user == that.user && course == that.course;
+	}
+
+	@Override
+	public String toString() {
+		return "UserCoursesId{" + "course=" + course + ", user=" + user + '}';
 	}
 
 }

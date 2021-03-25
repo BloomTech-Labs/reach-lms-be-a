@@ -10,9 +10,12 @@ import com.lambdaschool.oktafoundation.models.UserCourses;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Service(value = "studentTeacherService")
@@ -134,7 +137,9 @@ public class StudentTeacherServiceImpl
 			boolean removed = currCourse.getUsers()
 					.removeIf(userCourses -> userCourses.equals(new UserCourses(currUser, currCourse)));
 			if (!removed) {
-				throw new ResourceNotFoundException("The user to detach is not part of the course.");
+				throw new ResourceNotFoundException(
+						"The user with id " + currUser.getUserid() + " is not part" + " of the course with id + " +
+						currCourse.getCourseid());
 			}
 			courseService.update(currCourse.getCourseid(), currCourse);
 
@@ -191,6 +196,52 @@ public class StudentTeacherServiceImpl
 					}
 				});
 		return detachedTeachers;
+	}
+
+	@Transactional
+	@Override
+	public User replaceUserEnrollments(
+			Long userid,
+			List<Long> courseids
+	) {
+		User userToUpdate = userService.findUserById(userid);
+		if (userToUpdate.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users are not attached at the course-level");
+		} else {
+			// create a hashset from the list passed in (to get only unique ids)
+			Set<Long>        hashedIds           = new HashSet<>(courseids);
+			// this hashset will contain any course that needs to un-enroll the user in question
+			Set<UserCourses> coursesToRemoveUser = new HashSet<>();
+			userToUpdate.getCourses()
+					.forEach(userCourses -> {
+						// if the list passed in does not contain the id of a Course
+						// that our User was previously enrolled in, we're going to have to
+						// remove this user from that course
+						if (!hashedIds.contains(userCourses.getCourse()
+								.getCourseid())) {
+							coursesToRemoveUser.add(userCourses);
+						}
+					});
+			// we must iterate through our courses that we'll remove so
+			// that we won't hit a concurrent modification error
+			coursesToRemoveUser.forEach(userCourses -> //
+					userCourses.getCourse()
+							.removeUser(userToUpdate));
+
+			// now, for every course in our hashed ids, we will make a "new"
+			// UserCourses instance and add it to our user's courses!
+			for (Long courseid : hashedIds) {
+				Course      course          = courseService.findCourseById(courseid);
+				UserCourses newRelationship = new UserCourses();
+				newRelationship.setUser(userToUpdate);
+				newRelationship.setCourse(course);
+				userToUpdate.getCourses()
+						.add(newRelationship);
+			}
+			// we have been modifying this user straight-up... no need to "save" or "update"
+			return userToUpdate;
+		}
+
 	}
 
 

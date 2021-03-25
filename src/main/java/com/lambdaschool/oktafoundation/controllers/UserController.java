@@ -321,16 +321,6 @@ public class UserController {
 
 	}
 
-	@PutMapping("/user/{userid}/replace-courses")
-	public ResponseEntity<?> replaceUserCourses(
-			@PathVariable
-					Long userid,
-			@RequestBody
-					List<Long> courseids
-	) {
-		User              updatedUser = userService.replaceUserEnrollments(userid, courseids);
-		EntityModel<User> entityModel = userModelAssembler.toModel(updatedUser);
-		return new ResponseEntity<>(entityModel, HttpStatus.OK);
-	}
+
 
 }
