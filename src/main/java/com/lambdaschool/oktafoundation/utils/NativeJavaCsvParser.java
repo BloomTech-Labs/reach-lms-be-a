@@ -27,7 +27,7 @@ public class NativeJavaCsvParser {
 	public static void main(String[] args)
 	throws Exception {
 
-		// loads CSV file from the resource folder.
+		// Currently loads CSV file from the resource folder.
 		URL resource = NativeJavaCsvParser.class.getClassLoader()
 				.getResource("csv/test_csv.csv");
 		File file = Paths.get(resource.toURI())
@@ -73,7 +73,6 @@ public class NativeJavaCsvParser {
 				if (isMultiLine) {
 					pendingFieldLine = joinArrays(pendingFieldLine, csvLineInArray);
 				} else {
-
 					if (pendingFieldLine != null && pendingFieldLine.length > 0) {
 						// joins all fields and add to list
 						result.add(joinArrays(pendingFieldLine, csvLineInArray));
@@ -82,13 +81,9 @@ public class NativeJavaCsvParser {
 						// if dun want to support multiline, only this line is required.
 						result.add(csvLineInArray);
 					}
-
 				}
-
-
 			}
 		}
-
 		return result;
 	}
 
@@ -154,9 +149,7 @@ public class NativeJavaCsvParser {
 					field.append(c);                // else append the char into a field
 				}
 			}
-
 		}
-
 		//line done, what to do next?
 		if (inQuotes) {
 			pendingField = field.toString();        // multiline
@@ -164,9 +157,7 @@ public class NativeJavaCsvParser {
 		} else {
 			result.add(field.toString());           // this is the last field
 		}
-
-		return result;
-
+		return result; // woot woot
 	}
 
 	private String[] joinArrays(
