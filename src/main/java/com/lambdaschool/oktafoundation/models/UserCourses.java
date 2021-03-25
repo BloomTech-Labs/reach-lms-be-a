@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 @Entity
@@ -16,14 +17,14 @@ public class UserCourses
 		implements Serializable {
 
 	@Id
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "userid")
 	@JsonIgnoreProperties(value = "courses", allowSetters = true)
 	private User user;
 
 	@Id
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "courseid")
 	@JsonIgnoreProperties(value = "users", allowSetters = true)
@@ -57,8 +58,11 @@ public class UserCourses
 	}
 
 	@Override
-	public int hashCode() { return 42; }
+	public int hashCode() {
+		return Objects.hash(user, course);
+	}
 
+	@Override
 	public boolean equals(Object o) {
 		if (this == o) {
 			return true;
@@ -69,6 +73,11 @@ public class UserCourses
 		UserCourses that = (UserCourses) o;
 		return ((user == null) ? 0 : user.getUserid()) == ((that.user == null) ? 0 : that.user.getUserid()) &&
 		       ((course == null) ? 0 : course.getCourseid()) == ((that.course == null) ? 0 : that.course.getCourseid());
+	}
+
+	@Override
+	public String toString() {
+		return "UserCourses{" + "user=" + user.getUserid() + ", course=" + course.getCourseid() + '}';
 	}
 
 }

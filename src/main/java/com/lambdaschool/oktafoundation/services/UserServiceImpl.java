@@ -119,42 +119,48 @@ public class UserServiceImpl
 
 		}
 
+		newUser.getCourses().clear();
+		for (UserCourses userCourses : user.getCourses()) {
+			Course course = courseService.findCourseById(userCourses.getCourse().getCourseid());
+			newUser.getCourses().add(new UserCourses(newUser, course));
+		}
+
 		return userrepos.save(newUser);
 	}
 
 	@Transactional
-	public User updateFunctionality(User currentUser, User user, long id) {
-		if (user.getUsername() != null) {
-			currentUser.setUsername(user.getUsername()
+	public User updateFunctionality(User currentUser, User userIn) {
+		if (userIn.getUsername() != null) {
+			currentUser.setUsername(userIn.getUsername()
 					.toLowerCase());
 		}
 
-		if (user.getEmail() != null) {
-			currentUser.setEmail(user.getEmail()
+		if (userIn.getEmail() != null) {
+			currentUser.setEmail(userIn.getEmail()
 					.toLowerCase());
 		}
 
-		if (user.getFirstname() != null) {
-			currentUser.setFirstname(user.getFirstname());
+		if (userIn.getFirstname() != null) {
+			currentUser.setFirstname(userIn.getFirstname());
 		}
 
-		if (user.getLastname() != null) {
-			currentUser.setLastname(user.getLastname());
+		if (userIn.getLastname() != null) {
+			currentUser.setLastname(userIn.getLastname());
 		}
-		if (user.getPhonenumber() != null) {
-			currentUser.setPhonenumber(user.getPhonenumber());
+		if (userIn.getPhonenumber() != null) {
+			currentUser.setPhonenumber(userIn.getPhonenumber());
 		}
 
-		if (user.getRole() != null) {
-			Role newRole = roleService.findByName(user.getRole()
+		if (userIn.getRole() != null) {
+			Role newRole = roleService.findByName(userIn.getRole()
 					.name());
 			currentUser.getRoles()
 					.add(new UserRoles(currentUser, newRole));
 		}
 
-		if (user.getRoles()
+		if (userIn.getRoles()
 				    .size() > 0) {
-			for (UserRoles ur : user.getRoles()) {
+			for (UserRoles ur : userIn.getRoles()) {
 				Role addRole = roleService.findByName(ur.getRole()
 						.getName());
 				currentUser.getRoles()
@@ -162,20 +168,28 @@ public class UserServiceImpl
 			}
 
 		}
+
+		if (userIn.getCourses().size() > 0) {
+			currentUser.getCourses().clear();
+			for (UserCourses userCourses : userIn.getCourses()) {
+				Course course = courseService.findCourseById(userCourses.getCourse().getCourseid());
+				currentUser.getCourses().add(new UserCourses(currentUser, course));
+			}
+		}
 		return userrepos.save(currentUser);
 	}
 
 	@Transactional
 	@Override
 	public User update(
-			User user,
+			User userIn,
 			long id
 	) {
 		User currentUser = findUserById(id);
 		// update own thing OR the calling user is ADMIN
 		if (helperFunctions.getCurrentPriorityRole() == RoleType.ADMIN
 			||  helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
-			return updateFunctionality(currentUser, user, id);
+			return updateFunctionality(currentUser, userIn);
 		} else {
 			// note we should never get to this line but is needed for the compiler
 			// to recognize that this exception can be thrown
@@ -206,33 +220,6 @@ public class UserServiceImpl
 		return userToUpdate;
 	}
 
-	@Transactional
-	@Override
-	public User replaceUserEnrollments(
-			Long userid,
-			List<Long> courseids
-	) {
-		User userToUpdate = findUserById(userid);
-		if (userToUpdate.getRole() == RoleType.ADMIN) {
-			throw new RoleNotSufficientException("ADMIN users are not attached at the course-level");
-		} else {
-			Set<Long>        hashedIds  = new HashSet<>(courseids);
-			Set<UserCourses> newCourses = new HashSet<>();
-
-			hashedIds.forEach(courseid -> newCourses.add(new UserCourses(userToUpdate,
-					courseService.findCourseById(courseid)
-			)));
-
-			userToUpdate.getCourses()
-					.clear();
-			for (UserCourses newUserCourse : newCourses) {
-				userToUpdate.getCourses()
-						.add(newUserCourse);
-			}
-			return userToUpdate;
-		}
-
-	}
 
 
 }

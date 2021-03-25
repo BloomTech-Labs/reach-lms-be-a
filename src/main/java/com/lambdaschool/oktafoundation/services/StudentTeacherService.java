@@ -40,6 +40,8 @@ public interface StudentTeacherService {
 	List<User> getCourseDetachedStudents(Long courseid);
 	List<User> getCourseDetachedTeachers(Long courseid);
 
+	User replaceUserEnrollments(Long userid, List<Long> courseids);
+
 
 	// POSSIBLE METHODS WE COULD ADD BELOW
 	// GET teachers by courseid
