@@ -130,7 +130,6 @@ public class UserController {
 				.map(userModelAssembler::toModel)
 				.collect(Collectors.toList());
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
-				// Link to SELF (getUserLikeName method)
 				linkTo(methodOn(UserController.class).getUserByName(userName)).withSelfRel()
 		);
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
@@ -169,12 +168,14 @@ public class UserController {
 			newUser.setLastname(minimumUser.getEmail());
 		}
 		newUser = userService.save(newUser);
-		okta.createOktaUser(newUser.getEmail(),
+
+		com.okta.sdk.resource.user.User oktaUser = okta.createOktaUser(newUser.getEmail(),
 				newUser.getFirstname(),
 				newUser.getLastname(),
 				newUser.getRole()
 						.name()
 		);
+
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{userid}")

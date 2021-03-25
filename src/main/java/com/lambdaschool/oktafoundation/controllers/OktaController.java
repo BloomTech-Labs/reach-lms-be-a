@@ -3,23 +3,24 @@ package com.lambdaschool.oktafoundation.controllers;
 
 import com.lambdaschool.oktafoundation.models.MinimumUser;
 import com.lambdaschool.oktafoundation.services.OktaSDKService;
+import com.okta.sdk.client.Client;
 import com.okta.sdk.resource.group.GroupList;
 import com.okta.sdk.resource.user.User;
 import com.okta.sdk.resource.user.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 
-//@RestController
+@RestController
 public class OktaController {
 
 	@Autowired
 	OktaSDKService okta;
+
+	@Autowired
+	Client client;
 
 
 	/**
@@ -44,7 +45,7 @@ public class OktaController {
 			@RequestParam
 					String query
 	) {
-		return okta.searchUsersByEmail(query);
+		return okta.getUsers(query);
 	}
 
 	@PostMapping("/okta/createUser")
@@ -64,6 +65,11 @@ public class OktaController {
 	@GetMapping("/okta/groups")
 	public GroupList getGroups() {
 		return okta.getGroups();
+	}
+
+	@GetMapping("/okta/groups_query")
+	public GroupList getGroupsQ(@RequestParam String query) {
+		return client.listGroups(query, null, null);
 	}
 
 }

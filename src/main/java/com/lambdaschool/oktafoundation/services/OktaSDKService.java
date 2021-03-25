@@ -9,7 +9,7 @@ import com.okta.sdk.resource.user.UserList;
 public interface OktaSDKService {
 
 	UserList getUsers();
-	UserList searchUsersByEmail(String query);
+	UserList getUsers(String query);
 	User createOktaUser(
 			String email,
 			String firstname,
@@ -17,5 +17,6 @@ public interface OktaSDKService {
 			String role
 	);
 	GroupList getGroups();
+	GroupList getGroups(String query);
 
 }
