@@ -5,13 +5,14 @@ import javax.validation.constraints.NotNull;
 
 
 public class MinimumUser {
+
 	@NotNull
-	private String email;
+	private String   email;
 	@NotNull
 	private RoleType roleType;
-	private String username;
-	private String firstname;
-	private String lastname;
+	private String   username;
+	private String   firstname;
+	private String   lastname;
 
 	public MinimumUser() {}
 
@@ -41,7 +42,7 @@ public class MinimumUser {
 		this.email     = email;
 		this.firstname = firstname;
 		this.lastname  = lastname;
-		this.roleType = RoleType.STUDENT;
+		this.roleType  = RoleType.STUDENT;
 	}
 
 	public String getUsername() {

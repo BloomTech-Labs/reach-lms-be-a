@@ -1,120 +1,112 @@
 package com.lambdaschool.oktafoundation.models;
 
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 
 @Entity
 @Table(name = "modules")
-@JsonIgnoreProperties(value={"course"}, allowSetters = true)
-public class Module extends Auditable
-{
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long moduleid;
+@JsonIgnoreProperties(value = {"course"}, allowSetters = true)
+public class Module
+		extends Auditable {
 
-    @Column(nullable = false)
-    private String modulename;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long moduleid;
 
-    private String moduledescription;
+	@Column(nullable = false)
+	private String modulename;
 
-    @Column(nullable = false)
-    private String modulecontent;
+	private String moduledescription;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "courseid", nullable = false)
-//    @JsonIgnoreProperties(value = "modules")
-    private Course course;
+	@Column(nullable = false)
+	private String modulecontent;
 
-    public Module()
-    {
-    }
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "courseid", nullable = false)
+	@JsonIgnoreProperties(value = "modules")
+	private Course course;
 
-    public Module(String modulename, String moduledescription, String modulecontent, Course course)
-    {
-        this.modulename = modulename;
-        this.moduledescription = moduledescription;
-        this.modulecontent = modulecontent;
-        this.course = course;
-    }
+	public Module() {
+	}
 
-    public long getModuleid()
-    {
-        return moduleid;
-    }
+	public Module(
+			String modulename,
+			String moduledescription,
+			String modulecontent,
+			Course course
+	) {
+		this.modulename = modulename;
+		this.moduledescription = moduledescription;
+		this.modulecontent = modulecontent;
+		this.course = course;
+	}
 
-    public void setModuleid(long moduleid)
-    {
-        this.moduleid = moduleid;
-    }
+	public long getModuleid() {
+		return moduleid;
+	}
 
-    public String getModulename()
-    {
-        return modulename;
-    }
+	public void setModuleid(long moduleid) {
+		this.moduleid = moduleid;
+	}
 
-    public void setModulename(String modulename)
-    {
-        this.modulename = modulename;
-    }
+	public String getModulename() {
+		return modulename;
+	}
 
-    public String getModuledescription()
-    {
-        return moduledescription;
-    }
+	public void setModulename(String modulename) {
+		this.modulename = modulename;
+	}
 
-    public void setModuledescription(String moduledescription)
-    {
-        this.moduledescription = moduledescription;
-    }
+	public String getModuledescription() {
+		return moduledescription;
+	}
 
-    public String getModulecontent()
-    {
-        return modulecontent;
-    }
+	public void setModuledescription(String moduledescription) {
+		this.moduledescription = moduledescription;
+	}
 
-    public void setModulecontent(String modulecontent)
-    {
-        this.modulecontent = modulecontent;
-    }
+	public String getModulecontent() {
+		return modulecontent;
+	}
 
-    public Course getCourse()
-    {
-        return course;
-    }
+	public void setModulecontent(String modulecontent) {
+		this.modulecontent = modulecontent;
+	}
 
-    public void setCourse(Course course)
-    {
-        this.course = course;
-    }
+	public Course getCourse() {
+		return course;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-        Module module = (Module) o;
-        return getModuleid() == module.getModuleid() && Objects.equals(getModulename(), module.getModulename()) &&
-               Objects.equals(getModuledescription(), module.getModuledescription()) &&
-               Objects.equals(getModulecontent(), module.getModulecontent()) &&
-               Objects.equals(getCourse(), module.getCourse());
-    }
+	public void setCourse(Course course) {
+		this.course = course;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getModuleid(), getModulename(), getModuledescription(), getModulecontent(), getCourse());
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hash(getModuleid(), getModulename(), getModuledescription(), getModulecontent(), getCourse());
+	}
 
-    @Override
-    public String toString() {
-        return "Module{" + "moduleid=" + moduleid + ", modulename='" + modulename + '\'' + ", moduledescription='" +
-               moduledescription + '\'' + ", modulecontent='" + modulecontent + '\'' + ", course=" + course + '}';
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Module module = (Module) o;
+		return getModuleid() == module.getModuleid() && Objects.equals(getModulename(), module.getModulename()) &&
+		       Objects.equals(getModuledescription(), module.getModuledescription()) &&
+		       Objects.equals(getModulecontent(), module.getModulecontent()) &&
+		       Objects.equals(getCourse(), module.getCourse());
+	}
+
+	@Override
+	public String toString() {
+		return "Module{" + "moduleid=" + moduleid + ", modulename='" + modulename + '\'' + ", moduledescription='" +
+		       moduledescription + '\'' + ", modulecontent='" + modulecontent + '\'' + ", course=" + course + '}';
+	}
 
 }

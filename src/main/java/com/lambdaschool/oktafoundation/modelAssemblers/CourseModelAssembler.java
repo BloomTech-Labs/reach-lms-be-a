@@ -56,8 +56,7 @@ public class CourseModelAssembler
 		if (callingUserRole == RoleType.ADMIN || callingUserRole == RoleType.TEACHER) {
 			courseEntityModel.add(
 					// Link to associated users --- GET /courses/course/{courseid}/enrolled
-					linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(course.getCourseid())).withRel(
-							"enrolled_users"),
+					linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(course.getCourseid())).withRel("enrolled_users"),
 					// Link to all non-associated users --- GET /courses/course/{courseid}/detached
 					// Link to all enrolled teachers --- GET /courses/course/{courseid}/enrolled-teachers
 					linkTo(methodOn(StudentTeacherController.class).getEnrolledTeachers(course.getCourseid())).withRel(

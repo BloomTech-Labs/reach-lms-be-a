@@ -102,6 +102,9 @@ public interface UserService {
 			RoleType roleType
 	);
 
-	User replaceUserEnrollments(Long userid, List<Long> courseids);
+	User replaceUserEnrollments(
+			Long userid,
+			List<Long> courseids
+	);
 
 }

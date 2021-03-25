@@ -123,55 +123,59 @@ public class UserServiceImpl
 	}
 
 	@Transactional
+	public User updateFunctionality(User currentUser, User user, long id) {
+		if (user.getUsername() != null) {
+			currentUser.setUsername(user.getUsername()
+					.toLowerCase());
+		}
+
+		if (user.getEmail() != null) {
+			currentUser.setEmail(user.getEmail()
+					.toLowerCase());
+		}
+
+		if (user.getFirstname() != null) {
+			currentUser.setFirstname(user.getFirstname());
+		}
+
+		if (user.getLastname() != null) {
+			currentUser.setLastname(user.getLastname());
+		}
+		if (user.getPhonenumber() != null) {
+			currentUser.setPhonenumber(user.getPhonenumber());
+		}
+
+		if (user.getRole() != null) {
+			Role newRole = roleService.findByName(user.getRole()
+					.name());
+			currentUser.getRoles()
+					.add(new UserRoles(currentUser, newRole));
+		}
+
+		if (user.getRoles()
+				    .size() > 0) {
+			for (UserRoles ur : user.getRoles()) {
+				Role addRole = roleService.findByName(ur.getRole()
+						.getName());
+				currentUser.getRoles()
+						.add(new UserRoles(currentUser, addRole));
+			}
+
+		}
+		return userrepos.save(currentUser);
+	}
+
+	@Transactional
 	@Override
 	public User update(
 			User user,
 			long id
 	) {
 		User currentUser = findUserById(id);
-
-		// update own thing
-		// admin update
-		if (helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
-			if (user.getUsername() != null) {
-				currentUser.setUsername(user.getUsername()
-						.toLowerCase());
-			}
-
-			if (user.getEmail() != null) {
-				currentUser.setEmail(user.getEmail()
-						.toLowerCase());
-			}
-
-			if (user.getFirstname() != null) {
-				currentUser.setFirstname(user.getFirstname());
-			}
-
-			if (user.getLastname() != null) {
-				currentUser.setLastname(user.getLastname());
-			}
-			if (user.getPhonenumber() != null) {
-				currentUser.setPhonenumber(user.getPhonenumber());
-			}
-
-			if (user.getRole() != null) {
-				Role newRole = roleService.findByName(user.getRole()
-						.name());
-				currentUser.getRoles()
-						.add(new UserRoles(currentUser, newRole));
-			}
-
-			if (user.getRoles()
-					    .size() > 0) {
-				for (UserRoles ur : user.getRoles()) {
-					Role addRole = roleService.findByName(ur.getRole()
-							.getName());
-					currentUser.getRoles()
-							.add(new UserRoles(currentUser, addRole));
-				}
-
-			}
-			return userrepos.save(currentUser);
+		// update own thing OR the calling user is ADMIN
+		if (helperFunctions.getCurrentPriorityRole() == RoleType.ADMIN
+			||  helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
+			return updateFunctionality(currentUser, user, id);
 		} else {
 			// note we should never get to this line but is needed for the compiler
 			// to recognize that this exception can be thrown
@@ -214,13 +218,17 @@ public class UserServiceImpl
 		} else {
 			Set<Long>        hashedIds  = new HashSet<>(courseids);
 			Set<UserCourses> newCourses = new HashSet<>();
-			User             finalUserToUpdate = userToUpdate;
-			hashedIds.forEach(courseid -> {
-//				Course course = courseService.findCourseById(courseid);
-				newCourses.add(new UserCourses(finalUserToUpdate, courseService.findCourseById(courseid)));
-			});
-			userToUpdate.setCourses(newCourses);
-			userToUpdate = update(userToUpdate, userToUpdate.getUserid());
+
+			hashedIds.forEach(courseid -> newCourses.add(new UserCourses(userToUpdate,
+					courseService.findCourseById(courseid)
+			)));
+
+			userToUpdate.getCourses()
+					.clear();
+			for (UserCourses newUserCourse : newCourses) {
+				userToUpdate.getCourses()
+						.add(newUserCourse);
+			}
 			return userToUpdate;
 		}
 

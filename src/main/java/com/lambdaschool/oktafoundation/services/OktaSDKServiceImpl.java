@@ -24,7 +24,7 @@ public class OktaSDKServiceImpl
 	}
 
 	@Override
-	public UserList searchUsersByEmail(String query) {
+	public UserList getUsers(String query) {
 		return client.listUsers(query, null, null, null, null);
 	}
 
@@ -35,24 +35,34 @@ public class OktaSDKServiceImpl
 			String lastname,
 			String role
 	) {
-		//		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
-		// I think we could also add a Group attribute here, but I'm holding off until I'm certain about matching
-		// groups with Okta is the correct choice.
 		GroupList possibleGroupMatches = client.listGroups(role, null, null);
 		Group     groupToAttach        = possibleGroupMatches.single();
-		//		System.out.println(groupToAttach);
-		return UserBuilder.instance()
-				.setLogin(email)
+		String    groupId              = groupToAttach.getId();
+		String    groupName            = groupToAttach.getProfile()
+				.getName();
+		User stagedUser = UserBuilder.instance()
+				.setLogin(email) // make login match email
 				.setEmail(email)
 				.setFirstName(firstname)
 				.setLastName(lastname)
-				.setActive(false)
+				.addGroup(groupId)
+				.setActive(false) // initially create a non-activated user
 				.buildAndCreate(client);
+
+		// now that our user exists but isn't yet active,
+		// this will send an email to the user
+		stagedUser.activate(true);
+		return stagedUser;
 	}
 
 	@Override
 	public GroupList getGroups() {
 		return client.listGroups();
+	}
+
+	@Override
+	public GroupList getGroups(String q) {
+		return client.listGroups(q, null, null);
 	}
 
 }
