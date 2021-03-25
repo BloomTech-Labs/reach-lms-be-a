@@ -57,21 +57,47 @@ public class CourseModelAssembler
 			courseEntityModel.add(
 					// Link to associated users --- GET /courses/course/{courseid}/enrolled
 					linkTo(methodOn(StudentTeacherController.class).getAllEnrolled(course.getCourseid())).withRel("enrolled_users"),
-					// Link to all non-associated users --- GET /courses/course/{courseid}/detached
+
 					// Link to all enrolled teachers --- GET /courses/course/{courseid}/enrolled-teachers
 					linkTo(methodOn(StudentTeacherController.class).getEnrolledTeachers(course.getCourseid())).withRel(
 							"enrolled_teachers"),
+
 					// Link to all enrolled students --- GET /courses/course/{courseid}/enrolled-students
 					linkTo(methodOn(StudentTeacherController.class).getEnrolledStudents(course.getCourseid())).withRel(
 							"enrolled_students"),
+
+					// Link to all non-associated users --- GET /courses/course/{courseid}/detached
 					linkTo(methodOn(StudentTeacherController.class).getAllNotEnrolled(course.getCourseid())).withRel(
 							"available_users"),
+
 					// Link to all non-associated teachers --- GET /courses/course/{courseid}/detached-teachers
 					linkTo(methodOn(StudentTeacherController.class).getDetachedTeachers(course.getCourseid())).withRel(
 							"available_teachers"),
+
 					// Link to all non-associated students --- GET /courses/course/{courseid}/detached-students
 					linkTo(methodOn(StudentTeacherController.class).getDetachedStudents(course.getCourseid())).withRel(
 							"available_students")
+			);
+			try {
+				courseEntityModel.add(
+				// Link to ADD new module
+				linkTo(methodOn(ModuleController.class).addNewModule(course.getCourseid(), null)).withRel("add_module")
+				);
+			} catch (Exception ignored){}
+		}
+
+		// if the calling user is an ADMIN, display the following additional links
+		if (callingUserRole == RoleType.ADMIN) {
+			courseEntityModel.add(
+					// Link to PATCH course
+					linkTo(methodOn(CourseController.class).updateCourse(course.getCourseid(), null)).withRel("edit_course"),
+
+					// Link to PUT course
+					linkTo(methodOn(CourseController.class).updateFullCourse(course.getCourseid(), null)).withRel(
+							"replace_course"),
+
+					// Link to DELETE course
+					linkTo(methodOn(CourseController.class).deleteCourseById(course.getCourseid())).withRel("delete_course")
 			);
 		}
 
