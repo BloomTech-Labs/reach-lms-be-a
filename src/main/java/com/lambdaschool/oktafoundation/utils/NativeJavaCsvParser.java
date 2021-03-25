@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 
 // source: https://mkyong.com/java/how-to-read-and-parse-csv-file-in-java/
-public class NativeJavaCSVParser {
+public class NativeJavaCsvParser {
 
 	private static final char   DEFAULT_SEPARATOR  = ',';
 	private static final char   DOUBLE_QUOTES      = '"';
@@ -28,11 +28,11 @@ public class NativeJavaCSVParser {
 	throws Exception {
 
 		// loads CSV file from the resource folder.
-		URL resource = NativeJavaCSVParser.class.getClassLoader()
+		URL resource = NativeJavaCsvParser.class.getClassLoader()
 				.getResource("csv/test_csv.csv");
 		File file = Paths.get(resource.toURI())
 				.toFile();
-		NativeJavaCSVParser obj       = new NativeJavaCSVParser();
+		NativeJavaCsvParser obj       = new NativeJavaCsvParser();
 		List<String[]>      result    = obj.readFile(file, 1);
 		int                 listIndex = 0;
 		for (String[] arrays : result) {
