@@ -41,5 +41,4 @@ public interface UserRepository
 	List<User> findNotEnrolledUsers(long courseid);
 
 
-
 }

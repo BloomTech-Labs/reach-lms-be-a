@@ -52,7 +52,6 @@ public class UserController {
 	@Autowired
 	private OktaSDKService okta;
 
-
 	/**
 	 * Returns a list of all users
 	 * <br>Example: <a href="http://localhost:2019/users/users">http://localhost:2019/users/users</a>

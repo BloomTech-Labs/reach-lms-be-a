@@ -1,7 +1,6 @@
 package com.lambdaschool.oktafoundation.config;
 
 
-import com.lambdaschool.oktafoundation.models.Role;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.models.UserRoles;
 import com.lambdaschool.oktafoundation.repository.UserRepository;

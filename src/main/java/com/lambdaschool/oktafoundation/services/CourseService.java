@@ -1,21 +1,28 @@
 package com.lambdaschool.oktafoundation.services;
 
+
 import com.lambdaschool.oktafoundation.models.Course;
 
 import java.util.List;
 
-public interface CourseService
-{
-    List<Course> findAll();
 
-    Course findCourseById(long courseId);
+public interface CourseService {
 
-    Course save(long programId, Course course);
+	List<Course> findAll();
 
-    Course update(long courseId, Course course);
+	Course findCourseById(long courseId);
 
-    void delete(long courseId);
+	Course save(
+			long programId,
+			Course course
+	);
 
+	Course update(
+			long courseId,
+			Course course
+	);
+
+	void delete(long courseId);
 
 
 }

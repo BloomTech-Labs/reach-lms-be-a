@@ -68,7 +68,6 @@ public class RolesServiceImpl
 					.contains(new UserCourses(callingUser, course));
 
 		}
-
 	}
 
 }

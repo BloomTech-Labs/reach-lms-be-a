@@ -35,7 +35,6 @@ public class OktaSDKServiceImpl
 			String lastname,
 			String role
 	) {
-		//		char[] tempPassword = {'R', 'E', 'A', 'C', 'H', '_', 'L', 'M', 'S'};
 		// I think we could also add a Group attribute here, but I'm holding off until I'm certain about matching
 		// groups with Okta is the correct choice.
 		GroupList possibleGroupMatches = client.listGroups(role, null, null);

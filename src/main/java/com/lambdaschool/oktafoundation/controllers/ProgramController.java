@@ -38,10 +38,11 @@ public class ProgramController {
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
 
-	@GetMapping(value="")
-	public String home(@AuthenticationPrincipal
-	                   OidcUser user
-	                   ) {
+	@GetMapping(value = "")
+	public String home(
+			@AuthenticationPrincipal
+					OidcUser user
+	) {
 		return "Welcome, " + user.getFullName();
 	}
 

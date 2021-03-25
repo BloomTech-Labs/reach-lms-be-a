@@ -1,92 +1,85 @@
 package com.lambdaschool.oktafoundation.models;
 
+
 import javax.persistence.Embeddable;
 import java.io.Serializable;
+
 
 /**
  * Class to represent the complex primary key for UserRoles
  */
 @Embeddable
 public class UserRolesId
-    implements Serializable
-{
-    /**
-     * The id of the user
-     */
-    private long user;
+		implements Serializable {
 
-    /**
-     * The id of the role
-     */
-    private long role;
+	/**
+	 * The id of the user
+	 */
+	private long user;
 
-    /**
-     * The default constructor required by JPA
-     */
-    public UserRolesId()
-    {
-    }
+	/**
+	 * The id of the role
+	 */
+	private long role;
 
-    /**
-     * Getter for the user id
-     *
-     * @return long the user id
-     */
-    public long getUser()
-    {
-        return user;
-    }
+	/**
+	 * The default constructor required by JPA
+	 */
+	public UserRolesId() {
+	}
 
-    /**
-     * Setter for the user id
-     *
-     * @param user the new user id for this object
-     */
-    public void setUser(long user)
-    {
-        this.user = user;
-    }
+	/**
+	 * Getter for the user id
+	 *
+	 * @return long the user id
+	 */
+	public long getUser() {
+		return user;
+	}
 
-    /**
-     * Getter for the role id
-     *
-     * @return long the role id
-     */
-    public long getRole()
-    {
-        return role;
-    }
+	/**
+	 * Setter for the user id
+	 *
+	 * @param user the new user id for this object
+	 */
+	public void setUser(long user) {
+		this.user = user;
+	}
 
-    /**
-     * The setter for the role id
-     *
-     * @param role the new role id for this object
-     */
-    public void setRole(long role)
-    {
-        this.role = role;
-    }
+	/**
+	 * Getter for the role id
+	 *
+	 * @return long the role id
+	 */
+	public long getRole() {
+		return role;
+	}
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o)
-        {
-            return true;
-        }
-        // boolean temp = (o.getClass() instanceof Class);
-        if (o == null || getClass() != o.getClass())
-        {
-            return false;
-        }
-        UserRolesId that = (UserRolesId) o;
-        return user == that.user &&
-            role == that.role;
-    }
+	/**
+	 * The setter for the role id
+	 *
+	 * @param role the new role id for this object
+	 */
+	public void setRole(long role) {
+		this.role = role;
+	}
 
-    @Override
-    public int hashCode()
-    {
-        return 37;
-    }
+	@Override
+	public int hashCode() {
+		return 37;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		// boolean temp = (o.getClass() instanceof Class);
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		UserRolesId that = (UserRolesId) o;
+		return user == that.user && role == that.role;
+	}
+
 }

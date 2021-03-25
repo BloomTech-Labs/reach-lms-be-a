@@ -1,20 +1,29 @@
 package com.lambdaschool.oktafoundation.services;
 
+
 import com.lambdaschool.oktafoundation.models.Module;
 
 import java.util.List;
 
-public interface ModuleService
-{
-    List<Module> findAll();
 
-    Module findModulesById(long id);
+public interface ModuleService {
 
-    Module findModulesByName(String name);
+	List<Module> findAll();
 
-    Module save(long id, Module module);
+	Module findModulesById(long id);
 
-    Module update(long id, Module module);
+	Module findModulesByName(String name);
 
-    void delete(long id);
+	Module save(
+			long id,
+			Module module
+	);
+
+	Module update(
+			long id,
+			Module module
+	);
+
+	void delete(long id);
+
 }

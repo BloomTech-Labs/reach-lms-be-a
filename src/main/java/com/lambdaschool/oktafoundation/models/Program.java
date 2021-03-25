@@ -26,7 +26,7 @@ public class Program
 	private String programname;
 	private String programtype;
 	private String programdescription;
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name = "userid", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
 	private User user;
