@@ -3,12 +3,15 @@ package com.lambdaschool.oktafoundation;
 
 import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.models.*;
+import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 
 
 /**
@@ -46,6 +49,9 @@ public class SeedData
 
 	@Autowired
 	ModuleService moduleService;
+
+	@Autowired
+	TagRepository tagRepository;
 
 	/**
 	 * Generates test, seed data for our application
@@ -119,6 +125,11 @@ public class SeedData
 				.add(program2);
 
 		reachRoot = userService.save(reachRoot);
+
+		Tag tag1 = new Tag("Computer Science", "#000000");
+		Tag tag2 = new Tag("Higher Education");
+		program1.addTag(tag1);
+		program1.addTag(tag2);
 
 		program1 = programService.save(reachRoot.getUserid(), program1);
 		program2 = programService.save(reachRoot.getUserid(), program2);
