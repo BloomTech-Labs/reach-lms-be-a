@@ -51,7 +51,7 @@ public class ProgramServiceImpl
 		newProgram.setProgramdescription(program.getProgramdescription());
 
 		for (ProgramTags programTags : program.getTags()) {
-//			System.out.println("TAG: " + programTags.getTag());
+			//			System.out.println("TAG: " + programTags.getTag());
 			newProgram.addTag(programTags.getTag());
 		}
 
@@ -72,6 +72,15 @@ public class ProgramServiceImpl
 			newProgram.setUser(currentUser);
 		}
 		return programRepository.save(newProgram);
+	}
+
+	@Override
+	public List<Program> findProgramsByTagName(String title) {
+		List<Program> programs = new ArrayList<>();
+		programRepository.findByTags_tag_titleIgnoreCase(title)
+				.iterator()
+				.forEachRemaining(programs::add);
+		return programs;
 	}
 
 	@Override

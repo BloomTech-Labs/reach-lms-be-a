@@ -31,16 +31,20 @@ public class ProgramController {
 	@Autowired
 	TagRepository tagRepository;
 	@Autowired
-	private ProgramService programService;
+	private ProgramService        programService;
 	@Autowired
-	private ProgramRepository programRepos;
+	private ProgramRepository     programRepos;
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
 
-	//	@GetMapping(value="/programs/{programid}/tags")
-	//	public ResponseEntity<?> listTagsByProgram(@PathVariable Long programid) {
-	//
-	//	}
+	@GetMapping(value = "/programs/tag-title/{tagTitle}")
+	public ResponseEntity<?> listTagsByProgram(
+			@PathVariable
+					String tagTitle
+	) {
+		List<Program> programs = programService.findProgramsByTagName(tagTitle);
+		return new ResponseEntity<>(programs, HttpStatus.OK);
+	}
 
 	@GetMapping(value = "/programs", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Program>>> listAllPrograms() {

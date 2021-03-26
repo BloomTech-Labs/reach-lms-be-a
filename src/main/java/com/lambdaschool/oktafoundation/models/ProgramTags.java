@@ -15,7 +15,7 @@ extends Auditable
 		implements Serializable {
 
 	@EmbeddedId
-	private ProgramTagsId programTagsId;
+	private ProgramTagsId id;
 
 	@ManyToOne
 //			(fetch = FetchType.LAZY)
@@ -35,17 +35,17 @@ extends Auditable
 			Program program,
 			Tag tag
 	) {
-		this.programTagsId = new ProgramTagsId(program.getProgramid(), tag.getTagid());
-		this.program       = program;
-		this.tag           = tag;
+		this.id      = new ProgramTagsId(program.getProgramid(), tag.getTagid());
+		this.program = program;
+		this.tag     = tag;
 	}
 
-	public ProgramTagsId getProgramTagsId() {
-		return programTagsId;
+	public ProgramTagsId getId() {
+		return id;
 	}
 
-	public void setProgramTagsId(ProgramTagsId programTagsId) {
-		this.programTagsId = programTagsId;
+	public void setId(ProgramTagsId id) {
+		this.id = id;
 	}
 
 	public Program getProgram() {
@@ -71,18 +71,18 @@ extends Auditable
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProgramTags that = (ProgramTags) o;
-		return Objects.equals(getProgramTagsId(), that.getProgramTagsId()) &&
+		return Objects.equals(getId(), that.getId()) &&
 		       Objects.equals(getProgram(), that.getProgram()) && Objects.equals(getTag(), that.getTag());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getProgramTagsId(), getProgram(), getTag());
+		return Objects.hash(getId(), getProgram(), getTag());
 	}
 
 	@Override
 	public String toString() {
-		return "ProgramTags{" + "programTagsId=" + programTagsId + ", program=" + program + ", tag=" + tag + '}';
+		return "ProgramTags{" + "programTagsId=" + id + ", program=" + program + ", tag=" + tag + '}';
 	}
 
 }
