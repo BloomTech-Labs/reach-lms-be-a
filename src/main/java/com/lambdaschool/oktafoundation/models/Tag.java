@@ -1,13 +1,22 @@
 package com.lambdaschool.oktafoundation.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
 @Table(name = "tags")
+@NaturalIdCache
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Tag
 		extends Auditable {
 
@@ -17,9 +26,14 @@ public class Tag
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long   tagid;
 	@NotNull
+	@NaturalId
 	private String title;
 	@NotNull
 	private String hexcode;
+
+	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties(value = "tag")
+	private Set<ProgramTags> programs = new HashSet<>();
 
 	public Tag() {}
 
@@ -59,6 +73,15 @@ public class Tag
 	public void setHexcode(String hexCode) {
 		this.hexcode = hexCode;
 	}
+
+	public Set<ProgramTags> getPrograms() {
+		return programs;
+	}
+
+	public void setPrograms(Set<ProgramTags> programs) {
+		this.programs = programs;
+	}
+
 
 	@Override
 	public int hashCode() {

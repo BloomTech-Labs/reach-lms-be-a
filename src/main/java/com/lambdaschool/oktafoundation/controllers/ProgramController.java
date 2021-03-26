@@ -5,6 +5,7 @@ import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.modelAssemblers.ProgramModelAssembler;
 import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
+import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.services.ProgramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -12,8 +13,6 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,21 +29,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProgramController {
 
 	@Autowired
+	TagRepository tagRepository;
+	@Autowired
 	private ProgramService programService;
-
 	@Autowired
 	private ProgramRepository programRepos;
-
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
 
-	@GetMapping(value = "")
-	public String home(
-			@AuthenticationPrincipal
-					OidcUser user
-	) {
-		return "Welcome, " + user.getFullName();
-	}
+	//	@GetMapping(value="/programs/{programid}/tags")
+	//	public ResponseEntity<?> listTagsByProgram(@PathVariable Long programid) {
+	//
+	//	}
 
 	@GetMapping(value = "/programs", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Program>>> listAllPrograms() {

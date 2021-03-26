@@ -31,6 +31,7 @@ public class Program
 	@JsonIgnoreProperties(value = "programs")
 	private User user;
 	@OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties(value="program")
 	private Set<ProgramTags> tags = new HashSet<>();
 
 	public Program() {

@@ -17,12 +17,14 @@ extends Auditable
 	@EmbeddedId
 	private ProgramTagsId programTagsId;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
+//			(fetch = FetchType.LAZY)
 	@MapsId("programid")
 	@JsonIgnoreProperties(value = "tags", allowSetters = true)
 	private Program program;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
+//			(fetch = FetchType.LAZY)
 	@MapsId("tagid")
 	@JsonIgnoreProperties(value = "programs", allowSetters = true)
 	private Tag tag;
