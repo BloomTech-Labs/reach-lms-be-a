@@ -147,6 +147,11 @@ public class SeedData
 		course2.getUsers()
 				.add(new UserCourses(student001, course2));
 
+		course1.addTag(tag1);
+		course1.addTag(tag2);
+		course2.addTag(tag2);
+
+
 		course1 = courseService.save(course1.getProgram()
 				.getProgramid(), course1);
 		course2 = courseService.save(course2.getProgram()

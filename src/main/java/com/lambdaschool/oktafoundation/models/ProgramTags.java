@@ -15,6 +15,7 @@ extends Auditable
 		implements Serializable {
 
 	@EmbeddedId
+	@Column(name="program_tag_id")
 	private ProgramTagsId id;
 
 	@ManyToOne
@@ -62,6 +63,14 @@ extends Auditable
 
 	public void setTag(Tag tag) {
 		this.tag = tag;
+	}
+
+	public boolean softEquals(Program program, Tag tag) {
+		if (this.program.equals(program) && this.tag.equals(tag)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override

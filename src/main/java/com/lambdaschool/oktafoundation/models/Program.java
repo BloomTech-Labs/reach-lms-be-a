@@ -2,6 +2,7 @@ package com.lambdaschool.oktafoundation.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.lambdaschool.oktafoundation.exceptions.TagNotFoundException;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -22,16 +23,16 @@ public class Program
 	List<Course> courses = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long   programid;
-	private String programname;
-	private String programtype;
-	private String programdescription;
+	private long             programid;
+	private String           programname;
+	private String           programtype;
+	private String           programdescription;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
-	private User user;
+	private User             user;
 	@OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties(value="program")
+	@JsonIgnoreProperties(value = "program")
 	private Set<ProgramTags> tags = new HashSet<>();
 
 	public Program() {
@@ -109,6 +110,9 @@ public class Program
 	}
 
 	public void removeTag(Tag tag) {
+		if (!containsTag(tag)) {
+			throw new TagNotFoundException(tag.getTitle(), programname);
+		}
 		Iterator<ProgramTags> it = tags.iterator();
 		while (it.hasNext()) {
 			ProgramTags programTag = it.next();
@@ -120,6 +124,24 @@ public class Program
 				programTag.setTag(null);
 			}
 		}
+	}
+
+	public boolean containsTag(Tag tag) {
+		return findTag(tag).isPresent();
+	}
+
+	public Optional<ProgramTags> findTag(Tag tag) {
+		for (ProgramTags programTags : tags) {
+			if (programTags.softEquals(this, tag)) {
+				return Optional.of(programTags);
+			}
+		}
+		return Optional.empty();
+	}
+
+	public ProgramTags getTagIfPresent(Tag tag)
+	throws TagNotFoundException {
+		return findTag(tag).orElseThrow(() -> new TagNotFoundException(tag.getTitle(), programname));
 	}
 
 }

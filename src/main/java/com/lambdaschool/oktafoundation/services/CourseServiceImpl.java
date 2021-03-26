@@ -2,10 +2,8 @@ package com.lambdaschool.oktafoundation.services;
 
 
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
-import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Module;
-import com.lambdaschool.oktafoundation.models.Program;
-import com.lambdaschool.oktafoundation.models.UserCourses;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +59,7 @@ public class CourseServiceImpl
 		newCourse.setCoursedescription(course.getCoursedescription());
 		newCourse.setCoursecode(course.getCoursecode());
 
+
 		newCourse.getModules()
 				.clear();
 
@@ -71,8 +70,14 @@ public class CourseServiceImpl
 
 		Program program = programrepos.findById(programid)
 				.orElseThrow(() -> new ResourceNotFoundException("Program with id " + programid + "Not Found!"));
+
 		if (program != null) {
 			newCourse.setProgram(program);
+			newCourse.getTags()
+					.clear();
+			for (ProgramTags programTags : course.getTags()) {
+				newCourse.addTag(programTags.getTag());
+			}
 		}
 
 		newCourse.getUsers()
