@@ -32,7 +32,7 @@ public class UserModelAssembler
 				linkTo(methodOn(UserController.class).getUserByName(user.getUsername())).withRel("self_by_name")
 		);
 
-		// this will hold the role of the CALLING USER (i.e., ADMIN calling GET /users
+		// this will hold the role of the CALLING USER -- whomever is hitting this endpoint should have a role
 		RoleType callingUser = helperFunctions.getCurrentPriorityRole();
 
 		// this will hold the role of the user to be converted into a model
@@ -70,13 +70,18 @@ public class UserModelAssembler
 					linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserid())).withRel("programs"));
 		}
 
-		// if the CALLING USER (who will SEE this data) is an ADMIN
-		if (callingUser == RoleType.ADMIN) {
+		// if the calling user is an admin and the user in question is NOT an admin
+		if (callingUser == RoleType.ADMIN && user.getRole() != RoleType.ADMIN) {
 			userEntityModel.add(
 					// Link to DELETE User by User.userid
-					linkTo(methodOn(UserController.class).deleteUserById(user.getUserid())).withRel("delete"),
-					// link to POST Program (with userId)
-					linkTo(methodOn(ProgramController.class).addNewProgram(user.getUserid(), null)).withRel("post_program")
+					linkTo(methodOn(UserController.class).deleteUserById(user.getUserid())).withRel("delete_user"),
+					linkTo(methodOn(UserController.class).updateFullUser(null, user.getUserid())).withRel("replace_user"),
+					linkTo(methodOn(UserController.class).updateUser(null, user.getUserid())).withRel("edit_user"),
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.STUDENT)).withRel(
+							"make_student"),
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.ADMIN)).withRel("make_admin"),
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.TEACHER)).withRel(
+							"make_teacher")
 			);
 		}
 

@@ -35,6 +35,7 @@ com/lambdaschool/oktafoundation/services/UserServiceImpl.class
 com/lambdaschool/oktafoundation/modelAssemblers/CourseModelAssembler.class
 com/lambdaschool/oktafoundation/services/ModuleServiceImpl.class
 com/lambdaschool/oktafoundation/config/DataSourceConfig.class
+com/lambdaschool/oktafoundation/utils/NativeJavaCsvParser.class
 com/lambdaschool/oktafoundation/models/UserRoles.class
 com/lambdaschool/oktafoundation/services/RoleService.class
 com/lambdaschool/oktafoundation/services/ModuleService.class
