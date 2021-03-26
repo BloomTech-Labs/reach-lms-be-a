@@ -37,11 +37,22 @@ public class ProgramModelAssembler
 
 		if (currentRole == RoleType.ADMIN) {
 			programEntity.add(
-					// Link to `GET all programs by this program's admin`
+					// Link to GET all programs by this program's admin
 					linkTo(methodOn(ProgramController.class).getProgramsByUserId(program.getUser()
 							.getUserid())).withRel("admin_programs"),
-					// Link to `GET all programs`
-					linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs")
+					// Link to GET all programs
+					linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs"),
+					// Link to DELETE self
+					linkTo(methodOn(ProgramController.class).deleteProgram(program.getProgramid())).withRel("delete_program"),
+					// Link to PATCH self
+					linkTo(methodOn(ProgramController.class).editPartialProgram(program, program.getProgramid())).withRel(
+							"edit_program"),
+					// Link to PUT self
+					linkTo(methodOn(ProgramController.class).editEntireProgram(program, program.getProgramid())).withRel(
+							"replace_program"),
+					// Link to POST new program (with the same admin that is associated with this course)
+					linkTo(methodOn(ProgramController.class).addNewProgram(program.getUser()
+							.getUserid(), program)).withRel("add_program")
 			);
 		}
 

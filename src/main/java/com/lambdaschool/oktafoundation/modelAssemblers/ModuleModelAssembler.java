@@ -68,7 +68,6 @@ public class ModuleModelAssembler
 			} catch (Exception ignored) {}
 		}
 
-
 		return moduleEntity;
 	}
 
