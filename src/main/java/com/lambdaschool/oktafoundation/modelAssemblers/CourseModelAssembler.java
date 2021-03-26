@@ -26,7 +26,7 @@ public class CourseModelAssembler
 		implements RepresentationModelAssembler<Course, EntityModel<Course>> {
 
 	@Autowired
-	HelperFunctions helperFunctions;
+	private HelperFunctions helperFunctions;
 
 	/**
 	 * Creates a RepresentationModel for the given Course with useful
