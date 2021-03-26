@@ -10,6 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "program")
+@JsonIgnoreProperties(value={"id", "program"})
 public class ProgramTags
 extends Auditable
 		implements Serializable {
@@ -19,13 +20,11 @@ extends Auditable
 	private ProgramTagsId id;
 
 	@ManyToOne
-//			(fetch = FetchType.LAZY)
 	@MapsId("programid")
 	@JsonIgnoreProperties(value = "tags", allowSetters = true)
 	private Program program;
 
 	@ManyToOne
-//			(fetch = FetchType.LAZY)
 	@MapsId("tagid")
 	@JsonIgnoreProperties(value = "programs", allowSetters = true)
 	private Tag tag;
@@ -66,11 +65,7 @@ extends Auditable
 	}
 
 	public boolean softEquals(Program program, Tag tag) {
-		if (this.program.equals(program) && this.tag.equals(tag)) {
-			return true;
-		}
-
-		return false;
+		return this.program.equals(program) && this.tag.equals(tag);
 	}
 
 	@Override
