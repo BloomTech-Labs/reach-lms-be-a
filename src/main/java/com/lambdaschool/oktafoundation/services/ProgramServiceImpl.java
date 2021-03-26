@@ -4,8 +4,10 @@ package com.lambdaschool.oktafoundation.services;
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Program;
+import com.lambdaschool.oktafoundation.models.ProgramTags;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
+import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,9 @@ public class ProgramServiceImpl
 	@Autowired
 	UserRepository userrepos;
 
+	@Autowired
+	TagRepository tagRepository;
+
 	@Override
 	public Program save(
 			long userid,
@@ -44,6 +49,11 @@ public class ProgramServiceImpl
 		newProgram.setProgramname(program.getProgramname());
 		newProgram.setProgramtype(program.getProgramtype());
 		newProgram.setProgramdescription(program.getProgramdescription());
+
+		for (ProgramTags programTags : program.getTags()) {
+//			System.out.println("TAG: " + programTags.getTag());
+			newProgram.addTag(programTags.getTag());
+		}
 
 		newProgram.getCourses()
 				.clear();

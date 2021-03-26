@@ -6,8 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Entity
@@ -15,6 +14,7 @@ import java.util.List;
 @JsonIgnoreProperties(value = {"courses", "user"})
 public class Program
 		extends Auditable {
+
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
@@ -26,10 +26,12 @@ public class Program
 	private String programname;
 	private String programtype;
 	private String programdescription;
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
 	private User user;
+	@OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+	private Set<ProgramTags> tags = new HashSet<>();
 
 	public Program() {
 	}
@@ -90,6 +92,33 @@ public class Program
 
 	public void setCourses(List<Course> courses) {
 		this.courses = courses;
+	}
+
+	public Set<ProgramTags> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<ProgramTags> tags) {
+		this.tags = tags;
+	}
+
+	public void addTag(Tag tag) {
+		ProgramTags programTag = new ProgramTags(this, tag);
+		tags.add(programTag);
+	}
+
+	public void removeTag(Tag tag) {
+		Iterator<ProgramTags> it = tags.iterator();
+		while (it.hasNext()) {
+			ProgramTags programTag = it.next();
+			if (programTag.getProgram()
+					    .equals(this) && programTag.getTag()
+					    .equals(tag)) {
+				it.remove();
+				programTag.setProgram(null);
+				programTag.setTag(null);
+			}
+		}
 	}
 
 }
