@@ -59,12 +59,13 @@ public class ModuleModelAssembler
 					// link to PATCH self
 					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleid(), null)).withRel("edit_module"),
 					// Link to PUT self
-					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleid(), null)).withRel("replace_module"),
-					// link to POST module to the same course that this module belongs to
-					linkTo(methodOn(ModuleController.class).addNewModule(module.getCourse()
-							.getCourseid(), null)).withRel("add_module_sibling")
-
+					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleid(), null)).withRel("replace_module")
 			);
+			try {
+				moduleEntity.add(// link to POST module to the same course that this module belongs to
+						linkTo(methodOn(ModuleController.class).addNewModule(module.getCourse()
+								.getCourseid(), null)).withRel("add_module_sibling"));
+			} catch (Exception ignored) {}
 		}
 
 
