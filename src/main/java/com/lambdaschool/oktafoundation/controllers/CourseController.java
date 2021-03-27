@@ -54,6 +54,15 @@ public class CourseController {
 		return new ResponseEntity<>(entityCourses, HttpStatus.OK);
 	}
 
+	@GetMapping("/courses/by-tag/{tagTitle}")
+	public ResponseEntity<?> getCoursesByTag(
+			@PathVariable
+					String tagTitle
+	) {
+		List<Course> courses = courseService.findByTag(tagTitle);
+		return new ResponseEntity<>(courses, HttpStatus.OK);
+	}
+
 	@GetMapping("/courses/user/{userid}")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getUserCourses(
 			@PathVariable

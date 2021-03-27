@@ -25,6 +25,9 @@ public class TagServiceImpl
 	@Autowired
 	private ProgramService programService;
 
+	@Autowired
+	private CourseService courseService;
+
 	@Override
 	public List<Tag> getAll() {
 		List<Tag> tags = new ArrayList<>();
@@ -72,20 +75,14 @@ public class TagServiceImpl
 	)
 	throws TagNotFoundException, TagFoundException, ProgramNotFoundException {
 		Program program = programService.findProgramsById(programid); // throws if program does not exist
-
-		Tag newTag = new Tag();
-
-
+		Tag     newTag  = new Tag();
 		if (tag.getTagid() != 0) { // if this tag has an id
 			newTag = get(tag.getTagid()); // reassign if it exists, throw if not
 		}
-
-
 		if (program.containsTag(tag)) {
 			// throw error if program already contains this tag
 			throw new TagFoundException(tag.getTitle(), program);
 		}
-
 		// else, if this program doesn't already contain this tag
 		if (tag.getTitle() != null) {
 			newTag.setTitle(tag.getTitle());
@@ -93,7 +90,6 @@ public class TagServiceImpl
 		if (tag.getHexcode() != null) {
 			newTag.setHexcode(tag.getHexcode());
 		}
-
 		newTag = tagRepository.save(newTag);
 		return newTag;
 	}
@@ -176,19 +172,21 @@ public class TagServiceImpl
 				}
 			}
 		}
-		
+
 		return tagRepository.save(oldTag);
 
 	}
 
 	@Override
 	public void delete(long tagid) {
-
+		Tag toDelete = get(tagid); // throws if no such tag
+		tagRepository.delete(toDelete);
 	}
 
 	@Override
 	public void delete(Tag tag) {
-
+		Tag toDelete = get(tag.getTagid()); // throws if no such tag
+		tagRepository.delete(toDelete);
 	}
 
 }

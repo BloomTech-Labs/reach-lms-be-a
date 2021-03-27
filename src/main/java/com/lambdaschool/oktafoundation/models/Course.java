@@ -19,14 +19,8 @@ import java.util.Set;
 public class Course {
 
 	@ManyToMany(cascade = {CascadeType.ALL})
-//	name = "course_tags", joinColumns = {@JoinColumn(name = "programid")},
-	//			inverseJoinColumns = {@JoinColumn(name = "program_tag_id")}
 	@JoinColumn(name="program_tag_id")
-//	@JoinColumns({
-//			@JoinColumn(name="program_tag_id"),
-////			@JoinColumn(name="programid")
-//	})
-	@JsonIgnoreProperties(value = "program")
+	@JsonIgnoreProperties(value = {"program"})
 	Set<ProgramTags> tags = new HashSet<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)

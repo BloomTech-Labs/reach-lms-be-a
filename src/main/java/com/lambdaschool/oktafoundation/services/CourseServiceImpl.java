@@ -43,6 +43,15 @@ public class CourseServiceImpl
 				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
 	}
 
+	// OVERLOAD FOR CONVENIENCE
+	@Override
+	public Course save(
+			Course course,
+			long programid
+	) {
+		return save(programid, course);
+	}
+
 	@Override
 	public Course save(
 			long programid,
@@ -121,6 +130,15 @@ public class CourseServiceImpl
 		courserepos.findById(courseid)
 				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
 		courserepos.deleteById(courseid);
+	}
+
+	@Override
+	public List<Course> findByTag(String tagTitle) {
+		List<Course> courses = new ArrayList<>();
+		courserepos.findByTags_tag_titleLikeIgnoreCase(tagTitle)
+				.iterator()
+				.forEachRemaining(courses::add);
+		return courses;
 	}
 
 }

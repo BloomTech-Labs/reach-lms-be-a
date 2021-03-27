@@ -12,6 +12,13 @@ public interface CourseService {
 
 	Course findCourseById(long courseId);
 
+	List<Course> findByTag(String tagTitle);
+
+	Course save(
+			Course course,
+			long programid
+	);
+
 	Course save(
 			long programId,
 			Course course

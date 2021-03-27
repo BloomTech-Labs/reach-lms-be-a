@@ -21,7 +21,7 @@ public interface ProgramRepository
 
 	List<Program> findByTags_tag_titleLikeIgnoreCase(String name);
 
-	List<Program> findByTags_tag_tagid(long id);
+	List<Program> findByTags_tag_tagid(long tagid);
 
 	@Query(value = "SELECT * FROM PROGRAMS p WHERE p.userid = :userid\n", nativeQuery = true)
 	List<Program> findProgramsByUserid(long userid);
