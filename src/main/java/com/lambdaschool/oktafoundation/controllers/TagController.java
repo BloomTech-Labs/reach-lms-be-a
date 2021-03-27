@@ -2,15 +2,14 @@ package com.lambdaschool.oktafoundation.controllers;
 
 
 import com.lambdaschool.oktafoundation.models.Tag;
-import com.lambdaschool.oktafoundation.repository.TagRepository;
+import com.lambdaschool.oktafoundation.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -18,27 +17,67 @@ import java.util.List;
 public class TagController {
 
 	@Autowired
-	TagRepository tagRepository;
+	private TagService tagService;
 
 	@GetMapping(value = "/tags")
-	public ResponseEntity<?> getAllTags() {
-		List<Tag> tags = new ArrayList<>();
-		tagRepository.findAll()
-				.iterator()
-				.forEachRemaining(tags::add);
+	public ResponseEntity<?> getAll() {
+		List<Tag> tags = tagService.getAll();
 		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/tags/tag/{tagid}")
+	public ResponseEntity<?> get(
+			@PathVariable
+					Long tagid
+	) {
+		Tag tag = tagService.get(tagid);
+		return new ResponseEntity<>(tag, HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/tags/program/{programid}")
-	public ResponseEntity<?> getTagsByProgram(
+	public ResponseEntity<?> getByProgram(
 			@PathVariable
 					Long programid
 	) {
-		List<Tag> tags = new ArrayList<>();
-		tagRepository.findByPrograms_program_programid(programid)
-				.iterator()
-				.forEachRemaining(tags::add);
+		List<Tag> tags = tagService.getByProgram(programid);
 		return new ResponseEntity<>(tags, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/tags/program/name/{programname}")
+	public ResponseEntity<?> getByProgram(
+			@PathVariable
+					String programname
+	) {
+		List<Tag> tags = tagService.getByProgram(programname);
+	}
+
+	@PostMapping(value="/tags")
+	public ResponseEntity<?> post(@Valid @RequestBody Tag tag) {
+		tagService.save(tag);
+	}
+
+
+	@PostMapping(value = "/tags/new-by-program/{programid}")
+	public ResponseEntity<?> post(
+			@PathVariable
+					Long programid,
+			@Valid
+			@RequestBody
+					Tag tag
+	) {
+		tagService.save(tag, programid);
+		return new ResponseEntity<>(HttpStatus.CREATED);
+	}
+
+	@PatchMapping(value="/tags/tag/{tagid}")
+
+
+	@DeleteMapping("/tags/tag/{tagid}")
+	public ResponseEntity<?> delete(
+			@PathVariable
+					Long tagid
+	) {
+		return new ResponseEntity(null, null, HttpStatus.OK);
 	}
 
 }

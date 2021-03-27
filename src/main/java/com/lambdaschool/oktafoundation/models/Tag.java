@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.NaturalId;
@@ -32,7 +33,7 @@ public class Tag
 	private String hexcode;
 
 	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnoreProperties(value = "tag")
+	@JsonIgnore
 	private Set<ProgramTags> programs = new HashSet<>();
 
 	public Tag() {}

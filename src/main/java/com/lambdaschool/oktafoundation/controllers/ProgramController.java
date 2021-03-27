@@ -4,9 +4,11 @@ package com.lambdaschool.oktafoundation.controllers;
 import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.modelAssemblers.ProgramModelAssembler;
 import com.lambdaschool.oktafoundation.models.Program;
+import com.lambdaschool.oktafoundation.models.Tag;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.services.ProgramService;
+import com.lambdaschool.oktafoundation.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -37,13 +39,25 @@ public class ProgramController {
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
 
+	@Autowired
+	private TagService tagService;
+
 	@GetMapping(value = "/programs/tag-title/{tagTitle}")
-	public ResponseEntity<?> listTagsByProgram(
+	public ResponseEntity<?> listProgramsByTag(
 			@PathVariable
 					String tagTitle
 	) {
 		List<Program> programs = programService.findProgramsByTagName(tagTitle);
 		return new ResponseEntity<>(programs, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/programs/program/{programid}/tags")
+	public ResponseEntity<?> listTagsByProgramId(
+			@PathVariable
+					Long programid
+	) {
+		List<Tag> tags = tagService.getByProgram(programid);
+		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
 	@GetMapping(value = "/programs", produces = "application/json")
