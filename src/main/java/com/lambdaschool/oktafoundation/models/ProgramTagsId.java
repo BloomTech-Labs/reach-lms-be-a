@@ -13,7 +13,8 @@ public class ProgramTagsId implements Serializable {
 	private Long programid;
 	@Column(name="tagid")
 	private Long tagid;
-	private ProgramTagsId() {}
+
+	public ProgramTagsId() {}
 
 	public ProgramTagsId(
 			Long programid,

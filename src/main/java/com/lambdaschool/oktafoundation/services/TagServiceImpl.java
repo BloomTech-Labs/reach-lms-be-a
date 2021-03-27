@@ -110,7 +110,7 @@ public class TagServiceImpl
 	// OVERLOAD for convenience
 	@Override
 	public Tag replace(Tag tag) {
-		save(tag.getTagid(), tag);
+		return save(tag.getTagid(), tag);
 	}
 
 	@Override
@@ -130,30 +130,30 @@ public class TagServiceImpl
 
 	// OVERLOAD for convenience
 	@Override
-	public void replace(
+	public Tag replace(
 			Tag tag,
 			long tagid
 	) {
-		save(tagid, tag);
+		return save(tagid, tag);
 	}
 
 	// OVERLOAD for convenience
 	@Override
-	public void update(Tag tag) {
-		update(tag.getTagid(), tag);
+	public Tag update(Tag tag) {
+		return update(tag.getTagid(), tag);
 	}
 
 	// OVERLOAD for convenience
 	@Override
-	public void update(
+	public Tag update(
 			Tag tag,
 			long tagid
 	) {
-		update(tagid, tag);
+		return update(tagid, tag);
 	}
 
 	@Override
-	public void update(
+	public Tag update(
 			long tagid,
 			Tag tag
 	) {
@@ -176,6 +176,8 @@ public class TagServiceImpl
 				}
 			}
 		}
+		
+		return tagRepository.save(oldTag);
 
 	}
 

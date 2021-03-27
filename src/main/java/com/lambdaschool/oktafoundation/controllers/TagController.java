@@ -49,13 +49,8 @@ public class TagController {
 					String programname
 	) {
 		List<Tag> tags = tagService.getByProgram(programname);
+		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
-
-	@PostMapping(value="/tags")
-	public ResponseEntity<?> post(@Valid @RequestBody Tag tag) {
-		tagService.save(tag);
-	}
-
 
 	@PostMapping(value = "/tags/new-by-program/{programid}")
 	public ResponseEntity<?> post(

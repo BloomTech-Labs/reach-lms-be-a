@@ -57,12 +57,12 @@ public interface TagService {
 
 
 	// UPDATE HAS A TRIPLE OVERLOAD
-	void update(Tag tag);
-	void update(
+	Tag update(Tag tag);
+	Tag update(
 			Tag tag,
 			long tagid
 	);
-	void update(
+	Tag update(
 			long tagid,
 			Tag tag
 	);
