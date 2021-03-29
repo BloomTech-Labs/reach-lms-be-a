@@ -104,9 +104,17 @@ public class Program
 		this.tags = tags;
 	}
 
+	public void addTag(ProgramTags programTags) {
+		addTag(programTags.getTag());
+	}
+
 	public void addTag(Tag tag) {
 		ProgramTags programTag = new ProgramTags(this, tag);
 		tags.add(programTag);
+	}
+
+	public void removeTag(ProgramTags programTags) {
+		removeTag(programTags.getTag());
 	}
 
 	public void removeTag(Tag tag) {
