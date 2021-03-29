@@ -40,5 +40,9 @@ public interface UserRepository
 			nativeQuery = true)
 	List<User> findNotEnrolledUsers(long courseid);
 
+	@Query(value="SELECT * FROM users u WHERE CONCAT(u.username, ' ', u.firstname, ' ', u.lastname, ' ', u.email) " +
+	             "ILIKE %:query%", nativeQuery = true)
+	List<User> search(String query);
+
 
 }

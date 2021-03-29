@@ -26,7 +26,7 @@ public class UserServiceImpl
 	 * Connects this service to the User table.
 	 */
 	@Autowired
-	private UserRepository userrepos;
+	private UserRepository userRepository;
 
 	/**
 	 * Connects this service to the Role table
@@ -45,28 +45,41 @@ public class UserServiceImpl
 		List<User> list = new ArrayList<>();
 		// findAll returns an iterator set.
 		// iterate over the iterator set and add each element to an array list.
-		userrepos.findAll()
+		userRepository.findAll()
 				.iterator()
 				.forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
+	public List<User> search(String query) {
+		List<User> users = new ArrayList<>();
+		if (query != null) {
+			userRepository.search(query)
+					.iterator()
+					.forEachRemaining(users::add);
+		} else {
+			return findAll();
+		}
+		return users;
+	}
+
+	@Override
 	public List<User> findByNameContaining(String username) {
 
-		return userrepos.findByUsernameContainingIgnoreCase(username.toLowerCase());
+		return userRepository.findByUsernameContainingIgnoreCase(username.toLowerCase());
 	}
 
 	public User findUserById(long id)
 	throws UserNotFoundException {
-		return userrepos.findById(id)
+		return userRepository.findById(id)
 				.orElseThrow(() -> new UserNotFoundException(id));
 	}
 
 	@Override
 	public User findByName(String name)
 	throws UserNotFoundException {
-		User uu = userrepos.findByUsername(name.toLowerCase());
+		User uu = userRepository.findByUsername(name.toLowerCase());
 		if (uu == null) {
 			throw new UserNotFoundException(name);
 		}
@@ -78,7 +91,7 @@ public class UserServiceImpl
 	public void delete(long id)
 	throws UserNotFoundException {
 		findUserById(id); // this will throw if user not found
-		userrepos.deleteById(id);
+		userRepository.deleteById(id);
 	}
 
 	@Transactional
@@ -127,7 +140,7 @@ public class UserServiceImpl
 					.add(new UserCourses(newUser, course));
 		}
 
-		return userrepos.save(newUser);
+		return userRepository.save(newUser);
 	}
 
 	@Transactional
@@ -151,7 +164,7 @@ public class UserServiceImpl
 	@Transactional
 	@Override
 	public void deleteAll() {
-		userrepos.deleteAll();
+		userRepository.deleteAll();
 	}
 
 	@Transactional
@@ -226,7 +239,7 @@ public class UserServiceImpl
 						.add(new UserCourses(currentUser, course));
 			}
 		}
-		return userrepos.save(currentUser);
+		return userRepository.save(currentUser);
 	}
 
 

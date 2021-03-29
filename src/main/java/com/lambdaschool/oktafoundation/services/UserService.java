@@ -23,6 +23,8 @@ public interface UserService {
 	 */
 	List<User> findAll();
 
+	List<User> search(String query);
+
 	/**
 	 * A list of all users whose username contains the given substring
 	 *

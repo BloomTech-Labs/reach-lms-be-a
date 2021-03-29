@@ -31,7 +31,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
  * The entry point for clients to access user data
  */
 @RestController
-@RequestMapping("/users")
 public class UserController {
 
 	/**
@@ -60,15 +59,20 @@ public class UserController {
 	 *
 	 * @see UserService#findAll() UserService.findAll()
 	 */
-	@GetMapping(value = "", produces = "application/json")
-	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
-		List<EntityModel<User>> myUsers = userService.findAll()
+	@GetMapping(value = "/users", produces = "application/json")
+	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers(
+			@RequestParam(required = false)
+					String query
+	) {
+		List<EntityModel<User>> myUsers = userService.search(query)
 				.stream()
 				.map(userModelAssembler::toModel)
 				.collect(Collectors.toList());
+
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(myUsers,
-				linkTo(methodOn(UserController.class).listAllUsers()).withSelfRel()
+				linkTo(methodOn(UserController.class).listAllUsers(query)).withSelfRel()
 		);
+
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
@@ -82,7 +86,7 @@ public class UserController {
 	 *
 	 * @see UserService#findUserById(long) UserService.findUserById(long)
 	 */
-	@GetMapping(value = "/user/{userId}", produces = "application/json")
+	@GetMapping(value = "/users/user/{userId}", produces = "application/json")
 	public ResponseEntity<EntityModel<User>> getUserById(
 			@PathVariable
 					Long userId
@@ -101,7 +105,7 @@ public class UserController {
 	 *
 	 * @see UserService#findByName(String) UserService.findByName(String)
 	 */
-	@GetMapping(value = "/user/name/{userName}", produces = "application/json")
+	@GetMapping(value = "/users/user/name/{userName}", produces = "application/json")
 	public ResponseEntity<EntityModel<User>> getUserByName(
 			@PathVariable
 					String userName
@@ -120,7 +124,7 @@ public class UserController {
 	 *
 	 * @see UserService#findByNameContaining(String) UserService.findByNameContaining(String)
 	 */
-	@GetMapping(value = "/user/name/like/{userName}", produces = "application/json")
+	@GetMapping(value = "/users/user/name/like/{userName}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> getUserLikeName(
 			@PathVariable
 					String userName
@@ -135,7 +139,7 @@ public class UserController {
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@PostMapping("/create-user")
+	@PostMapping("/users/create-user")
 	public ResponseEntity<?> addMinUser(
 			@Valid
 			@RequestBody
@@ -197,7 +201,7 @@ public class UserController {
 	 *
 	 * @see UserService#save(User) UserService.save(User)
 	 */
-	@PostMapping(value = "/user", consumes = "application/json")
+	@PostMapping(value = "/users/user", consumes = "application/json")
 	public ResponseEntity<?> addNewUser(
 			@Valid
 			@RequestBody
@@ -230,7 +234,7 @@ public class UserController {
 	 *
 	 * @see UserService#save(User) UserService.save(User)
 	 */
-	@PutMapping(value = "/user/{userid}", consumes = "application/json")
+	@PutMapping(value = "/users/user/{userid}", consumes = "application/json")
 	public ResponseEntity<?> updateFullUser(
 			@Valid
 			@RequestBody
@@ -256,7 +260,7 @@ public class UserController {
 	 *
 	 * @see UserService#update(User, long) UserService.update(User, long)
 	 */
-	@PatchMapping(value = "/user/{userid}", consumes = "application/json")
+	@PatchMapping(value = "/users/user/{userid}", consumes = "application/json")
 	public ResponseEntity<?> updateUser(
 			@RequestBody
 					User updateUser,
@@ -275,7 +279,7 @@ public class UserController {
 	 *
 	 * @return Status of OK
 	 */
-	@DeleteMapping(value = "/user/{userid}")
+	@DeleteMapping(value = "/users/user/{userid}")
 	public ResponseEntity<?> deleteUserById(
 			@PathVariable
 					long userid
@@ -294,13 +298,13 @@ public class UserController {
 	 *
 	 * @see UserService#findByName(String) UserService.findByName(authenticated user)
 	 */
-	@GetMapping(value = "/getuserinfo", produces = {"application/json"})
+	@GetMapping(value = "/users/getuserinfo", produces = {"application/json"})
 	public ResponseEntity<EntityModel<User>> getCurrentUserInfo(Authentication authentication) {
 		EntityModel<User> user = userModelAssembler.toModel(userService.findByName(authentication.getName()));
 		return new ResponseEntity<>(user, HttpStatus.OK);
 	}
 
-	@PatchMapping(value = "/user/{userid}/{roleType}")
+	@PatchMapping(value = "/users/user/{userid}/{roleType}")
 	public ResponseEntity<?> updateUserRole(
 			@PathVariable
 					Long userid,
@@ -320,7 +324,6 @@ public class UserController {
 		return new ResponseEntity<>(userToEdit, HttpStatus.OK);
 
 	}
-
 
 
 }
