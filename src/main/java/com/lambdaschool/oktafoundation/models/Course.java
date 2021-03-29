@@ -19,11 +19,6 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
-	//	@ManyToMany(cascade = {CascadeType.ALL})
-	//	@JoinColumn(name="program_tag_id")
-	//	@JsonIgnoreProperties(value = {"program"})
-	//	Set<ProgramTags> tags = new HashSet<>();
-
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumns({
 			@JoinColumn(name = "program_programid"), @JoinColumn(name = "tag_tagid")
