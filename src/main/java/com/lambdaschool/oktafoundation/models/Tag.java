@@ -22,7 +22,7 @@ import java.util.Set;
 public class Tag
 		extends Auditable {
 
-	private static final String DEFAULT_HEX_CODE = "#000000";
+	private static final String DEFAULT_HEX_CODE = "#FFFFFF";
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "courseid")
 	@JsonIgnoreProperties(value = "tags")

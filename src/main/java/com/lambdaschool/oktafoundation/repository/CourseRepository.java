@@ -7,17 +7,18 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Transactional
 public interface CourseRepository
 		extends CrudRepository<Course, Long> {
 
+	Optional<Course> findByCoursename(String coursename);
+
 	List<Course> findCoursesByProgram_Programid(long programid);
 
-	List<Course> findByTags_tag_titleLikeIgnoreCase(String name);
-
-	List<Course> findByTags_tag_tagid(long tagid);
+	List<Course> findByTag_tag_titleLikeIgnoreCase(String name);
 
 	@Query(value = "SELECT * FROM usercourses uc\n" + "JOIN courses c ON uc.courseid = c.courseid " +
 	               "WHERE userid = :userid", nativeQuery = true)
@@ -47,13 +48,6 @@ public interface CourseRepository
 	@Query(value = "SELECT * FROM courses c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) " +
 	               "ILIKE %?1%", nativeQuery = true)
 	List<Course> search(String query);
-
-	/*
-	WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=5) )
-	SELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE '%course_1%';
-	WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=:userid) )
-	SELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE %:query%
-	*/
 
 	@Query(value = "WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=:userid) )\n" +
 	               "\tSELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE %:query%",
