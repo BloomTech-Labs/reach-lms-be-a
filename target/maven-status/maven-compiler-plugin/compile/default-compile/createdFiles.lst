@@ -1,3 +1,4 @@
+com/lambdaschool/oktafoundation/models/ProgramTagsId.class
 com/lambdaschool/oktafoundation/services/OktaSDKServiceImpl.class
 com/lambdaschool/oktafoundation/models/Module.class
 com/lambdaschool/oktafoundation/models/RoleType.class
@@ -19,7 +20,9 @@ com/lambdaschool/oktafoundation/config/HypermediaConfig.class
 com/lambdaschool/oktafoundation/SeedData.class
 com/lambdaschool/oktafoundation/repository/ModuleRepository.class
 com/lambdaschool/oktafoundation/models/UserCoursesId.class
+com/lambdaschool/oktafoundation/exceptions/TagFoundException.class
 com/lambdaschool/oktafoundation/controllers/CourseController.class
+com/lambdaschool/oktafoundation/exceptions/CourseNotFoundException.class
 com/lambdaschool/oktafoundation/models/Course.class
 com/lambdaschool/oktafoundation/models/UserRolesId.class
 com/lambdaschool/oktafoundation/services/UserService.class
@@ -28,8 +31,11 @@ com/lambdaschool/oktafoundation/services/HelperFunctionsImpl.class
 com/lambdaschool/oktafoundation/exceptions/RoleNotSufficientException.class
 com/lambdaschool/oktafoundation/models/Role.class
 com/lambdaschool/oktafoundation/controllers/UserController.class
+com/lambdaschool/oktafoundation/repository/TagRepository.class
 com/lambdaschool/oktafoundation/modelAssemblers/ProgramModelAssembler.class
 com/lambdaschool/oktafoundation/config/JwtAuthenticationFilter.class
+com/lambdaschool/oktafoundation/models/Tag.class
+com/lambdaschool/oktafoundation/exceptions/ProgramNotFoundException.class
 com/lambdaschool/oktafoundation/services/RolesServiceImpl.class
 com/lambdaschool/oktafoundation/services/UserServiceImpl.class
 com/lambdaschool/oktafoundation/modelAssemblers/CourseModelAssembler.class
@@ -37,12 +43,15 @@ com/lambdaschool/oktafoundation/services/ModuleServiceImpl.class
 com/lambdaschool/oktafoundation/config/DataSourceConfig.class
 com/lambdaschool/oktafoundation/utils/NativeJavaCsvParser.class
 com/lambdaschool/oktafoundation/models/UserRoles.class
+com/lambdaschool/oktafoundation/controllers/TagController.class
 com/lambdaschool/oktafoundation/services/RoleService.class
+com/lambdaschool/oktafoundation/exceptions/TagNotFoundException.class
 com/lambdaschool/oktafoundation/services/ModuleService.class
 com/lambdaschool/oktafoundation/models/User.class
 com/lambdaschool/oktafoundation/handlers/RestExceptionHandler.class
 com/lambdaschool/oktafoundation/models/Program.class
 com/lambdaschool/oktafoundation/models/Auditable.class
+com/lambdaschool/oktafoundation/services/TagServiceImpl.class
 com/lambdaschool/oktafoundation/exceptions/ResourceFoundException.class
 com/lambdaschool/oktafoundation/services/RolesService.class
 com/lambdaschool/oktafoundation/models/Roles.class
@@ -54,6 +63,7 @@ com/lambdaschool/oktafoundation/services/StudentTeacherService.class
 com/lambdaschool/oktafoundation/exceptions/ResourceNotFoundException.class
 com/lambdaschool/oktafoundation/modelAssemblers/UserModelAssembler.class
 com/lambdaschool/oktafoundation/config/H2ServerConfiguration.class
+com/lambdaschool/oktafoundation/services/CourseServiceImpl$1.class
 com/lambdaschool/oktafoundation/controllers/RolesController.class
 com/lambdaschool/oktafoundation/services/RoleServiceImpl.class
 com/lambdaschool/oktafoundation/controllers/ModuleController.class
@@ -62,4 +72,6 @@ com/lambdaschool/oktafoundation/config/OktaAuthSecurityConfig.class
 com/lambdaschool/oktafoundation/repository/CourseRepository.class
 com/lambdaschool/oktafoundation/modelAssemblers/ModuleModelAssembler.class
 com/lambdaschool/oktafoundation/models/UserCourses.class
+com/lambdaschool/oktafoundation/models/ProgramTags.class
 com/lambdaschool/oktafoundation/services/ProgramService.class
+com/lambdaschool/oktafoundation/services/TagService.class
