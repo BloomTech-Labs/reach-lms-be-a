@@ -72,4 +72,7 @@ public interface TagService {
 	void delete(long tagid);
 	void delete(Tag tag);
 
+	// DELETE ALL
+	void deleteAll();
+
 }
