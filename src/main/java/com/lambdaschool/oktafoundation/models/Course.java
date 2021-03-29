@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,10 +19,19 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name="program_tag_id")
-	@JsonIgnoreProperties(value = {"program"})
-	Set<ProgramTags> tags = new HashSet<>();
+//	@ManyToMany(cascade = {CascadeType.ALL})
+//	@JoinColumn(name="program_tag_id")
+//	@JsonIgnoreProperties(value = {"program"})
+//	Set<ProgramTags> tags = new HashSet<>();
+
+	@ManyToOne(cascade = {CascadeType.ALL})
+	@JoinColumns({
+			@JoinColumn(name="program_programid"),
+			@JoinColumn(name="tag_tagid")
+	})
+	@JsonIgnoreProperties(value= {"program"})
+	private ProgramTags tag;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long             courseid;
@@ -90,6 +100,47 @@ public class Course {
 		this.coursedescription = coursedescription;
 	}
 
+	@JsonIgnore
+	public ProgramTags getTag() {
+		return tag;
+	}
+
+	public Tag getCoursetype() {
+		if (tag != null) {
+			return tag.getTag();
+		} else {
+			return null;
+		}
+	}
+
+	public void setTag(ProgramTags tag) {
+		this.tag = tag;
+	}
+
+
+	public void setTag(Tag tag) {
+		ProgramTags newTag = program.getTagIfPresent(tag);
+		setTag(newTag);
+	}
+
+	public void removeTag(Tag tag) {
+		ProgramTags tagToRemove = program.getTagIfPresent(tag);
+		this.tag = null;
+	}
+
+	//	public Set<ProgramTags> getTags() {
+	//		return tags;
+	//	}
+
+	//	public void setTags(Set<ProgramTags> tags) {
+	//		this.tags = tags;
+	//		Iterator<ProgramTags> it = tags.stream().iterator();
+	//		while (it.hasNext()) {
+	//			this.tag = it.next();
+	//		}
+	//	}
+
+
 	public Program getProgram() {
 		return program;
 	}
@@ -114,23 +165,6 @@ public class Course {
 		this.modules = modules;
 	}
 
-	public Set<ProgramTags> getTags() {
-		return tags;
-	}
-
-	public void setTags(Set<ProgramTags> tags) {
-		this.tags = tags;
-	}
-
-	public void addTag(Tag tag) {
-		ProgramTags newTag = program.getTagIfPresent(tag);
-		tags.add(newTag);
-	}
-
-	public void removeTag(Tag tag) {
-		ProgramTags tagToRemove = program.getTagIfPresent(tag);
-		tags.remove(tagToRemove);
-	}
 
 	public void removeUser(User user) {
 		Iterator<UserCourses> iterator = users.iterator();

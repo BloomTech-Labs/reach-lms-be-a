@@ -12,7 +12,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "programs")
-@JsonIgnoreProperties(value = {"courses", "user"})
+@JsonIgnoreProperties(value = {"courses", "user", "tags"})
 public class Program
 		extends Auditable {
 

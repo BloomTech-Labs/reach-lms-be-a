@@ -15,9 +15,11 @@ public interface CourseRepository
 
 	List<Course> findCoursesByProgram_Programid(long programid);
 
-	List<Course> findByTags_tag_titleLikeIgnoreCase(String name);
+	List<Course> findByTag_tag_titleLikeIgnoreCase(String name);
 
-	List<Course> findByTags_tag_tagid(long tagid);
+//	List<Course> findByTags_tag_titleLikeIgnoreCase(String name);
+//
+//	List<Course> findByTags_tag_tagid(long tagid);
 
 	@Query(value = "SELECT * FROM usercourses uc\n" + "JOIN courses c ON uc.courseid = c.courseid " +
 	               "WHERE userid = :userid", nativeQuery = true)
