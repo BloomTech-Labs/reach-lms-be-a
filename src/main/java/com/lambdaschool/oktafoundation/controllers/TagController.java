@@ -64,7 +64,7 @@ public class TagController {
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
-	@PatchMapping(value="/tags/tag/{tagid}")
+//	@PatchMapping(value="/tags/tag/{tagid}")
 
 
 	@DeleteMapping("/tags/tag/{tagid}")

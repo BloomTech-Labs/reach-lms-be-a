@@ -38,24 +38,35 @@ public class TagServiceImpl
 	}
 
 	@Override
-	public Tag get(long tagid) {
+	public Tag get(long tagid)
+	throws TagNotFoundException {
 		return tagRepository.findById(tagid)
 				.orElseThrow(() -> new TagNotFoundException(tagid));
 	}
 
 	@Override
-	public Tag get(String title) {
-		return null;
+	public Tag get(String title)
+	throws TagNotFoundException {
+		return tagRepository.findByTitle(title)
+				.orElseThrow(() -> new TagNotFoundException(title));
 	}
 
 	@Override
 	public List<Tag> getByProgram(long programid) {
-		return null;
+		List<Tag> tags = new ArrayList<>();
+		tagRepository.findByPrograms_program_programid(programid)
+				.iterator()
+				.forEachRemaining(tags::add);
+		return tags;
 	}
 
 	@Override
 	public List<Tag> getByProgram(String programname) {
-		return null;
+		List<Tag> tags = new ArrayList<>();
+		tagRepository.findByPrograms_program_programname(programname)
+				.iterator()
+				.forEachRemaining(tags::add);
+		return tags;
 	}
 
 	@Override
@@ -99,7 +110,8 @@ public class TagServiceImpl
 	public Tag save(
 			Tag tag,
 			long programid
-	) {
+	)
+	throws TagNotFoundException, TagFoundException, ProgramNotFoundException {
 		return save(programid, tag);
 	}
 
@@ -165,6 +177,10 @@ public class TagServiceImpl
 
 		if (tag.getPrograms()
 				    .size() > 0) {
+			// only clear the programs attached to the old program
+			// if someone passed in a tag with programs attached as a property
+			oldTag.getPrograms()
+					.clear();
 			for (ProgramTags programTag : tag.getPrograms()) {
 				Program program = programTag.getProgram();
 				if (!program.containsTag(oldTag)) {
@@ -187,6 +203,11 @@ public class TagServiceImpl
 	public void delete(Tag tag) {
 		Tag toDelete = get(tag.getTagid()); // throws if no such tag
 		tagRepository.delete(toDelete);
+	}
+
+	@Override
+	public void deleteAll() {
+		tagRepository.deleteAll();
 	}
 
 }
