@@ -16,6 +16,9 @@ public interface CourseService {
 
 	Course findCourseById(long courseId);
 
+	Course get(long courseid);
+	Course get(String coursename);
+
 	List<Course> findByTag(String tagTitle);
 
 	Course save(

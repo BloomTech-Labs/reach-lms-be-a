@@ -89,8 +89,21 @@ public class CourseServiceImpl
 	@Override
 	public Course findCourseById(long courseid)
 	throws CourseNotFoundException {
+		return get(courseid);
+	}
+
+	@Override
+	public Course get(long courseid)
+	throws CourseNotFoundException {
 		return courseRepository.findById(courseid)
 				.orElseThrow(() -> new CourseNotFoundException(courseid));
+	}
+
+	@Override
+	public Course get(String coursename)
+	throws CourseNotFoundException {
+		return courseRepository.findByCoursename(coursename)
+				.orElseThrow(() -> new CourseNotFoundException(coursename));
 	}
 
 	@Override

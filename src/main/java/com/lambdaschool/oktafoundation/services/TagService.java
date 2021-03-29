@@ -25,14 +25,6 @@ public interface TagService {
 	// program name
 	List<Tag> getByProgram(String programname);
 
-
-	// GET TAGS BY COURSE
-	// course id
-	List<Tag> getByCourse(long courseid);
-	// course name
-	List<Tag> getByCourse(String coursename);
-
-
 	// SAVE HAS A DOUBLE OVERLOAD
 	Tag save(
 			long programid,

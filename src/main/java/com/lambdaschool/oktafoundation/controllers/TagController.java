@@ -6,7 +6,6 @@ import com.lambdaschool.oktafoundation.services.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -60,19 +59,59 @@ public class TagController {
 			@RequestBody
 					Tag tag
 	) {
-		tagService.save(tag, programid);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		Tag savedTag = tagService.save(tag, programid);
+		return new ResponseEntity<>(savedTag, HttpStatus.CREATED);
 	}
 
-//	@PatchMapping(value="/tags/tag/{tagid}")
+	@PutMapping("/tags/tag/{tagid}")
+	public ResponseEntity<?> replace(
+			@PathVariable
+					Long tagid,
+			@Valid
+			@RequestBody
+					Tag tag
+	) {
+		Tag updatedTag = tagService.replace(tag, tagid);
+		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
+	}
 
+	@PutMapping("/tags/tag")
+	public ResponseEntity<?> replace(
+			@Valid
+			@RequestBody
+					Tag tag
+	) {
+		Tag updatedTag = tagService.replace(tag);
+		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
+	}
+
+	@PatchMapping("/tags/tag")
+	public ResponseEntity<?> edit(
+			@RequestBody
+					Tag tag
+	) {
+		Tag updatedTag = tagService.update(tag);
+		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
+	}
+
+	@PatchMapping(value = "/tags/tag/{tagid}")
+	public ResponseEntity<?> edit(
+			@PathVariable
+					Long tagid,
+			@RequestBody
+					Tag tag
+	) {
+		Tag updatedTag = tagService.update(tag, tagid);
+		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
+	}
 
 	@DeleteMapping("/tags/tag/{tagid}")
 	public ResponseEntity<?> delete(
 			@PathVariable
 					Long tagid
 	) {
-		return new ResponseEntity(null, null, HttpStatus.OK);
+		tagService.delete(tagid);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 }
