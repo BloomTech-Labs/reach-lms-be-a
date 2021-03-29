@@ -39,6 +39,7 @@ public interface CourseRepository
 	 * NOTE: 'ILIKE' is a Postgresql Operation. When running H2 locally, this query will throw an
 	 * {@link java.sql.SQLFeatureNotSupportedException SQL Exception}.
 	 * <p>
+	 *
 	 * @param query The search term that should be compared to the various fields mentioned above
 	 *
 	 * @return Any course that contains a match to the given search term
@@ -46,6 +47,21 @@ public interface CourseRepository
 	@Query(value = "SELECT * FROM courses c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) " +
 	               "ILIKE %?1%", nativeQuery = true)
 	List<Course> search(String query);
+
+	/*
+	WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=5) )
+	SELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE '%course_1%';
+	WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=:userid) )
+	SELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE %:query%
+	*/
+
+	@Query(value = "WITH c as ( SELECT * FROM courses where courseid in (SELECT courseid FROM usercourses WHERE userid=:userid) )\n" +
+	               "\tSELECT * FROM c WHERE CONCAT(c.coursename, ' ', c.coursedescription, ' ', c.coursecode) ILIKE %:query%",
+			nativeQuery = true)
+	List<Course> search(
+			long userid,
+			String query
+	);
 
 
 }

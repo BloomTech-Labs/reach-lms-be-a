@@ -25,6 +25,9 @@ public class CourseServiceImpl
 	@Autowired
 	private ProgramService programService;
 
+	@Autowired
+	private HelperFunctions helperFunctions;
+
 	@Override
 	public List<Course> findAll() {
 		List<Course> courses = new ArrayList<>();
@@ -38,17 +41,49 @@ public class CourseServiceImpl
 
 	@Override
 	public List<Course> findRelevant(String query) {
-		List<Course> courses = new ArrayList<>();
-		if (query != null) {
-			courseRepository.search(query)
-					.iterator()
-					.forEachRemaining(courses::add);
-		} else {
-			courseRepository.findAll()
-					.iterator()
-					.forEachRemaining(courses::add);
+		List<Course> courses     = new ArrayList<>();
+		User         callingUser = helperFunctions.getCallingUser();
+		RoleType     callingRole = callingUser.getRole();
+
+		// switch based on the role of the calling user
+		switch (callingRole) {
+			// if the calling user is STUDENT or a TEACHER, we want to return any courses
+			// that they are attached to.
+			// NOTE that TEACHER and STUDENT have the same result, so we merge their cases
+			// by stacking `case TEACHER:` right on top of `case STUDENT:`
+			case TEACHER: // stacking case statements is how you merge cases in Java
+			case STUDENT: // stacking case statements is how you merge cases in Java
+				if (query != null) {
+					courseRepository.search(callingUser.getUserid(), query)
+							.iterator()
+							.forEachRemaining(courses::add);
+				} else {
+					return findByUser(callingUser.getUserid());
+				}
+				break;
+			// if the calling user is an ADMIN, we want to return all courses in the system.
+			// OR DEFAULT -- if somehow the calling user doesn't have a role, we're currently
+			// defaulting to all the courses in the system!
+			// This is something that may be worth changing later on for security reasons.
+			case ADMIN:
+			default:
+				if (query != null) {
+					courseRepository.search(query)
+							.iterator()
+							.forEachRemaining(courses::add);
+				} else {
+					return findAll();
+				}
+				break;
 		}
+		// return the courses that are relevant to this user!!
+		// if we reach this line, it means the user DID provide a query!
 		return courses;
+	}
+
+	@Override
+	public List<Course> findByUser(long userid) {
+		return new ArrayList<>(courseRepository.findCoursesByUserid(userid));
 	}
 
 	@Override

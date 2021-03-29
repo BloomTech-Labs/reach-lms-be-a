@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 
 /**
@@ -66,10 +64,11 @@ public class UserServiceImpl
 	}
 
 	@Override
-	public User findByName(String name) {
+	public User findByName(String name)
+	throws UserNotFoundException {
 		User uu = userrepos.findByUsername(name.toLowerCase());
 		if (uu == null) {
-			throw new ResourceNotFoundException("User name " + name + " not found!");
+			throw new UserNotFoundException(name);
 		}
 		return uu;
 	}
@@ -119,17 +118,64 @@ public class UserServiceImpl
 
 		}
 
-		newUser.getCourses().clear();
+		newUser.getCourses()
+				.clear();
 		for (UserCourses userCourses : user.getCourses()) {
-			Course course = courseService.findCourseById(userCourses.getCourse().getCourseid());
-			newUser.getCourses().add(new UserCourses(newUser, course));
+			Course course = courseService.findCourseById(userCourses.getCourse()
+					.getCourseid());
+			newUser.getCourses()
+					.add(new UserCourses(newUser, course));
 		}
 
 		return userrepos.save(newUser);
 	}
 
 	@Transactional
-	public User updateFunctionality(User currentUser, User userIn) {
+	@Override
+	public User update(
+			User userIn,
+			long id
+	) {
+		User currentUser = findUserById(id);
+		// update own thing OR the calling user is ADMIN
+		if (helperFunctions.getCurrentPriorityRole() == RoleType.ADMIN ||
+		    helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
+			return updateFunctionality(currentUser, userIn);
+		} else {
+			// note we should never get to this line but is needed for the compiler
+			// to recognize that this exception can be thrown
+			throw new ResourceNotFoundException("This user is not authorized to make change");
+		}
+	}
+
+	@Transactional
+	@Override
+	public void deleteAll() {
+		userrepos.deleteAll();
+	}
+
+	@Transactional
+	@Override
+	public User updateRole(
+			User user,
+			RoleType newRole
+	) {
+		User userToUpdate = findUserById(user.getUserid()); // throws if user not found
+		if (userToUpdate.getRole() == RoleType.ADMIN) {
+			throw new RoleNotSufficientException("ADMIN users cannot be changed from ADMIN");
+		} else {
+			Role roleToUse = roleService.findByName(newRole.name());
+			userToUpdate.getRoles()
+					.add(new UserRoles(userToUpdate, roleToUse));
+		}
+		return userToUpdate;
+	}
+
+	@Transactional
+	private User updateFunctionality(
+			User currentUser,
+			User userIn
+	) {
 		if (userIn.getUsername() != null) {
 			currentUser.setUsername(userIn.getUsername()
 					.toLowerCase());
@@ -169,57 +215,19 @@ public class UserServiceImpl
 
 		}
 
-		if (userIn.getCourses().size() > 0) {
-			currentUser.getCourses().clear();
+		if (userIn.getCourses()
+				    .size() > 0) {
+			currentUser.getCourses()
+					.clear();
 			for (UserCourses userCourses : userIn.getCourses()) {
-				Course course = courseService.findCourseById(userCourses.getCourse().getCourseid());
-				currentUser.getCourses().add(new UserCourses(currentUser, course));
+				Course course = courseService.findCourseById(userCourses.getCourse()
+						.getCourseid());
+				currentUser.getCourses()
+						.add(new UserCourses(currentUser, course));
 			}
 		}
 		return userrepos.save(currentUser);
 	}
-
-	@Transactional
-	@Override
-	public User update(
-			User userIn,
-			long id
-	) {
-		User currentUser = findUserById(id);
-		// update own thing OR the calling user is ADMIN
-		if (helperFunctions.getCurrentPriorityRole() == RoleType.ADMIN
-			||  helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
-			return updateFunctionality(currentUser, userIn);
-		} else {
-			// note we should never get to this line but is needed for the compiler
-			// to recognize that this exception can be thrown
-			throw new ResourceNotFoundException("This user is not authorized to make change");
-		}
-	}
-
-	@Transactional
-	@Override
-	public void deleteAll() {
-		userrepos.deleteAll();
-	}
-
-	@Transactional
-	@Override
-	public User updateRole(
-			User user,
-			RoleType newRole
-	) {
-		User userToUpdate = findUserById(user.getUserid()); // throws if user not found
-		if (userToUpdate.getRole() == RoleType.ADMIN) {
-			throw new RoleNotSufficientException("ADMIN users cannot be changed from ADMIN");
-		} else {
-			Role roleToUse = roleService.findByName(newRole.name());
-			userToUpdate.getRoles()
-					.add(new UserRoles(userToUpdate, roleToUse));
-		}
-		return userToUpdate;
-	}
-
 
 
 }

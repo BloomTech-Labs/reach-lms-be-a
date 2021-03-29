@@ -104,6 +104,8 @@ public class HelperFunctionsImpl
 		} else if (authorities.contains(new SimpleGrantedAuthority(RoleType.STUDENT.name()))) {
 			return RoleType.STUDENT;
 		} else {
+			// default case... this is mostly just for testing, as we usually shouldn't hit this default in production
+			// when testing feel free to change this around to see what TEACHER and STUDENT might see
 			return RoleType.ADMIN;
 		}
 	}

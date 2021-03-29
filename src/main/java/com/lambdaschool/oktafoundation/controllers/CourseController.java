@@ -59,9 +59,16 @@ public class CourseController {
 			@RequestParam(required = false)
 					String query
 	) {
-		//		List<EntityModel<Course>> courses = courseService;
-		List<Course> courses = courseService.findRelevant(query);
-		return new ResponseEntity<>(courses, HttpStatus.OK);
+		List<EntityModel<Course>> courses = courseService.findRelevant(query)
+				.stream()
+				.map(courseModelAssembler::toModel)
+				.collect(Collectors.toList());
+
+		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
+				linkTo(methodOn(CourseController.class).getRelevantCourses(query)).withSelfRel()
+		);
+		
+		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
 	@GetMapping("/courses/by-tag/{tagTitle}")
@@ -78,7 +85,7 @@ public class CourseController {
 			@PathVariable
 					long userid
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
+		List<EntityModel<Course>> courses = courseService.findByUser(userid)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
