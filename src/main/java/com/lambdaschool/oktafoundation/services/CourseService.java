@@ -10,6 +10,9 @@ public interface CourseService {
 
 	List<Course> findAll();
 
+	List<Course> findRelevant();
+	List<Course> findRelevant(String query);
+
 	Course findCourseById(long courseId);
 
 	List<Course> findByTag(String tagTitle);

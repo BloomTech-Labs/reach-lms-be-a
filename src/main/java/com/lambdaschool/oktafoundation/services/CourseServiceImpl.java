@@ -1,7 +1,8 @@
 package com.lambdaschool.oktafoundation.services;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.CourseNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.ProgramNotFoundException;
 import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
@@ -25,6 +26,9 @@ public class CourseServiceImpl
 	@Autowired
 	private ProgramRepository programrepos;
 
+	@Autowired
+	private ProgramService programService;
+
 	@Override
 	public List<Course> findAll() {
 		List<Course> courses = new ArrayList<>();
@@ -37,10 +41,29 @@ public class CourseServiceImpl
 	}
 
 	@Override
+	public List<Course> findRelevant() {
+		return null;
+	}
+
+	@Override
+	public List<Course> findRelevant(String query) {
+		return null;
+	}
+
+	@Override
 	public Course findCourseById(long courseid)
-	throws ResourceNotFoundException {
+	throws CourseNotFoundException {
 		return courserepos.findById(courseid)
-				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
+				.orElseThrow(() -> new CourseNotFoundException(courseid));
+	}
+
+	@Override
+	public List<Course> findByTag(String tagTitle) {
+		List<Course> courses = new ArrayList<>();
+		courserepos.findByTags_tag_titleLikeIgnoreCase(tagTitle)
+				.iterator()
+				.forEachRemaining(courses::add);
+		return courses;
 	}
 
 	// OVERLOAD FOR CONVENIENCE
@@ -57,29 +80,22 @@ public class CourseServiceImpl
 			long programid,
 			Course course
 	)
-	throws ResourceNotFoundException {
+	throws ProgramNotFoundException, CourseNotFoundException {
 		Course newCourse = new Course();
 		if (course.getCourseid() != 0) {
-			courserepos.findById(course.getCourseid())
-					.orElseThrow(() -> new ResourceNotFoundException("Course with id" + course.getCourseid() + "Not Found!"));
+			findCourseById(course.getCourseid()); // throws if course not found
 			newCourse.setCourseid(course.getCourseid());
 		}
 		newCourse.setCoursename(course.getCoursename());
 		newCourse.setCoursedescription(course.getCoursedescription());
 		newCourse.setCoursecode(course.getCoursecode());
-
-
 		newCourse.getModules()
 				.clear();
-
 		for (Module module : course.getModules()) {
 			newCourse.getModules()
 					.add(new Module(module.getModulename(), module.getModuledescription(), module.getModulecontent(), newCourse));
 		}
-
-		Program program = programrepos.findById(programid)
-				.orElseThrow(() -> new ResourceNotFoundException("Program with id " + programid + "Not Found!"));
-
+		Program program = programService.findProgramsById(programid); // throws if program not found
 		if (program != null) {
 			newCourse.setProgram(program);
 			newCourse.getTags()
@@ -88,17 +104,13 @@ public class CourseServiceImpl
 				newCourse.addTag(programTags.getTag());
 			}
 		}
-
 		newCourse.getUsers()
 				.clear();
 		for (UserCourses userCourse : course.getUsers()) {
 			newCourse.getUsers()
 					.add(new UserCourses(userCourse.getUser(), newCourse));
 		}
-
-
 		return courserepos.save(newCourse);
-
 	}
 
 	@Override
@@ -106,39 +118,25 @@ public class CourseServiceImpl
 			long courseid,
 			Course course
 	) {
-		Course newCourse = findCourseById(courseid);
+		Course newCourse = findCourseById(courseid); // throws if Course not found
 
 		if (course.getCoursename() != null) {
 			newCourse.setCoursename(course.getCoursename());
 		}
-
 		if (course.getCoursedescription() != null) {
 			newCourse.setCoursedescription(course.getCoursedescription());
 		}
-
 		if (course.getCoursecode() != null) {
 			newCourse.setCoursecode(course.getCoursecode());
 		}
-
-
 		return courserepos.save(newCourse);
 	}
 
 	@Override
 	public void delete(long courseid)
-	throws ResourceNotFoundException {
-		courserepos.findById(courseid)
-				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + "Not Found!"));
+	throws CourseNotFoundException {
+		findCourseById(courseid); // throws if Course not found
 		courserepos.deleteById(courseid);
-	}
-
-	@Override
-	public List<Course> findByTag(String tagTitle) {
-		List<Course> courses = new ArrayList<>();
-		courserepos.findByTags_tag_titleLikeIgnoreCase(tagTitle)
-				.iterator()
-				.forEachRemaining(courses::add);
-		return courses;
 	}
 
 }
