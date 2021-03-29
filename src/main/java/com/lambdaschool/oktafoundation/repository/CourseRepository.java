@@ -19,7 +19,7 @@ public interface CourseRepository
 
 	List<Course> findByTags_tag_tagid(long tagid);
 
-	@Query(value = "SELECT * FROM usercourses uc\n" + "JOIN courses c ON uc.courseid = c.courseid\n" +
+	@Query(value = "SELECT * FROM usercourses uc\n" + "JOIN courses c ON uc.courseid = c.courseid " +
 	               "WHERE userid = :userid", nativeQuery = true)
 	List<Course> findCoursesByUserid(long userid);
 
