@@ -16,24 +16,27 @@ import java.util.*;
 public class Program
 		extends Auditable {
 
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnoreProperties(value = "program", allowSetters = true)
-	List<Course> courses = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long             programid;
 	private String           programname;
 	private String           programtype;
 	private String           programdescription;
+	//
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
 	private User             user;
+	//
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "program", allowSetters = true)
+	private List<Course>     courses = new ArrayList<>();
+	//
 	@OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties(value = "program")
-	private Set<ProgramTags> tags = new HashSet<>();
+	private Set<ProgramTags> tags    = new HashSet<>();
+
 
 	public Program() {
 	}
