@@ -129,6 +129,15 @@ public class ProgramServiceImpl
 			oldProgram.setProgramdescription(program.getProgramdescription());
 		}
 
+		if (program.getTags()
+				    .size() > 0) {
+			oldProgram.getTags()
+					.clear();
+			for (ProgramTags programTags : program.getTags()) {
+				oldProgram.addTag(programTags.getTag());
+			}
+		}
+
 		return programRepository.save(oldProgram);
 
 	}
