@@ -147,8 +147,6 @@ public class SeedData
 		course2.getUsers()
 				.add(new UserCourses(student001, course2));
 
-		course1.setTag(tag1);
-		course1.setTag(tag2);
 		course2.setTag(tag2);
 
 
