@@ -55,10 +55,13 @@ public class CourseController {
 	}
 
 	@GetMapping("/courses/relevant")
-	public ResponseEntity<?> getRelevantCourses(@RequestParam String query) {
+	public ResponseEntity<?> getRelevantCourses(
+			@RequestParam(required = false)
+					String query
+	) {
 		//		List<EntityModel<Course>> courses = courseService;
 		List<Course> courses = courseService.findRelevant(query);
-		return new ResponseEntity<>(null, null, HttpStatus.OK);
+		return new ResponseEntity<>(courses, HttpStatus.OK);
 	}
 
 	@GetMapping("/courses/by-tag/{tagTitle}")

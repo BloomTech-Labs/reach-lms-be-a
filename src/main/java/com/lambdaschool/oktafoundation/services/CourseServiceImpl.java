@@ -6,7 +6,6 @@ import com.lambdaschool.oktafoundation.exceptions.ProgramNotFoundException;
 import com.lambdaschool.oktafoundation.models.Module;
 import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
-import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,10 +20,7 @@ public class CourseServiceImpl
 		implements CourseService {
 
 	@Autowired
-	private CourseRepository courserepos;
-
-	@Autowired
-	private ProgramRepository programrepos;
+	private CourseRepository courseRepository;
 
 	@Autowired
 	private ProgramService programService;
@@ -33,7 +29,7 @@ public class CourseServiceImpl
 	public List<Course> findAll() {
 		List<Course> courses = new ArrayList<>();
 
-		courserepos.findAll()
+		courseRepository.findAll()
 				.iterator()
 				.forEachRemaining(courses::add);
 
@@ -41,26 +37,31 @@ public class CourseServiceImpl
 	}
 
 	@Override
-	public List<Course> findRelevant() {
-		return null;
-	}
-
-	@Override
 	public List<Course> findRelevant(String query) {
-		return null;
+		List<Course> courses = new ArrayList<>();
+		if (query != null) {
+			courseRepository.search(query)
+					.iterator()
+					.forEachRemaining(courses::add);
+		} else {
+			courseRepository.findAll()
+					.iterator()
+					.forEachRemaining(courses::add);
+		}
+		return courses;
 	}
 
 	@Override
 	public Course findCourseById(long courseid)
 	throws CourseNotFoundException {
-		return courserepos.findById(courseid)
+		return courseRepository.findById(courseid)
 				.orElseThrow(() -> new CourseNotFoundException(courseid));
 	}
 
 	@Override
 	public List<Course> findByTag(String tagTitle) {
 		List<Course> courses = new ArrayList<>();
-		courserepos.findByTags_tag_titleLikeIgnoreCase(tagTitle)
+		courseRepository.findByTags_tag_titleLikeIgnoreCase(tagTitle)
 				.iterator()
 				.forEachRemaining(courses::add);
 		return courses;
@@ -110,7 +111,7 @@ public class CourseServiceImpl
 			newCourse.getUsers()
 					.add(new UserCourses(userCourse.getUser(), newCourse));
 		}
-		return courserepos.save(newCourse);
+		return courseRepository.save(newCourse);
 	}
 
 	@Override
@@ -129,14 +130,14 @@ public class CourseServiceImpl
 		if (course.getCoursecode() != null) {
 			newCourse.setCoursecode(course.getCoursecode());
 		}
-		return courserepos.save(newCourse);
+		return courseRepository.save(newCourse);
 	}
 
 	@Override
 	public void delete(long courseid)
 	throws CourseNotFoundException {
 		findCourseById(courseid); // throws if Course not found
-		courserepos.deleteById(courseid);
+		courseRepository.deleteById(courseid);
 	}
 
 }
