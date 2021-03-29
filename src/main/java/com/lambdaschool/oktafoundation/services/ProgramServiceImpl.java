@@ -1,11 +1,14 @@
 package com.lambdaschool.oktafoundation.services;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.ProgramNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.UserNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Program;
+import com.lambdaschool.oktafoundation.models.ProgramTags;
 import com.lambdaschool.oktafoundation.models.User;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
+import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,24 +29,29 @@ public class ProgramServiceImpl
 	@Autowired
 	UserRepository userrepos;
 
+	@Autowired
+	TagRepository tagRepository;
+
 	@Override
 	public Program save(
 			long userid,
 			Program program
 	)
-	throws ResourceNotFoundException {
+	throws ProgramNotFoundException, UserNotFoundException {
 		Program newProgram = new Program();
 
 		if (program.getProgramid() != 0) {
-			programRepository.findById(program.getProgramid())
-					.orElseThrow(() -> new ResourceNotFoundException(
-							"Program with id " + program.getProgramid() + " not found."));
+			findProgramsById(program.getProgramid()); // throws if program not found
 			newProgram.setProgramid(program.getProgramid());
 		}
 
 		newProgram.setProgramname(program.getProgramname());
 		newProgram.setProgramtype(program.getProgramtype());
 		newProgram.setProgramdescription(program.getProgramdescription());
+
+		for (ProgramTags programTags : program.getTags()) {
+			newProgram.addTag(programTags.getTag());
+		}
 
 		newProgram.getCourses()
 				.clear();
@@ -57,11 +65,18 @@ public class ProgramServiceImpl
 					));
 		}
 		User currentUser = userrepos.findById(userid)
-				.orElseThrow(() -> new ResourceNotFoundException("User with id " + userid + "not found !"));
-		if (currentUser != null) {
-			newProgram.setUser(currentUser);
-		}
+				.orElseThrow(() -> new UserNotFoundException(userid));
+		newProgram.setUser(currentUser);
 		return programRepository.save(newProgram);
+	}
+
+	@Override
+	public List<Program> findProgramsByTagName(String title) {
+		List<Program> programs = new ArrayList<>();
+		programRepository.findByTags_tag_titleLikeIgnoreCase(title)
+				.iterator()
+				.forEachRemaining(programs::add);
+		return programs;
 	}
 
 	@Override
@@ -74,36 +89,33 @@ public class ProgramServiceImpl
 	}
 
 	@Override
-	public Program findProgramsById(long id) {
+	public Program findProgramsById(long id)
+	throws ProgramNotFoundException {
 		return programRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Program with id " + id + " not found."));
+				.orElseThrow(() -> new ProgramNotFoundException(id));
 	}
 
 	@Override
-	public Program findProgramsByName(String name) {
-		Program pp = programRepository.findByProgramnameIgnoreCase(name);
-		if (pp == null) {
-			throw new ResourceNotFoundException("Program name " + name + " not found.");
-		}
-		return pp;
+	public Program findProgramsByName(String name)
+	throws ProgramNotFoundException {
+		return programRepository.findByProgramnameIgnoreCase(name)
+				.orElseThrow(() -> new ProgramNotFoundException(name));
 	}
 
 	@Override
 	public void delete(long id)
-	throws ResourceNotFoundException {
-		programRepository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Program with id " + id + " not found."));
+	throws ProgramNotFoundException {
+		findProgramsById(id); // throws if not found
 		programRepository.deleteById(id);
-
-
 	}
 
 	@Override
 	public Program update(
 			Program program,
 			long id
-	) {
-		Program oldProgram = findProgramsById(id);
+	)
+	throws ProgramNotFoundException {
+		Program oldProgram = findProgramsById(id); // throws if not found
 
 		if (program.getProgramname() != null) {
 			oldProgram.setProgramname(program.getProgramname());

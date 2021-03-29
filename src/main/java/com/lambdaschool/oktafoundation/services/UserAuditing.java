@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.services;
 
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +25,7 @@ public class UserAuditing
 	 * @return Optional(String) of current user
 	 */
 	@Override
-	public Optional<String> getCurrentAuditor() {
+	public @NotNull Optional<String> getCurrentAuditor() {
 		String uname;
 		Authentication authentication = SecurityContextHolder.getContext()
 				.getAuthentication();

@@ -37,4 +37,42 @@ public interface HelperFunctions {
 
 	User getCallingUser();
 
+	// THIS may be a good/simple/customizable solution to adding
+	// some granularity & consistency to the permissions in our app
+	//
+	//	boolean isAuthorizedToMakeChange(RoleType role);
+	//	boolean isAuthorizedToMakeChange(
+	//			String username,
+	//			User user
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			String username,
+	//			Program program
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			String username,
+	//			Course course
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			String username,
+	//			Module module
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			RoleType role,
+	//			User user
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			RoleType role,
+	//			Program program
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			RoleType role,
+	//			Course course
+	//	);
+	//	boolean isAuthorizedToMakeChange(
+	//			RoleType role,
+	//			Module module
+	//	);
+
+
 }

@@ -13,6 +13,8 @@ public interface ProgramService {
 			Program program
 	);
 
+	List<Program> findProgramsByTagName(String title);
+
 	List<Program> findAll();
 
 	Program findProgramsById(long id);

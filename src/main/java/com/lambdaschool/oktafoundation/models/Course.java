@@ -18,32 +18,30 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
+	@ManyToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name="program_tag_id")
+	@JsonIgnoreProperties(value = {"program"})
+	Set<ProgramTags> tags = new HashSet<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long courseid;
-
+	private long             courseid;
 	@NotNull
-	private String coursename;
-
+	private String           coursename;
 	@NotNull
-	private String coursecode;
-
-	private String coursedescription;
-
+	private String           coursecode;
+	private String           coursedescription;
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "programid")
 	@JsonIgnoreProperties(value = "courses")
-	private Program program;
-
+	private Program          program;
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<UserCourses> users = new HashSet<>();
-
+	private Set<UserCourses> users   = new HashSet<>();
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<Module> modules = new HashSet<>();
+	private Set<Module>      modules = new HashSet<>();
 
 	public Course() {
 	}
@@ -116,20 +114,46 @@ public class Course {
 		this.modules = modules;
 	}
 
-	public void removeUser(User user) {
+	public Set<ProgramTags> getTags() {
+		return tags;
+	}
 
+	public void setTags(Set<ProgramTags> tags) {
+		this.tags = tags;
+	}
+
+	public void addTag(Tag tag) {
+		ProgramTags newTag = program.getTagIfPresent(tag);
+		tags.add(newTag);
+	}
+
+	public void removeTag(Tag tag) {
+		ProgramTags tagToRemove = program.getTagIfPresent(tag);
+		tags.remove(tagToRemove);
+	}
+
+	public void removeUser(User user) {
 		Iterator<UserCourses> iterator = users.iterator();
 		while (iterator.hasNext()) {
 			UserCourses userCourses = iterator.next();
-			if (userCourses.getCourse().equals(this)
-					&& userCourses.getUser().equals(user)
-			) {
+			if (userCourses.getCourse()
+					    .equals(this) && userCourses.getUser()
+					    .equals(user)) {
 				iterator.remove();
-				userCourses.getUser().getCourses().remove(userCourses);
+				userCourses.getUser()
+						.getCourses()
+						.remove(userCourses);
 				userCourses.setCourse(null);
 				userCourses.setUser(null);
 			}
 		}
+	}
+
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getCourseid(), getCoursename(), getCoursecode(), getCoursedescription());
 	}
 
 	@Override
@@ -142,11 +166,6 @@ public class Course {
 		return getCourseid() == course.getCourseid() && getCoursename().equals(course.getCoursename()) &&
 		       Objects.equals(getCoursecode(), course.getCoursecode()) &&
 		       Objects.equals(getCoursedescription(), course.getCoursedescription());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getCourseid(), getCoursename(), getCoursecode(), getCoursedescription());
 	}
 
 }
