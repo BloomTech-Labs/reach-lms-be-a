@@ -3,15 +3,14 @@ package com.lambdaschool.oktafoundation.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.lambdaschool.oktafoundation.exceptions.UserNotFoundException;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
-import java.util.Set;
+import javax.validation.constraints.Size;
+import java.util.*;
 
 
 @Entity
@@ -19,33 +18,40 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private long             courseid;
+	//
+	@NotNull
+	private String           coursename;
+	//
+	@NotNull
+	private String           coursecode;
+	//
+	@Size(max = 2000)
+	private String           coursedescription;
+	//
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "programid")
+	@JsonIgnoreProperties(value = "courses")
+	private Program          program;
+	//
+	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "course", allowSetters = true)
+	private Set<UserCourses> users   = new HashSet<>();
+	//
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "course", allowSetters = true)
+	private Set<Module>      modules = new HashSet<>();
+	//
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumns({
 			@JoinColumn(name = "program_programid"), @JoinColumn(name = "tag_tagid")
 	})
 	@JsonIgnoreProperties(value = {"program"})
-	private ProgramTags tag;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long             courseid;
-	@NotNull
-	private String           coursename;
-	@NotNull
-	private String           coursecode;
-	private String           coursedescription;
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "programid")
-	@JsonIgnoreProperties(value = "courses")
-	private Program          program;
-	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<UserCourses> users   = new HashSet<>();
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnoreProperties(value = "course", allowSetters = true)
-	private Set<Module>      modules = new HashSet<>();
+	private ProgramTags      tag;
 
 	public Course() {
 	}
@@ -157,7 +163,47 @@ public class Course {
 		this.modules = modules;
 	}
 
+	public Optional<UserCourses> findUser(User user) {
+		for (UserCourses userCourses : users) {
+			if (userCourses.softEquals(user, this)) {
+				return Optional.of(userCourses);
+			}
+		}
+		return Optional.empty();
+	}
+
+	public boolean containsUser(User user) {
+		return findUser(user).isPresent();
+	}
+
+	public UserCourses getUserIfPresent(User user)
+	throws UserNotFoundException {
+		return findUser(user).orElseThrow(() -> new UserNotFoundException(user.getUserid(), this));
+	}
+
+	public void addUser(UserCourses userCourse) {
+		addUser(userCourse.getUser());
+	}
+
+	public void addUser(List<User> users) {
+		for (User user : users) {
+			addUser(user);
+		}
+	}
+
+	public void addUser(User user) {
+		UserCourses userCourse = new UserCourses(user, this);
+		users.add(userCourse);
+	}
+
+	public void removeUser(UserCourses userCourse) {
+		removeUser(userCourse.getUser());
+	}
+
 	public void removeUser(User user) {
+		if (!containsUser(user)) {
+			throw new UserNotFoundException(user.getUserid(), this);
+		}
 		Iterator<UserCourses> iterator = users.iterator();
 		while (iterator.hasNext()) {
 			UserCourses userCourses = iterator.next();

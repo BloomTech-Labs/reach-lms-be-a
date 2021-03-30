@@ -118,10 +118,23 @@ public class CourseServiceImpl
 
 	// OVERLOAD FOR CONVENIENCE
 	@Override
+	public Course save(Course course)
+	throws ProgramNotFoundException {
+		if (course.getProgram() != null) {
+			return save(course.getProgram()
+					.getProgramid(), course);
+		} else {
+			throw new ProgramNotFoundException("Anonymous/Null Program");
+		}
+	}
+
+	// OVERLOAD FOR CONVENIENCE
+	@Override
 	public Course save(
 			Course course,
 			long programid
-	) {
+	)
+	throws ProgramNotFoundException {
 		return save(programid, course);
 	}
 
