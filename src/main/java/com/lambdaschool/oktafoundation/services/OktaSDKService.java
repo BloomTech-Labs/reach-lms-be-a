@@ -8,8 +8,10 @@ import com.okta.sdk.resource.user.UserList;
 
 public interface OktaSDKService {
 
+	boolean containsUser(String email);
 	UserList getUsers();
 	UserList getUsers(String query);
+	User createOktaUser(com.lambdaschool.oktafoundation.models.User reachUser);
 	User createOktaUser(
 			String email,
 			String firstname,

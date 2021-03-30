@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -17,6 +18,9 @@ public class CsvServiceImpl
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private OktaSDKService okta;
 
 	@Autowired
 	private RoleService roleService;
@@ -30,12 +34,17 @@ public class CsvServiceImpl
 		try {
 			List<User> users = CsvHelper.csvToStudents(file);
 			for (User user : users) {
-				// we should check to see:
-				// 1. if this user exists in Okta. (If not, create)
-				// 2. If this user exists in our DB. (If not, create)
-				user.getRoles()
-						.add(new UserRoles(user, studentRole));
-				userService.save(user);
+				// Check if this user exists in our DB. (If not, create)
+				Optional<User> existingUser = userService.findByEmail(user.getEmail());
+				if (existingUser.isEmpty()) {
+					user.getRoles()
+							.add(new UserRoles(user, studentRole));
+					user = userService.save(user);
+				}
+				// Check if this user exists in Okta. (If not, create)
+				if (!okta.containsUser(user.getEmail())) {
+					okta.createOktaUser(user);
+				}
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Failure store CSV data: " + e.getMessage());
@@ -55,15 +64,27 @@ public class CsvServiceImpl
 			List<User> users = CsvHelper.csvToStudents(file);
 			for (User user : users) {
 				// we should check to see:
-				// 1. if this user exists in Okta. (If not, create)
-				// 2. If this user exists in our DB. (If not, create)
-				// 3. If this user is already attached to this course. (If not, attach)
-				user.getRoles()
-						.add(new UserRoles(user, studentRole));
-				user = userService.save(user);
-				user.getCourses()
-						.add(new UserCourses(user, relevantCourse));
-				userService.save(user);
+				// Check If this user exists in our DB. (If not, create)
+				Optional<User> optional = userService.findByEmail(user.getEmail());
+				if (optional.isEmpty()) {
+					user.getRoles()
+							.add(new UserRoles(user, studentRole));
+					user = userService.save(user);
+				} else {
+					user = optional.get();
+				}
+				// Check if this user exists in Okta. (If not, create)
+				if (!okta.containsUser(user.getEmail())) {
+					okta.createOktaUser(user);
+				}
+				// Check if this user is already attached to this course. (If not, attach)
+				if (!user.getCourses()
+						.contains(new UserCourses(user, relevantCourse))) {
+					user.getCourses()
+							.add(new UserCourses(user, relevantCourse));
+					userService.save(user);
+				}
+
 			}
 		} catch (IOException e) {
 			throw new RuntimeException("Failure to store CSV data: " + e.getMessage());

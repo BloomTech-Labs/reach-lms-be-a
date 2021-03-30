@@ -33,24 +33,28 @@ public class User
 	@NotNull
 	@Column(unique = true)
 	private String   username;
+	//
 	@NotNull
 	@Column(unique = true)
 	private String   email;
+	//
 	private String   firstname;
+	//
 	private String   lastname;
+	//
 	private String   phonenumber;
+	//
 	private RoleType roleType;
-
+	//
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<Program> programs = new HashSet<>();
-
+	//
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	@JsonIgnoreProperties(value = "user", allowSetters = true)
 	private Set<UserCourses> courses = new HashSet<>();
-
 	/**
 	 * Part of the join relationship between user and role
 	 * connects users to the user role combination

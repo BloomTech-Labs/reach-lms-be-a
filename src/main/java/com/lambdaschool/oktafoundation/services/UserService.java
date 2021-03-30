@@ -5,6 +5,7 @@ import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.models.User;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -42,6 +43,8 @@ public interface UserService {
 	 * @return The given User or throws an exception if not found.
 	 */
 	User findUserById(long id);
+
+	Optional<User> findByEmail(String email);
 
 	/**
 	 * Returns the user with the given name
