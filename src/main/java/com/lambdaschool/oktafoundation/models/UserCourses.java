@@ -57,6 +57,10 @@ public class UserCourses
 		this.course = course;
 	}
 
+	public boolean softEquals(User user, Course course) {
+		return this.user.equals(user) && this.course.equals(course);
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(user, course);
