@@ -9,7 +9,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "program")
+@Table(name = "programtags")
 @JsonIgnoreProperties(value = {"id", "program"})
 public class ProgramTags
 		extends Auditable
