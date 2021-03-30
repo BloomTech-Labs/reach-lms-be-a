@@ -22,6 +22,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/TagRepository.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/User.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/RoleNotSufficientException.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/CsvService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/modelAssemblers/ModuleModelAssembler.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/RoleServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/package-info.java
@@ -60,6 +61,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/package-info.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/config/DataSourceConfig.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/CourseController.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/CsvServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/ModuleService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/config/JwtAuthenticationFilter.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/RolesController.java
@@ -77,7 +79,9 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/ValidationError.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/ProgramTags.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/ResourceFoundException.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/utils/CsvHelper.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Course.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/UploadCsvController.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/OktaSDKService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/TagFoundException.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/UserCoursesId.java

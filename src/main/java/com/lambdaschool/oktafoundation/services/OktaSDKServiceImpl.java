@@ -10,6 +10,8 @@ import com.okta.sdk.resource.user.UserList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class OktaSDKServiceImpl
@@ -17,6 +19,13 @@ public class OktaSDKServiceImpl
 
 	@Autowired
 	public Client client;
+
+	@Override
+	public boolean containsUser(String email) {
+		Optional<User> user = getUsers(email).stream()
+				.findFirst();
+		return user.isPresent();
+	}
 
 	@Override
 	public UserList getUsers() {
@@ -38,7 +47,7 @@ public class OktaSDKServiceImpl
 		GroupList possibleGroupMatches = client.listGroups(role, null, null);
 		Group     groupToAttach        = possibleGroupMatches.single();
 		String    groupId              = groupToAttach.getId();
-		String    groupName            = groupToAttach.getProfile()
+		String groupName = groupToAttach.getProfile()
 				.getName();
 		User stagedUser = UserBuilder.instance()
 				.setLogin(email) // make login match email
@@ -63,6 +72,16 @@ public class OktaSDKServiceImpl
 	@Override
 	public GroupList getGroups(String q) {
 		return client.listGroups(q, null, null);
+	}
+
+	@Override
+	public User createOktaUser(com.lambdaschool.oktafoundation.models.User reachUser) {
+		return createOktaUser(reachUser.getEmail(),
+				reachUser.getFirstname(),
+				reachUser.getLastname(),
+				reachUser.getRole()
+						.name()
+		);
 	}
 
 }

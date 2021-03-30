@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -70,10 +71,16 @@ public class UserServiceImpl
 		return userRepository.findByUsernameContainingIgnoreCase(username.toLowerCase());
 	}
 
+	@Override
 	public User findUserById(long id)
 	throws UserNotFoundException {
 		return userRepository.findById(id)
 				.orElseThrow(() -> new UserNotFoundException(id));
+	}
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		return userRepository.findByEmail(email);
 	}
 
 	@Override
@@ -185,7 +192,7 @@ public class UserServiceImpl
 	}
 
 	@Transactional
-	private User updateFunctionality(
+	public User updateFunctionality(
 			User currentUser,
 			User userIn
 	) {

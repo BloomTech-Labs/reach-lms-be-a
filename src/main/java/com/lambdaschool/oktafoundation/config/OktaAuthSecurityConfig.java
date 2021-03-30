@@ -58,7 +58,8 @@ public class OktaAuthSecurityConfig
 							"/courses/**",
 							"/students/**",
 							"/teachers/**",
-							"/okta/**"
+							"/okta/**",
+							"/upload/**"
 					)
 					.permitAll()
 					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**")
@@ -69,7 +70,7 @@ public class OktaAuthSecurityConfig
 					.permitAll()
 					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
 					.permitAll()
-					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
+					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/upload/**")
 					.permitAll()
 					.anyRequest()
 					.denyAll()
@@ -95,7 +96,7 @@ public class OktaAuthSecurityConfig
 					.authenticated()
 					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
 					.permitAll()
-					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
+					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**", "/upload/**")
 					.hasAnyRole("ADMIN", "TEACHER")
 					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
 					.hasAnyRole("ADMIN", "TEACHER")

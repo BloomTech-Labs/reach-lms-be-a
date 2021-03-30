@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -22,6 +23,8 @@ public interface UserRepository
 	 * @return the first user object with the name you seek
 	 */
 	User findByUsername(String username);
+
+	Optional<User> findByEmail(String email);
 
 	/**
 	 * Find all users whose name contains a given substring ignoring case
@@ -40,9 +43,8 @@ public interface UserRepository
 			nativeQuery = true)
 	List<User> findNotEnrolledUsers(long courseid);
 
-	@Query(value="SELECT * FROM users u WHERE CONCAT(u.username, ' ', u.firstname, ' ', u.lastname, ' ', u.email) " +
-	             "ILIKE %:query%", nativeQuery = true)
+	@Query(value = "SELECT * FROM users u WHERE CONCAT(u.username, ' ', u.firstname, ' ', u.lastname, ' ', u.email) " +
+	               "ILIKE %:query% ", nativeQuery = true)
 	List<User> search(String query);
-
 
 }
