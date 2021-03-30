@@ -1,6 +1,7 @@
 package com.lambdaschool.oktafoundation.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -18,10 +19,13 @@ import java.util.Set;
 @JsonIgnoreProperties(value = {"program", "users", "modules"}, allowSetters = true)
 public class Course {
 
-	@ManyToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name="program_tag_id")
+	@ManyToOne(cascade = {CascadeType.ALL})
+	@JoinColumns({
+			@JoinColumn(name = "program_programid"), @JoinColumn(name = "tag_tagid")
+	})
 	@JsonIgnoreProperties(value = {"program"})
-	Set<ProgramTags> tags = new HashSet<>();
+	private ProgramTags tag;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long             courseid;
@@ -90,6 +94,45 @@ public class Course {
 		this.coursedescription = coursedescription;
 	}
 
+	@JsonIgnore // JsonIgnore as to not serialize this to JSON
+	public ProgramTags getTag() {
+		return tag;
+	}
+
+	// Regular Setter for setTag
+	public void setTag(ProgramTags tag) {
+		ProgramTags newTag = program.getTagIfPresent(tag.getTag()); // throws if no such tag in program
+		this.tag = newTag;
+	}
+
+	// Overload for ease of use -- this version accepts a regular Tag
+	public void setTag(Tag tag) {
+		ProgramTags newTag = program.getTagIfPresent(tag); // throws if no such tag in program
+		setTag(newTag);
+	}
+
+	/**
+	 * Returns the tag associated with this course in the specific way that we want it to.
+	 * <p>
+	 * Note that "coursetype" is not an ACTUAL property on this entity.
+	 * However, adding a simple getter like this will allow Jackson to serialize this data!
+	 * <p>
+	 *
+	 * @return The {@link Tag tag} associated with this course if present, else just return null
+	 */
+	public Tag getCoursetype() {
+		if (tag != null) {
+			return tag.getTag();
+		} else {
+			return null;
+		}
+	}
+
+	public void removeTag(Tag tag) {
+		program.getTagIfPresent(tag); // throws if no such tag in program
+		this.tag = null;
+	}
+
 	public Program getProgram() {
 		return program;
 	}
@@ -114,24 +157,6 @@ public class Course {
 		this.modules = modules;
 	}
 
-	public Set<ProgramTags> getTags() {
-		return tags;
-	}
-
-	public void setTags(Set<ProgramTags> tags) {
-		this.tags = tags;
-	}
-
-	public void addTag(Tag tag) {
-		ProgramTags newTag = program.getTagIfPresent(tag);
-		tags.add(newTag);
-	}
-
-	public void removeTag(Tag tag) {
-		ProgramTags tagToRemove = program.getTagIfPresent(tag);
-		tags.remove(tagToRemove);
-	}
-
 	public void removeUser(User user) {
 		Iterator<UserCourses> iterator = users.iterator();
 		while (iterator.hasNext()) {
@@ -148,8 +173,6 @@ public class Course {
 			}
 		}
 	}
-
-
 
 	@Override
 	public int hashCode() {

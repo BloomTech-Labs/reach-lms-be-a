@@ -89,14 +89,28 @@ public class CourseServiceImpl
 	@Override
 	public Course findCourseById(long courseid)
 	throws CourseNotFoundException {
+		return get(courseid);
+	}
+
+	@Override
+	public Course get(long courseid)
+	throws CourseNotFoundException {
 		return courseRepository.findById(courseid)
 				.orElseThrow(() -> new CourseNotFoundException(courseid));
 	}
 
 	@Override
+	public Course get(String coursename)
+	throws CourseNotFoundException {
+		return courseRepository.findByCoursename(coursename)
+				.orElseThrow(() -> new CourseNotFoundException(coursename));
+	}
+
+	@Override
 	public List<Course> findByTag(String tagTitle) {
 		List<Course> courses = new ArrayList<>();
-		courseRepository.findByTags_tag_titleLikeIgnoreCase(tagTitle)
+
+		courseRepository.findByTag_tag_titleLikeIgnoreCase(tagTitle)
 				.iterator()
 				.forEachRemaining(courses::add);
 		return courses;
@@ -134,11 +148,7 @@ public class CourseServiceImpl
 		Program program = programService.findProgramsById(programid); // throws if program not found
 		if (program != null) {
 			newCourse.setProgram(program);
-			newCourse.getTags()
-					.clear();
-			for (ProgramTags programTags : course.getTags()) {
-				newCourse.addTag(programTags.getTag());
-			}
+			newCourse.setTag(course.getTag());
 		}
 		newCourse.getUsers()
 				.clear();

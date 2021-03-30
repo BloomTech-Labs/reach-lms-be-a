@@ -25,9 +25,6 @@ public class TagServiceImpl
 	@Autowired
 	private ProgramService programService;
 
-	@Autowired
-	private CourseService courseService;
-
 	@Override
 	public List<Tag> getAll() {
 		List<Tag> tags = new ArrayList<>();
@@ -67,16 +64,6 @@ public class TagServiceImpl
 				.iterator()
 				.forEachRemaining(tags::add);
 		return tags;
-	}
-
-	@Override
-	public List<Tag> getByCourse(long courseid) {
-		return null;
-	}
-
-	@Override
-	public List<Tag> getByCourse(String coursename) {
-		return null;
 	}
 
 	@Override
@@ -182,7 +169,9 @@ public class TagServiceImpl
 			oldTag.getPrograms()
 					.clear();
 			for (ProgramTags programTag : tag.getPrograms()) {
-				Program program = programTag.getProgram();
+				// throws if no such program
+				Program program = programService.findProgramsById(programTag.getProgram()
+						.getProgramid());
 				if (!program.containsTag(oldTag)) {
 					program.addTag(oldTag);
 				}

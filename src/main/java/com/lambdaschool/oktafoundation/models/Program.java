@@ -12,28 +12,31 @@ import java.util.*;
 
 @Entity
 @Table(name = "programs")
-@JsonIgnoreProperties(value = {"courses", "user"})
+@JsonIgnoreProperties(value = {"courses", "user", "tags"})
 public class Program
 		extends Auditable {
 
-
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
-	@OnDelete(action = OnDeleteAction.CASCADE)
-	@JsonIgnoreProperties(value = "program", allowSetters = true)
-	List<Course> courses = new ArrayList<>();
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long             programid;
 	private String           programname;
 	private String           programtype;
 	private String           programdescription;
+	//
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "userid", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
 	private User             user;
+	//
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	@JsonIgnoreProperties(value = "program", allowSetters = true)
+	private List<Course>     courses = new ArrayList<>();
+	//
 	@OneToMany(mappedBy = "program", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnoreProperties(value = "program")
-	private Set<ProgramTags> tags = new HashSet<>();
+	private Set<ProgramTags> tags    = new HashSet<>();
+
 
 	public Program() {
 	}
@@ -104,9 +107,17 @@ public class Program
 		this.tags = tags;
 	}
 
+	public void addTag(ProgramTags programTags) {
+		addTag(programTags.getTag());
+	}
+
 	public void addTag(Tag tag) {
 		ProgramTags programTag = new ProgramTags(this, tag);
 		tags.add(programTag);
+	}
+
+	public void removeTag(ProgramTags programTags) {
+		removeTag(programTags.getTag());
 	}
 
 	public void removeTag(Tag tag) {

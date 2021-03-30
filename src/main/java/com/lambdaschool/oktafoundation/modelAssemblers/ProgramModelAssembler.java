@@ -3,6 +3,7 @@ package com.lambdaschool.oktafoundation.modelAssemblers;
 
 import com.lambdaschool.oktafoundation.controllers.CourseController;
 import com.lambdaschool.oktafoundation.controllers.ProgramController;
+import com.lambdaschool.oktafoundation.controllers.TagController;
 import com.lambdaschool.oktafoundation.models.Program;
 import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.services.HelperFunctions;
@@ -30,7 +31,9 @@ public class ProgramModelAssembler
 				// Link to self_by_name --- GET /programs/program/{programname}
 				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramname())).withRel("self_by_name"),
 				// Link to associated courses
-				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramid())).withRel("courses")
+				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramid())).withRel("courses"),
+				// Link to GET all tags associated with this program
+				linkTo(methodOn(TagController.class).getByProgram(program.getProgramid())).withRel("tags")
 		);
 
 		RoleType currentRole = helperFunctions.getCurrentPriorityRole();
