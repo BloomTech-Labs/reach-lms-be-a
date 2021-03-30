@@ -53,6 +53,21 @@ public class ModuleController {
 		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}
 
+	@GetMapping("/modules/markdown/{moduleid}")
+	public ResponseEntity<?> getMarkdownByModuleId(
+			@PathVariable
+					Long moduleid
+	) {
+		Module module = moduleService.findModulesById(moduleid);
+		return new ResponseEntity<>(module.getModulecontent(), HttpStatus.OK);
+	}
+
+	@PostMapping("/modules/markdown/{moduleid}")
+	public ResponseEntity<?> replaceMarkdownByModuleId(@PathVariable Long moduleid, @RequestBody String markdown) {
+		moduleService.replaceMarkdown(moduleid, markdown);
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
 	@GetMapping(value = "/modules/module/{moduleid}", produces = "application/json")
 	public ResponseEntity<EntityModel<Module>> getModuleById(
 			@PathVariable
