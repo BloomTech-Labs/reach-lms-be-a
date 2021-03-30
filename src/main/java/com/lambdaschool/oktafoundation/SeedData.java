@@ -123,28 +123,28 @@ public class SeedData
 		Tag tag_python         = new Tag("Python");
 
 
-		String cs39_description = "#Welcome to Computer Science!\n" + "\n" +
-		                          "We're here to practice one skill: ***problem-solving*** (without looking up the " +
-		                          "answers on the Internet).\n" + "\n>That's it!\n\n" +
-		                          "To accomplish this, we'll look at various techniques, data structures, and algorithms and use them to attack problems relentlessly. Most importantly, we'll utilize a problem-solving framework called U.P.E.R. This defines a process you can follow to solve any problem without looking up the answer.\n" +
-		                          "\n" +
-		                          "Attacking problems relentlessly is the main attribute that separates the good developers from the average ones. If you find that a problem is being difficult and is stubbornly refusing to be solved, keep on attacking.\n" +
-		                          "\n" + "\"An expert has failed more times than a beginner has even tried.\"\n" + "\n" +
-		                          "We stress this so much because hiring managers look for problem-solving skills in the individuals they hire. They might use various interviewing techniques, including whiteboarding, but they are all looking to ascertain your problem-solving skill level.\n" +
-		                          "\n" +
-		                          "In Computer Science, none of the answers are meant to be obvious. With every single one of them, we intend that you initially have no idea how to solve it, but then you attack it to resolution with the techniques described in the problem-solving framework.\n" +
-		                          "\n" +
-		                          "Remember that as you go through the program: if you have no idea how to solve a " +
-		                          "problem when you first look at it, that's by design. You're in good company. Start relentlessly attacking!";
+		String cs39_description = //
+				"#Welcome to Computer Science!\n" + "\n" +
+				"We're here to practice one skill: ***problem-solving*** (without looking up the " +
+				"answers on the Internet).\n" + "\n>That's it!\n\n" +
+				"To accomplish this, we'll look at various techniques, data structures, and algorithms and use them to attack problems relentlessly. Most importantly, we'll utilize a problem-solving framework called U.P.E.R. This defines a process you can follow to solve any problem without looking up the answer.\n" +
+				"\n" +
+				"Attacking problems relentlessly is the main attribute that separates the good developers from the average ones. If you find that a problem is being difficult and is stubbornly refusing to be solved, keep on attacking.\n" +
+				"\n" + "\"An expert has failed more times than a beginner has even tried.\"\n" + "\n" +
+				"We stress this so much because hiring managers look for problem-solving skills in the individuals they hire. They might use various interviewing techniques, including whiteboarding, but they are all looking to ascertain your problem-solving skill level.\n" +
+				"\n" +
+				"In Computer Science, none of the answers are meant to be obvious. With every single one of them, we intend that you initially have no idea how to solve it, but then you attack it to resolution with the techniques described in the problem-solving framework.\n" +
+				"\n" + "Remember that as you go through the program: if you have no idea how to solve a " +
+				"problem when you first look at it, that's by design. You're in good company. Start relentlessly attacking!";
 
 		Program program_cs39 = new Program("CS39--Lambda Computer Science", "Computer Science", cs39_description);
 
 
-		String csFundamentals_description = "#Overview\n" +
-		                                    "During this sprint, we will introduce you to some fundamental Computer Science fundamentals. First, we will introduce you to Python (the language we will be using throughout Computer Science). Second, you will learn about Lambda's Problem-Solving Framework, which we call U.P.E.R. Third, you will learn about Big O notation and analyzing an algorithm's time and space complexity. Last, you will learn about the basics of computer memory.\n" +
-		                                    "\n" +
-		                                    "All of these topics lay down a crucial base for the other three sprints in " +
-		                                    "Computer Science. You will rely on your Python skills, problem-solving abilities, ability to analyze time and space complexity, and your mental model for computer memory throughout the rest of the course.";
+		String csFundamentals_description = //
+				"#Overview\n" +
+				"During this sprint, we will introduce you to some fundamental Computer Science fundamentals. First, we will introduce you to Python (the language we will be using throughout Computer Science). Second, you will learn about Lambda's Problem-Solving Framework, which we call U.P.E.R. Third, you will learn about Big O notation and analyzing an algorithm's time and space complexity. Last, you will learn about the basics of computer memory.\n" +
+				"\n" + "All of these topics lay down a crucial base for the other three sprints in " +
+				"Computer Science. You will rely on your Python skills, problem-solving abilities, ability to analyze time and space complexity, and your mental model for computer memory throughout the rest of the course.";
 
 
 		String pythonBasics_description = "In this module, you will learn all of the fundamentals of the Python programming language. After completing this module, you will have all the basics that you need to get started using Python to solve algorithmic code challenges and deepen your understanding and skill set related to programming.";
@@ -319,7 +319,7 @@ public class SeedData
 		);
 
 		Module listComprehensions = new Module("List Comprehensions",
-				"List Comprehensions are fucking sick",
+				"List Comprehensions are PREMIUM... almost as good as Dictionary Comprehensions",
 				listComprehensions_content,
 				course_cs39_1_fundamentals
 		);

@@ -68,6 +68,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/UserAuditing.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Role.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/Roles.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/exceptions/ModuleNotFoundException.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/OktaSDKServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/OktaFoundationApplication.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/controllers/ProgramController.java

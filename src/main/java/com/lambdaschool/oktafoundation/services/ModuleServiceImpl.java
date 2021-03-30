@@ -1,10 +1,10 @@
 package com.lambdaschool.oktafoundation.services;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.CourseNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.ModuleNotFoundException;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.Module;
-import com.lambdaschool.oktafoundation.repository.CourseRepository;
 import com.lambdaschool.oktafoundation.repository.ModuleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,65 +20,78 @@ public class ModuleServiceImpl
 		implements ModuleService {
 
 	@Autowired
-	private ModuleRepository modulerepos;
+	private ModuleRepository moduleRepository;
 
 	@Autowired
-	private CourseRepository courserepos;
+	private CourseService courseService;
 
 	@Override
 	public List<Module> findAll() {
 		List<Module> modules = new ArrayList<>();
-		modulerepos.findAll()
+		moduleRepository.findAll()
 				.iterator()
 				.forEachRemaining(modules::add);
 		return modules;
 	}
 
 	@Override
-	public Module findModulesById(long id) {
-		return modulerepos.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found."));
+	public Module find(long moduleId)
+	throws ModuleNotFoundException {
+		return moduleRepository.findById(moduleId)
+				.orElseThrow(() -> new ModuleNotFoundException(moduleId));
 	}
 
 	@Override
-	public Module findModulesByName(String name) {
-		Module mm = modulerepos.findByModulenameIgnoreCase(name);
-		if (mm == null) {
-			throw new ResourceNotFoundException("Module name " + name + " not found.");
-		}
-		return mm;
+	public Module find(String moduleName)
+	throws ModuleNotFoundException {
+		return moduleRepository.findByModulenameIgnoreCase(moduleName)
+				.orElseThrow(() -> new ModuleNotFoundException(moduleName));
 	}
 
+	@Override
+	public Module findModulesById(long id)
+	throws ModuleNotFoundException {
+		return find(id);
+	}
+
+	@Override
+	public void replaceMarkdown(
+			Long moduleid,
+			String markdown
+	) {
+		Module module = find(moduleid); // throws if no such module
+		module.setModulecontent(markdown);
+		moduleRepository.save(module);
+	}
 
 	@Override
 	public Module save(
 			long courseId,
 			Module module
-	) {
+	)
+	throws ModuleNotFoundException, CourseNotFoundException {
 		Module newModule = new Module();
-		if (newModule.getModuleid() != 0) {
-			modulerepos.findById(newModule.getModuleid())
-					.orElseThrow(() -> new ResourceNotFoundException("Module with id" + module.getModuleid() + " not found."));
+		if (module.getModuleid() != 0) {
+			find(module.getModuleid()); // throws if no such module
 			newModule.setModuleid(module.getModuleid());
 		}
 		newModule.setModulename(module.getModulename());
 		newModule.setModuledescription(module.getModuledescription());
 		newModule.setModulecontent(module.getModulecontent());
 
-		Course course = courserepos.findById(courseId)
-				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseId + " not found."));
+		Course course = courseService.get(courseId); // throws if no such course
 		if (course != null) {
 			newModule.setCourse(course);
 		}
-		return modulerepos.save(newModule);
+		return moduleRepository.save(newModule);
 	}
 
 	@Override
 	public Module update(
 			long id,
 			Module module
-	) {
-		Module newModule = findModulesById(id);
+	) throws ModuleNotFoundException {
+		Module newModule = find(id); // throws if no such module
 
 		if (module.getModulename() != null) {
 			newModule.setModulename(module.getModulename());
@@ -91,14 +104,14 @@ public class ModuleServiceImpl
 		if (module.getModulecontent() != null) {
 			newModule.setModulecontent(module.getModulecontent());
 		}
-		return modulerepos.save(newModule);
+		return moduleRepository.save(newModule);
 	}
 
 	@Override
-	public void delete(long id) {
-		modulerepos.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Module with id " + id + " not found."));
-		modulerepos.deleteById(id);
+	public void delete(long id)
+	throws ModuleNotFoundException {
+		find(id); // throws if no such module
+		moduleRepository.deleteById(id);
 	}
 
 }

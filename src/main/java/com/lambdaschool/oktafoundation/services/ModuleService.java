@@ -10,9 +10,14 @@ public interface ModuleService {
 
 	List<Module> findAll();
 
+	Module find(long moduleId);
+
+	Module find(String name);
+
+
 	Module findModulesById(long id);
 
-	Module findModulesByName(String name);
+	void replaceMarkdown(Long moduleid, String markdown);
 
 	Module save(
 			long id,
