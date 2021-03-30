@@ -130,6 +130,8 @@ public class SeedData
 		Tag tag2 = new Tag("Higher Education");
 		program1.addTag(tag1);
 		program1.addTag(tag2);
+		program2.addTag(tag1);
+//		program2.addTag(tag2);
 
 		program1 = programService.save(reachRoot.getUserid(), program1);
 		program2 = programService.save(reachRoot.getUserid(), program2);
@@ -147,8 +149,8 @@ public class SeedData
 		course2.getUsers()
 				.add(new UserCourses(student001, course2));
 
+		course1.setTag(tag1);
 		course2.setTag(tag2);
-
 
 		course1 = courseService.save(course1.getProgram()
 				.getProgramid(), course1);

@@ -148,6 +148,8 @@ public class CourseServiceImpl
 		Program program = programService.findProgramsById(programid); // throws if program not found
 		if (program != null) {
 			newCourse.setProgram(program);
+		}
+		if (course.getTag() != null) {
 			newCourse.setTag(course.getTag());
 		}
 		newCourse.getUsers()
