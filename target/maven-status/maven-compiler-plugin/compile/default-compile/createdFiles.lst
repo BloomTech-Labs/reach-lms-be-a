@@ -1,3 +1,4 @@
+com/lambdaschool/oktafoundation/controllers/UploadCsvController.class
 com/lambdaschool/oktafoundation/models/ProgramTagsId.class
 com/lambdaschool/oktafoundation/services/OktaSDKServiceImpl.class
 com/lambdaschool/oktafoundation/models/Module.class
@@ -24,8 +25,10 @@ com/lambdaschool/oktafoundation/exceptions/TagFoundException.class
 com/lambdaschool/oktafoundation/controllers/CourseController.class
 com/lambdaschool/oktafoundation/exceptions/CourseNotFoundException.class
 com/lambdaschool/oktafoundation/models/Course.class
+com/lambdaschool/oktafoundation/services/CsvService.class
 com/lambdaschool/oktafoundation/models/UserRolesId.class
 com/lambdaschool/oktafoundation/services/UserService.class
+com/lambdaschool/oktafoundation/services/CsvServiceImpl.class
 com/lambdaschool/oktafoundation/models/MinimumUser.class
 com/lambdaschool/oktafoundation/services/HelperFunctionsImpl.class
 com/lambdaschool/oktafoundation/exceptions/RoleNotSufficientException.class
@@ -49,6 +52,7 @@ com/lambdaschool/oktafoundation/exceptions/TagNotFoundException.class
 com/lambdaschool/oktafoundation/services/ModuleService.class
 com/lambdaschool/oktafoundation/models/User.class
 com/lambdaschool/oktafoundation/handlers/RestExceptionHandler.class
+com/lambdaschool/oktafoundation/utils/CsvHelper.class
 com/lambdaschool/oktafoundation/models/Program.class
 com/lambdaschool/oktafoundation/models/Auditable.class
 com/lambdaschool/oktafoundation/services/TagServiceImpl.class
