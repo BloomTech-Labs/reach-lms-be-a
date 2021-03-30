@@ -62,7 +62,7 @@ public class ModuleController {
 		return new ResponseEntity<>(module.getModulecontent(), HttpStatus.OK);
 	}
 
-	@PostMapping("/modules/markdown/{moduleid}")
+	@PutMapping("/modules/markdown/{moduleid}")
 	public ResponseEntity<?> replaceMarkdownByModuleId(@PathVariable Long moduleid, @RequestBody String markdown) {
 		moduleService.replaceMarkdown(moduleid, markdown);
 		return new ResponseEntity<>(HttpStatus.OK);
