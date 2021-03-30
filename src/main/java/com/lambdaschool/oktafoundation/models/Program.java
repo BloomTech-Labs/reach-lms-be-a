@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.*;
 
 
@@ -19,8 +20,12 @@ public class Program
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long             programid;
+	//
 	private String           programname;
+	//
 	private String           programtype;
+	//
+	@Size(max=2000)
 	private String           programdescription;
 	//
 	@ManyToOne(fetch = FetchType.EAGER)

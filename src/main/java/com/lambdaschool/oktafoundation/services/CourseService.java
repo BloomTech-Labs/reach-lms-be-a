@@ -21,6 +21,7 @@ public interface CourseService {
 
 	List<Course> findByTag(String tagTitle);
 
+	Course save(Course course);
 	Course save(
 			Course course,
 			long programid

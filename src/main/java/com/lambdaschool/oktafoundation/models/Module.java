@@ -4,6 +4,7 @@ package com.lambdaschool.oktafoundation.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Objects;
 
 
@@ -20,9 +21,11 @@ public class Module
 	@Column(nullable = false)
 	private String modulename;
 
+	@Size(max=2000)
 	private String moduledescription;
 
 	@Column(nullable = false)
+	@Size(max=20000)
 	private String modulecontent;
 
 	@ManyToOne(fetch = FetchType.EAGER)

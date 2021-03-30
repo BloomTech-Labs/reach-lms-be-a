@@ -1,33 +1,33 @@
 package com.lambdaschool.oktafoundation.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "program")
-@JsonIgnoreProperties(value={"id", "program"})
+@JsonIgnoreProperties(value = {"id", "program"})
 public class ProgramTags
-extends Auditable
+		extends Auditable
 		implements Serializable {
 
 	@EmbeddedId
-	@Column(name="program_tag_id")
+	@Column(name = "program_tag_id")
 	private ProgramTagsId id;
-
+	//
 	@ManyToOne
 	@MapsId("programid")
 	@JsonIgnoreProperties(value = "tags", allowSetters = true)
-	private Program program;
-
+	private Program       program;
+	//
 	@ManyToOne
 	@MapsId("tagid")
 	@JsonIgnoreProperties(value = "programs", allowSetters = true)
-	private Tag tag;
+	private Tag           tag;
 
 	public ProgramTags() {}
 
@@ -35,9 +35,9 @@ extends Auditable
 			Program program,
 			Tag tag
 	) {
-		this.id      = new ProgramTagsId(program.getProgramid(), tag.getTagid());
+		this.id = new ProgramTagsId(program.getProgramid(), tag.getTagid());
 		this.program = program;
-		this.tag     = tag;
+		this.tag = tag;
 	}
 
 	public ProgramTagsId getId() {
@@ -64,8 +64,16 @@ extends Auditable
 		this.tag = tag;
 	}
 
-	public boolean softEquals(Program program, Tag tag) {
+	public boolean softEquals(
+			Program program,
+			Tag tag
+	) {
 		return this.program.equals(program) && this.tag.equals(tag);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getProgram(), getTag());
 	}
 
 	@Override
@@ -75,13 +83,8 @@ extends Auditable
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProgramTags that = (ProgramTags) o;
-		return Objects.equals(getId(), that.getId()) &&
-		       Objects.equals(getProgram(), that.getProgram()) && Objects.equals(getTag(), that.getTag());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId(), getProgram(), getTag());
+		return Objects.equals(getId(), that.getId()) && Objects.equals(getProgram(), that.getProgram()) &&
+		       Objects.equals(getTag(), that.getTag());
 	}
 
 	@Override
