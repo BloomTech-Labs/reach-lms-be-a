@@ -10,7 +10,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "modules")
-@JsonIgnoreProperties(value = {"course"}, allowSetters = true)
+@JsonIgnoreProperties(value = {"course", "modulecontent"}, allowSetters = true)
 public class Module
 		extends Auditable {
 

@@ -57,18 +57,19 @@ public class OktaAuthSecurityConfig
 							"/students/**",
 							"/teachers/**",
 							"/okta/**",
-							"/upload/**"
+							"/upload/**",
+							"/tags/**"
 					)
 					.permitAll()
-					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**")
+					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**", "/tags/**")
 					.permitAll()
-					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**")
+					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**", "/upload/**", "/tags/**")
 					.permitAll()
-					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
+					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**", "/upload/**", "/tags/**")
 					.permitAll()
-					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
+					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**", "/upload/**", "/tags/**")
 					.permitAll()
-					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/upload/**")
+					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/tags/**")
 					.permitAll()
 					.anyRequest()
 					.denyAll()
@@ -92,15 +93,15 @@ public class OktaAuthSecurityConfig
 					.authenticated()
 					.antMatchers("/teachers/**")
 					.authenticated()
-					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**")
-					.permitAll()
-					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**", "/upload/**")
+					.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**", "/tags/**")
+					.authenticated()
+					.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**", "/upload/**", "/tags/**")
 					.hasAnyRole("ADMIN", "TEACHER")
-					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**")
+					.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**", "/upload/**", "/tags/**")
 					.hasAnyRole("ADMIN", "TEACHER")
-					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**")
+					.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**", "/upload/**", "/tags/**")
 					.hasAnyRole("ADMIN", "TEACHER")
-					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**")
+					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/tags/**")
 					.hasAnyRole("ADMIN", "TEACHER")
 
 					// *** Endpoints not specified above are automatically denied

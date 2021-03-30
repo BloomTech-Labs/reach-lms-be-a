@@ -4,6 +4,7 @@ com/lambdaschool/oktafoundation/services/OktaSDKServiceImpl.class
 com/lambdaschool/oktafoundation/models/Module.class
 com/lambdaschool/oktafoundation/models/RoleType.class
 com/lambdaschool/oktafoundation/exceptions/CustomErrorDetails.class
+com/lambdaschool/oktafoundation/exceptions/ModuleNotFoundException.class
 com/lambdaschool/oktafoundation/models/ErrorDetail.class
 com/lambdaschool/oktafoundation/models/ValidationError.class
 com/lambdaschool/oktafoundation/services/UserAuditing.class
