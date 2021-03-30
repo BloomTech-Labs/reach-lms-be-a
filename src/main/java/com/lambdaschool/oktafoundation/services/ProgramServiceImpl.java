@@ -3,10 +3,7 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ProgramNotFoundException;
 import com.lambdaschool.oktafoundation.exceptions.UserNotFoundException;
-import com.lambdaschool.oktafoundation.models.Course;
-import com.lambdaschool.oktafoundation.models.Program;
-import com.lambdaschool.oktafoundation.models.ProgramTags;
-import com.lambdaschool.oktafoundation.models.User;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
@@ -31,6 +28,16 @@ public class ProgramServiceImpl
 
 	@Autowired
 	TagRepository tagRepository;
+
+	@Override
+	public Program save(
+			long userid,
+			ProgramIn programIn
+	)
+	throws ProgramNotFoundException, UserNotFoundException {
+		Program newProgram = programIn.toProgram();
+		return save(userid, newProgram);
+	}
 
 	@Override
 	public Program save(
@@ -140,6 +147,15 @@ public class ProgramServiceImpl
 
 		return programRepository.save(oldProgram);
 
+	}
+
+	@Override
+	public Program update(
+			ProgramIn programIn,
+			long programId
+	) {
+		Program newProgram = programIn.toProgram();
+		return update(newProgram, programId);
 	}
 
 
