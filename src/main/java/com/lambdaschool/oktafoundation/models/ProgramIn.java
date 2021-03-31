@@ -38,24 +38,29 @@ public class ProgramIn {
 		this.programdescription = programdescription;
 	}
 
-	public Program toProgram() {
-		Program newProgram = new Program();
+	public Program toProgram(Program existingProgram) {
 		if (hasProgramid) {
-			newProgram.setProgramid(programid);
+			existingProgram.setProgramid(programid);
+		}
+		if (hasProgramid) {
+			existingProgram.setProgramid(programid);
 		}
 		if (programname != null) {
-			newProgram.setProgramname(programname);
+			existingProgram.setProgramname(programname);
 		}
 		if (programtype != null) {
-			newProgram.setProgramtype(programtype);
+			existingProgram.setProgramtype(programtype);
 		}
 		if (programdescription != null) {
-			newProgram.setProgramdescription(programdescription);
+			existingProgram.setProgramdescription(programdescription);
 		}
-		for (Tag tag : tags) {
-			newProgram.addTag(tag);
-		}
-		return newProgram;
+
+		return existingProgram;
+	}
+
+	public Program toProgram() {
+		Program newProgram = new Program();
+		return toProgram(newProgram);
 	}
 
 	public long getProgramid() {
@@ -101,6 +106,13 @@ public class ProgramIn {
 
 	public void setTags(List<Tag> tags) {
 		this.tags = tags;
+	}
+
+	@Override
+	public String toString() {
+		return "ProgramIn{" + "programid=" + programid + ", programname='" + programname + '\'' + ", programtype='" +
+		       programtype + '\'' + ", programdescription='" + programdescription + '\'' + ", hasProgramid=" +
+		       hasProgramid + ", tags=" + tags + '}';
 	}
 
 }

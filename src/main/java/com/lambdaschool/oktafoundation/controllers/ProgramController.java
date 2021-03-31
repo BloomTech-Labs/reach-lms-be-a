@@ -153,7 +153,6 @@ public class ProgramController {
 	) {
 		editProgram.setProgramid(programid);
 		Program newProgram = programService.update(editProgram, programid);
-
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -175,7 +174,10 @@ public class ProgramController {
 			@PathVariable
 					Long programid
 	) {
+		programIn.setProgramid(programid);
+		System.out.println("\n\nPre-Save ---- " + programIn);
 		Program saved = programService.update(programIn, programid);
+		System.out.println("SAVED --- "+ saved);
 		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 

@@ -1,10 +1,7 @@
 package com.lambdaschool.oktafoundation.modelAssemblers;
 
 
-import com.lambdaschool.oktafoundation.controllers.CourseController;
-import com.lambdaschool.oktafoundation.controllers.ModuleController;
-import com.lambdaschool.oktafoundation.controllers.ProgramController;
-import com.lambdaschool.oktafoundation.controllers.StudentTeacherController;
+import com.lambdaschool.oktafoundation.controllers.*;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.models.RoleType;
 import com.lambdaschool.oktafoundation.services.HelperFunctions;
@@ -80,10 +77,9 @@ public class CourseModelAssembler
 			);
 			try {
 				courseEntityModel.add(
-				// Link to ADD new module
-				linkTo(methodOn(ModuleController.class).addNewModule(course.getCourseid(), null)).withRel("add_module")
-				);
-			} catch (Exception ignored){}
+						// Link to ADD new module
+						linkTo(methodOn(ModuleController.class).addNewModule(course.getCourseid(), null)).withRel("add_module"));
+			} catch (Exception ignored) {}
 		}
 
 		// if the calling user is an ADMIN, display the following additional links
@@ -93,8 +89,9 @@ public class CourseModelAssembler
 					linkTo(methodOn(CourseController.class).updateCourse(course.getCourseid(), null)).withRel("edit_course"),
 
 					// Link to PUT course
-					linkTo(methodOn(CourseController.class).updateFullCourse(course.getCourseid(), null)).withRel(
-							"replace_course"),
+					linkTo(methodOn(CourseController.class).updateFullCourse(course.getCourseid(),
+							null
+					)).withRel("replace_course"),
 
 					// Link to DELETE course
 					linkTo(methodOn(CourseController.class).deleteCourseById(course.getCourseid())).withRel("delete_course")

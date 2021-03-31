@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Transactional
@@ -29,15 +30,8 @@ public class ProgramServiceImpl
 	@Autowired
 	TagRepository tagRepository;
 
-	@Override
-	public Program save(
-			long userid,
-			ProgramIn programIn
-	)
-	throws ProgramNotFoundException, UserNotFoundException {
-		Program newProgram = programIn.toProgram();
-		return save(userid, newProgram);
-	}
+	@Autowired
+	TagService tagService;
 
 	@Override
 	public Program save(
@@ -75,6 +69,24 @@ public class ProgramServiceImpl
 				.orElseThrow(() -> new UserNotFoundException(userid));
 		newProgram.setUser(currentUser);
 		return programRepository.save(newProgram);
+	}
+
+	@Override
+	public Program save(
+			long userid,
+			ProgramIn programIn
+	)
+	throws ProgramNotFoundException, UserNotFoundException {
+		Program newProgram = programIn.toProgram();
+		for (Tag tag : programIn.getTags()) {
+			Optional<Tag> optional = tagService.find(tag.getTitle());
+			if (optional.isEmpty()) {
+				newProgram.addTag(tag);
+			} else if (!newProgram.containsTag(optional.get())) {
+				newProgram.addTag(optional.get());
+			}
+		}
+		return save(userid, newProgram);
 	}
 
 	@Override
@@ -118,6 +130,44 @@ public class ProgramServiceImpl
 
 	@Override
 	public Program update(
+			ProgramIn programIn,
+			long programId
+	) {
+		Program existingProgram = findProgramsById(programId);
+		System.out.println("EXISTING_PROGRAM " + existingProgram.getTags());
+		System.out.println("NEW_PROGRAM " + programIn.getTags());
+		for (Tag tag : programIn.getTags()) {
+			Optional<Tag> optional;
+			if (tag.getTagid() != 0) {
+				optional = tagService.find(tag.getTagid());
+			} else {
+				optional = tagService.find(tag.getTitle());
+			}
+			if (optional.isEmpty()) {
+				existingProgram.addTag(tag);
+			} else {
+				Tag existingTag = optional.get();
+				if (tag.getTitle() != null) {
+					existingTag.setTitle(tag.getTitle());
+				}
+				if (tag.getHexcode() != null) {
+					existingTag.setHexcode(tag.getHexcode());
+				}
+
+			}
+
+				if (!existingProgram.containsTag(optional.get())) {
+
+				existingProgram.addTag(optional.get());
+			}
+		}
+		Program newProgram = programIn.toProgram(existingProgram);
+
+		return update(newProgram, programId);
+	}
+
+	@Override
+	public Program update(
 			Program program,
 			long id
 	)
@@ -136,10 +186,10 @@ public class ProgramServiceImpl
 			oldProgram.setProgramdescription(program.getProgramdescription());
 		}
 
+		System.out.println("SIZE OF TAGS " + program.getTags()
+				.size());
 		if (program.getTags()
 				    .size() > 0) {
-			oldProgram.getTags()
-					.clear();
 			for (ProgramTags programTags : program.getTags()) {
 				oldProgram.addTag(programTags.getTag());
 			}
@@ -147,15 +197,6 @@ public class ProgramServiceImpl
 
 		return programRepository.save(oldProgram);
 
-	}
-
-	@Override
-	public Program update(
-			ProgramIn programIn,
-			long programId
-	) {
-		Program newProgram = programIn.toProgram();
-		return update(newProgram, programId);
 	}
 
 
