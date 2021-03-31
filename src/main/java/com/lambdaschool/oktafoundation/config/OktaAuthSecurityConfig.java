@@ -82,14 +82,10 @@ public class OktaAuthSecurityConfig
 			http.authorizeRequests()
 					.antMatchers("/", "/h2-console/**", "/webjars/**")
 					.permitAll()
-
 					// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
 					.antMatchers("/users/**")
 					.authenticated()
-					// *** Handled at UseremailService Level
-					.antMatchers("/useremails/**")
-					.authenticated()
-					.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**")
+					.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**", "/tags/**")
 					.authenticated()
 					.antMatchers("/teachers/**")
 					.authenticated()
@@ -103,7 +99,6 @@ public class OktaAuthSecurityConfig
 					.hasAnyRole("ADMIN", "TEACHER")
 					.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/tags/**")
 					.hasAnyRole("ADMIN", "TEACHER")
-
 					// *** Endpoints not specified above are automatically denied
 					.anyRequest()
 					.denyAll()

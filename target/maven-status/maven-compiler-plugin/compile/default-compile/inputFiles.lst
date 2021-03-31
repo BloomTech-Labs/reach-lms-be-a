@@ -51,6 +51,7 @@
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/TagServiceImpl.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/services/RolesService.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/utils/NativeJavaCsvParser.java
+/Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/ProgramIn.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/models/MinimumUser.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/repository/RoleRepository.java
 /Users/chazadmin/code/projects/lambda/labs32/reach-lms-be-a/src/main/java/com/lambdaschool/oktafoundation/handlers/package-info.java

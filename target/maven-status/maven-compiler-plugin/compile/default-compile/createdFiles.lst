@@ -78,5 +78,6 @@ com/lambdaschool/oktafoundation/repository/CourseRepository.class
 com/lambdaschool/oktafoundation/modelAssemblers/ModuleModelAssembler.class
 com/lambdaschool/oktafoundation/models/UserCourses.class
 com/lambdaschool/oktafoundation/models/ProgramTags.class
+com/lambdaschool/oktafoundation/models/ProgramIn.class
 com/lambdaschool/oktafoundation/services/ProgramService.class
 com/lambdaschool/oktafoundation/services/TagService.class
