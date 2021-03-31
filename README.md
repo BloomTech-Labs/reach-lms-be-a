@@ -743,4 +743,5 @@ Status No Content (204)
 
 ----
 
-See [Swagger Documentation](https://reach-team-a-be.herokuapp.com/swagger-ui.html#) for more documentation
+## HATEOAS
+
