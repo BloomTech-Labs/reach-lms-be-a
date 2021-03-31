@@ -40,23 +40,18 @@ public class ProgramServiceImpl
 	)
 	throws ProgramNotFoundException, UserNotFoundException {
 		Program newProgram = new Program();
-
 		if (program.getProgramid() != 0) {
 			findProgramsById(program.getProgramid()); // throws if program not found
 			newProgram.setProgramid(program.getProgramid());
 		}
-
 		newProgram.setProgramname(program.getProgramname());
 		newProgram.setProgramtype(program.getProgramtype());
 		newProgram.setProgramdescription(program.getProgramdescription());
-
 		for (ProgramTags programTags : program.getTags()) {
 			newProgram.addTag(programTags.getTag());
 		}
-
 		newProgram.getCourses()
 				.clear();
-
 		for (Course course : program.getCourses()) {
 			newProgram.getCourses()
 					.add(new Course(course.getCoursename(),
@@ -134,8 +129,6 @@ public class ProgramServiceImpl
 			long programId
 	) {
 		Program existingProgram = findProgramsById(programId);
-		System.out.println("EXISTING_PROGRAM " + existingProgram.getTags());
-		System.out.println("NEW_PROGRAM " + programIn.getTags());
 		for (Tag tag : programIn.getTags()) {
 			Optional<Tag> optional;
 			if (tag.getTagid() != 0) {
@@ -153,16 +146,12 @@ public class ProgramServiceImpl
 				if (tag.getHexcode() != null) {
 					existingTag.setHexcode(tag.getHexcode());
 				}
-
-			}
-
-				if (!existingProgram.containsTag(optional.get())) {
-
-				existingProgram.addTag(optional.get());
+				if (!existingProgram.containsTag(existingTag)) {
+					existingProgram.addTag(existingTag);
+				}
 			}
 		}
 		Program newProgram = programIn.toProgram(existingProgram);
-
 		return update(newProgram, programId);
 	}
 
@@ -173,31 +162,22 @@ public class ProgramServiceImpl
 	)
 	throws ProgramNotFoundException {
 		Program oldProgram = findProgramsById(id); // throws if not found
-
 		if (program.getProgramname() != null) {
 			oldProgram.setProgramname(program.getProgramname());
 		}
-
 		if (program.getProgramtype() != null) {
 			oldProgram.setProgramtype(program.getProgramtype());
 		}
-
 		if (program.getProgramdescription() != null) {
 			oldProgram.setProgramdescription(program.getProgramdescription());
 		}
-
-		System.out.println("SIZE OF TAGS " + program.getTags()
-				.size());
 		if (program.getTags()
 				    .size() > 0) {
 			for (ProgramTags programTags : program.getTags()) {
 				oldProgram.addTag(programTags.getTag());
 			}
 		}
-
 		return programRepository.save(oldProgram);
-
 	}
-
 
 }
