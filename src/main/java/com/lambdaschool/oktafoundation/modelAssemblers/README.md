@@ -28,7 +28,13 @@ Every `*ModelAssembler` class should have the following:
   entity to an `EntityModel<E>` (i.e, an EntityModel OF that entity). `SomeModel` in this case should be somewhere in
   our `/models/` directory, and it should have an `@Entity` annotation at the class-level.
 
-- The only method that MUST be overridden with the `@Override` annotation is the `toModel` method.
+- The only method that MUST be overridden with the `@Override` annotation is the `toModel` method. This method should
+  take in a basic Entity class instance (the same entities you're used to building) and add any links that should belong
+  to it.
+
+## Basic Example
+
+I want to quickly run through an example of how the
 
 ```json
 // Templated Endpoint --- GET "/entities/entity/{entityId}"
@@ -45,7 +51,6 @@ Every `*ModelAssembler` class should have the following:
   ]
 }
 ```
-
 
 ```java
 import org.springframework.hateoas.EntityModel;
@@ -78,11 +83,13 @@ public class ExampleAssembler
 				// our client has access to further information that may be related to this entity...
 				// The link below provides a "link to self" so to speak, which is why '.withSelfRel()' is called.
 				// if our endpoint location actually was GET "/entities/entity/{entityId}", then the following
-            // line of code will attach a PROPERTY within the '_links' object with a 
+				// line of code will attach a PROPERTY within the '_links' object with a 
 				linkTo(methodOn(ExampleController.class).getEntityByEntityId(entity.getId())).withSelfRel()
 		);
 
-		return entityModel;
+		if (entity.has)
+
+			return entityModel;
 
 	}
 
