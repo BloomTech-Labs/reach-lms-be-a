@@ -18,26 +18,31 @@ import java.util.Set;
 @Table(name = "tags")
 @NaturalIdCache
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value="courses")
+@JsonIgnoreProperties(value = "courses")
 public class Tag
 		extends Auditable {
 
 	private static final String DEFAULT_HEX_CODE = "#FFFFFF";
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "courseid")
-	@JsonIgnoreProperties(value = "tags")
-	Set<ProgramTags> courses = new HashSet<>();
+	//
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long   tagid;
+	private long             tagid;
+	//
 	@NotNull
 	@NaturalId
-	private String title;
+	private String           title;
+	//
 	@NotNull
-	private String hexcode;
+	private String           hexcode;
+	//
 	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private Set<ProgramTags> programs = new HashSet<>();
+	//
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "courseid")
+	@JsonIgnoreProperties(value = "tags")
+	private Set<ProgramTags> courses  = new HashSet<>();
 
 	public Tag() {}
 
