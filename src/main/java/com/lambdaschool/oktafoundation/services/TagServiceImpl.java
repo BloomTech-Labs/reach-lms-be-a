@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -37,15 +38,23 @@ public class TagServiceImpl
 	@Override
 	public Tag get(long tagid)
 	throws TagNotFoundException {
-		return tagRepository.findById(tagid)
-				.orElseThrow(() -> new TagNotFoundException(tagid));
+		return find(tagid).orElseThrow(() -> new TagNotFoundException(tagid));
 	}
 
 	@Override
 	public Tag get(String title)
 	throws TagNotFoundException {
-		return tagRepository.findByTitle(title)
-				.orElseThrow(() -> new TagNotFoundException(title));
+		return find(title).orElseThrow(() -> new TagNotFoundException(title));
+	}
+
+	@Override
+	public Optional<Tag> find(String title) {
+		return tagRepository.findByTitle(title);
+	}
+
+	@Override
+	public Optional<Tag> find(long tagId) {
+		return tagRepository.findById(tagId);
 	}
 
 	@Override

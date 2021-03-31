@@ -35,9 +35,9 @@ public class ProgramTags
 			Program program,
 			Tag tag
 	) {
-		this.id = new ProgramTagsId(program.getProgramid(), tag.getTagid());
+		this.id      = new ProgramTagsId(program.getProgramid(), tag.getTagid());
 		this.program = program;
-		this.tag = tag;
+		this.tag     = tag;
 	}
 
 	public ProgramTagsId getId() {
@@ -89,7 +89,7 @@ public class ProgramTags
 
 	@Override
 	public String toString() {
-		return "ProgramTags{" + "programTagsId=" + id + ", program=" + program + ", tag=" + tag + '}';
+		return "ProgramTags{" + "id=" + id + ", program=" + program.getProgramid() + ", tag=" + tag + '}';
 	}
 
 }

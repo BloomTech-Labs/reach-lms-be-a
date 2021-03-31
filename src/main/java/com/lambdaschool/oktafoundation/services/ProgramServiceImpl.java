@@ -3,10 +3,7 @@ package com.lambdaschool.oktafoundation.services;
 
 import com.lambdaschool.oktafoundation.exceptions.ProgramNotFoundException;
 import com.lambdaschool.oktafoundation.exceptions.UserNotFoundException;
-import com.lambdaschool.oktafoundation.models.Course;
-import com.lambdaschool.oktafoundation.models.Program;
-import com.lambdaschool.oktafoundation.models.ProgramTags;
-import com.lambdaschool.oktafoundation.models.User;
+import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import com.lambdaschool.oktafoundation.repository.TagRepository;
 import com.lambdaschool.oktafoundation.repository.UserRepository;
@@ -16,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Transactional
@@ -32,6 +30,9 @@ public class ProgramServiceImpl
 	@Autowired
 	TagRepository tagRepository;
 
+	@Autowired
+	TagService tagService;
+
 	@Override
 	public Program save(
 			long userid,
@@ -39,23 +40,18 @@ public class ProgramServiceImpl
 	)
 	throws ProgramNotFoundException, UserNotFoundException {
 		Program newProgram = new Program();
-
 		if (program.getProgramid() != 0) {
 			findProgramsById(program.getProgramid()); // throws if program not found
 			newProgram.setProgramid(program.getProgramid());
 		}
-
 		newProgram.setProgramname(program.getProgramname());
 		newProgram.setProgramtype(program.getProgramtype());
 		newProgram.setProgramdescription(program.getProgramdescription());
-
 		for (ProgramTags programTags : program.getTags()) {
 			newProgram.addTag(programTags.getTag());
 		}
-
 		newProgram.getCourses()
 				.clear();
-
 		for (Course course : program.getCourses()) {
 			newProgram.getCourses()
 					.add(new Course(course.getCoursename(),
@@ -68,6 +64,24 @@ public class ProgramServiceImpl
 				.orElseThrow(() -> new UserNotFoundException(userid));
 		newProgram.setUser(currentUser);
 		return programRepository.save(newProgram);
+	}
+
+	@Override
+	public Program save(
+			long userid,
+			ProgramIn programIn
+	)
+	throws ProgramNotFoundException, UserNotFoundException {
+		Program newProgram = programIn.toProgram();
+		for (Tag tag : programIn.getTags()) {
+			Optional<Tag> optional = tagService.find(tag.getTitle());
+			if (optional.isEmpty()) {
+				newProgram.addTag(tag);
+			} else if (!newProgram.containsTag(optional.get())) {
+				newProgram.addTag(optional.get());
+			}
+		}
+		return save(userid, newProgram);
 	}
 
 	@Override
@@ -111,36 +125,59 @@ public class ProgramServiceImpl
 
 	@Override
 	public Program update(
+			ProgramIn programIn,
+			long programId
+	) {
+		Program existingProgram = findProgramsById(programId);
+		for (Tag tag : programIn.getTags()) {
+			Optional<Tag> optional;
+			if (tag.getTagid() != 0) {
+				optional = tagService.find(tag.getTagid());
+			} else {
+				optional = tagService.find(tag.getTitle());
+			}
+			if (optional.isEmpty()) {
+				existingProgram.addTag(tag);
+			} else {
+				Tag existingTag = optional.get();
+				if (tag.getTitle() != null) {
+					existingTag.setTitle(tag.getTitle());
+				}
+				if (tag.getHexcode() != null) {
+					existingTag.setHexcode(tag.getHexcode());
+				}
+				if (!existingProgram.containsTag(existingTag)) {
+					existingProgram.addTag(existingTag);
+				}
+			}
+		}
+		Program newProgram = programIn.toProgram(existingProgram);
+		return update(newProgram, programId);
+	}
+
+	@Override
+	public Program update(
 			Program program,
 			long id
 	)
 	throws ProgramNotFoundException {
 		Program oldProgram = findProgramsById(id); // throws if not found
-
 		if (program.getProgramname() != null) {
 			oldProgram.setProgramname(program.getProgramname());
 		}
-
 		if (program.getProgramtype() != null) {
 			oldProgram.setProgramtype(program.getProgramtype());
 		}
-
 		if (program.getProgramdescription() != null) {
 			oldProgram.setProgramdescription(program.getProgramdescription());
 		}
-
 		if (program.getTags()
 				    .size() > 0) {
-			oldProgram.getTags()
-					.clear();
 			for (ProgramTags programTags : program.getTags()) {
 				oldProgram.addTag(programTags.getTag());
 			}
 		}
-
 		return programRepository.save(oldProgram);
-
 	}
-
 
 }

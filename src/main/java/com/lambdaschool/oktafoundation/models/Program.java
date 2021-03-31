@@ -121,6 +121,16 @@ public class Program
 		tags.add(programTag);
 	}
 
+	public void clearTags() {
+		Iterator<ProgramTags> it = tags.iterator();
+		while (it.hasNext()) {
+			ProgramTags programTags = it.next();
+			it.remove();
+			programTags.setProgram(null);
+			programTags.setTag(null);
+		}
+	}
+
 	public void removeTag(ProgramTags programTags) {
 		removeTag(programTags.getTag());
 	}

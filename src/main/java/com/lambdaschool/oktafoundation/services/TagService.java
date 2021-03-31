@@ -4,6 +4,7 @@ package com.lambdaschool.oktafoundation.services;
 import com.lambdaschool.oktafoundation.models.Tag;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface TagService {
@@ -17,6 +18,8 @@ public interface TagService {
 	Tag get(long tagid);
 	// tag title
 	Tag get(String title);
+	Optional<Tag> find(String title);
+	Optional<Tag> find(long tagId);
 
 
 	// GET TAGS BY PROGRAM

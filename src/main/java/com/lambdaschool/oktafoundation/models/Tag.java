@@ -3,9 +3,6 @@ package com.lambdaschool.oktafoundation.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.NaturalIdCache;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,28 +13,30 @@ import java.util.Set;
 
 @Entity
 @Table(name = "tags")
-@NaturalIdCache
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value="courses")
+@JsonIgnoreProperties(value = "courses")
 public class Tag
 		extends Auditable {
 
-	private static final String DEFAULT_HEX_CODE = "#FFFFFF";
+	private static final String           DEFAULT_HEX_CODE = "#FFFFFF";
+	//
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private              long             tagid;
+	//
+	@NotNull
+	private              String           title;
+	//
+	@NotNull
+	private              String           hexcode;
+	//
+	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnore
+	private              Set<ProgramTags> programs         = new HashSet<>();
+	//
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "courseid")
 	@JsonIgnoreProperties(value = "tags")
-	Set<ProgramTags> courses = new HashSet<>();
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long   tagid;
-	@NotNull
-	@NaturalId
-	private String title;
-	@NotNull
-	private String hexcode;
-	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonIgnore
-	private Set<ProgramTags> programs = new HashSet<>();
+	private              Set<ProgramTags> courses          = new HashSet<>();
 
 	public Tag() {}
 

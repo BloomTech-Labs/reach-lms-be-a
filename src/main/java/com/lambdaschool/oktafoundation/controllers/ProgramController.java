@@ -1,9 +1,9 @@
 package com.lambdaschool.oktafoundation.controllers;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
 import com.lambdaschool.oktafoundation.modelAssemblers.ProgramModelAssembler;
 import com.lambdaschool.oktafoundation.models.Program;
+import com.lambdaschool.oktafoundation.models.ProgramIn;
 import com.lambdaschool.oktafoundation.models.Tag;
 import com.lambdaschool.oktafoundation.repository.ProgramRepository;
 import com.lambdaschool.oktafoundation.repository.TagRepository;
@@ -119,19 +119,28 @@ public class ProgramController {
 			@RequestBody
 					Program newProgram
 	) {
-		// TODO: check calling user's role permissions before we allow a POST
 		newProgram.setProgramid(0);
 		newProgram = programService.save(userid, newProgram);
-
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newProgramURI = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{programid}")
 				.buildAndExpand(newProgram.getProgramid())
 				.toUri();
 		responseHeaders.setLocation(newProgramURI);
-		// TODO: send `newProgramURI` as part of the body
-
 		return new ResponseEntity<>(newProgram, responseHeaders, HttpStatus.CREATED);
+	}
+
+	@PostMapping(value = "/programs/{userid}/program-in", consumes = {"application/json"}, produces = "application/json")
+	public ResponseEntity<?> addNewProgram(
+			@PathVariable
+					long userid,
+			@Valid
+			@RequestBody
+					ProgramIn program
+	) {
+		program.setProgramid(0);
+		Program newProgram = programService.save(userid, program);
+		return new ResponseEntity<>(newProgram, HttpStatus.CREATED);
 	}
 
 	@PutMapping(value = "/programs/program/{programid}", consumes = "application/json")
@@ -142,10 +151,8 @@ public class ProgramController {
 			@PathVariable
 					Long programid
 	) {
-		// TODO: check calling user's role permissions before we allow a PUT
 		editProgram.setProgramid(programid);
-		Program newtProgram = programService.update(editProgram, programid);
-
+		Program newProgram = programService.update(editProgram, programid);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -156,10 +163,20 @@ public class ProgramController {
 			@PathVariable
 					Long programid
 	) {
-		// TODO: check calling user's role permissions before we allow a PATCH
 		programService.update(editPartialProgram, programid);
-
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	@PatchMapping("/programs/program-in/{programid}")
+	public ResponseEntity<?> editPartialProgram(
+			@RequestBody
+					ProgramIn programIn,
+			@PathVariable
+					Long programid
+	) {
+		programIn.setProgramid(programid);
+		Program saved = programService.update(programIn, programid);
+		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "/programs/program/{programid}")
@@ -167,11 +184,7 @@ public class ProgramController {
 			@PathVariable
 					long programid
 	) {
-		// TODO: check calling user's role permissions before we allow a DELETE
-		programRepos.findById(programid)
-				.orElseThrow(() -> new ResourceNotFoundException("Program id with id" + programid + " Not found!"));
-		programRepos.deleteById(programid);
-
+		programService.delete(programid);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
