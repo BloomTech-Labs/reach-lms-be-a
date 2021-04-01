@@ -32,25 +32,36 @@ Every `*ModelAssembler` class should have the following:
   take in a basic Entity class instance (the same entities you're used to building) and add any links that should belong
   to it.
 
-## Basic Example
+# General Example
 
-I want to quickly run through an example of how the
+This example will focus on the basic essentials for writing the `ModelAssembler` class itself. If you want the full flow
+of how to USE the model assembler, skip to [Full Example — The Complete Implementation Flow](#full-implementation)
+
+## Before Implementing the Model Assembler — `GET "/entities/entity/{entityId}"`
+
+Here's what one single entity might've looked like before we implement the model assembler.
 
 ```json
-// Templated Endpoint --- GET "/entities/entity/{entityId}"
-// Actual Endpoint called --- GET "/entities/entity/4"
 {
   "entityId": 4,
   "entityName": "This is just an example of a plain entity!",
   "entityType": "POJO",
-  "roles": [
+  "hobbies": [
     {
-      "roleName": "ROLE_ONE",
-      "roleDescription": "Uh oh... this is nested data... what if this array was 100 objects long?"
+      "hobbyId": 1,
+      "hobbyName": "Rocket League",
+      "timeSpent": "Too damn much"
+    },
+    {
+      "hobbyId": 2,
+      "hobbyName": "Coding",
+      "timeSpent": "All of it"
     }
   ]
 }
 ```
+
+## Now, let's write the Model Assembler itself
 
 ```java
 import org.springframework.hateoas.EntityModel;
@@ -65,14 +76,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component // needs to be a component to @Autowire it anywhere
 public class ExampleAssembler
-		implements RepresentationModelAssembler<E, EntityModel<E>> {
+		implements RepresentationModelAssembler<Entity, EntityModel<Entity>> {
 
+	// this method will take in some POJO entity and 
+	// transform it into our EntityModel representation
 	@Override
-	public EntityModel<E> toModel(E entity) {
-		// this method will take in some POJO entity and 
-		// transform it into our EntityModel representation
+	public EntityModel<Entity> toModel(Entity entity) {
 
-		EntityModel<E> entityModel = EntityModel.of(entity,
+		EntityModel<Entity> entityModel = EntityModel.of(entity,
 				// this is where we can add any links to this entity
 				//
 				// this link is a link to some controller method in the 'ExampleController' class
@@ -83,20 +94,189 @@ public class ExampleAssembler
 				// our client has access to further information that may be related to this entity...
 				// The link below provides a "link to self" so to speak, which is why '.withSelfRel()' is called.
 				// if our endpoint location actually was GET "/entities/entity/{entityId}", then the following
-				// line of code will attach a PROPERTY within the '_links' object with a 
-				linkTo(methodOn(ExampleController.class).getEntityByEntityId(entity.getId())).withSelfRel()
+				// line of code will attach a PROPERTY within the '_links' object with a full URI that 
+				// a client could go hit to GET THIS SPECIFIC ENTITY: "http://localhost:2019/entities/entitiy/4"
+				linkTo(methodOn(ExampleController.class).getEntityByEntityId(entity.getId())).withSelfRel(),
+
+				// one powerful ability that comes from this pattern is the ability to link to any relationships
+				// that this entity might have. Now the client has the agency to go get a collection of all the 
+				// hobbies associated with this entity!
+				linkTo(methodOn(HobbyController.class).getHobbiesByEntityId(entity.getId())).withRel("hobbies")
 		);
 
-		if (entity.has)
+		// we also have the ability to add links conditionally
+		// if the entity in question has an ID that is less than 10, we'll add the following links
+		if (entity.getId() < 10) {
+			// this method lets us add new links onto the entity. Very useful for handling conditional logic
+			entityModel.add(
+					// link to the method in the controller that returns all the entities with a single-digit ID 
+					linkTo(methodOn(ExampleController.class).getEntitiesWithSingleDigitId()).withRel("single_digit_id") //
+			);
 
-			return entityModel;
+		}
+
+		return entityModel;
 
 	}
 
 }
 ```
 
-## Resources
+## After Implementing the Model Assembler — `GET "/entities/entity/{entityId}"`
+
+Here's what it would look like if we hit `GET "/entities/entity/4"` after implementing our model assembler.
+
+```json
+{
+  "entityId": 4,
+  "entityName": "This is just an example of a plain entity!",
+  "entityType": "POJO",
+  "_links": {
+    "self": {
+      "href": "http://localhost:2019/entities/entity/4"
+    },
+    "hobbies": {
+      "href": "http://localhost:2019/hobbies/by-entity-id/4"
+    },
+    "single_digit_id": {
+      "href": "http://localhost:2019/entities/single-digit"
+    }
+  }
+}
+```
+
+We had added in some conditional logic that attached the `single_digit_id` only if the entity had an `entityId` that was
+less than `10`. So what would our response look like if we hit `GET "/entities/entity/12"`?
+
+```json
+{
+  "entityId": 4,
+  "entityName": "This is just an example of a plain entity!",
+  "entityType": "POJO",
+  "_links": {
+    "self": {
+      "href": "http://localhost:2019/entities/entity/4"
+    },
+    "hobbies": {
+      "href": "http://localhost:2019/hobbies/by-entity-id/4"
+    }
+  }
+}
+```
+
+--- 
+
+<a name="full-implementation"></a>
+
+# Full Implementation
+
+Now that you've seen a basic example of what these classes do and what the data looks like as a result, let's look at a
+slightly more comprehensive example.
+
+Let's look at a more stripped-down version of Reach LMS.
+
+This example will walk through a `UserModelAssembler` class that builds a representational model for the `User` class.
+
+Then we'll implement and use that `UserModelAssembler` in our `UserController` class.
+
+## Models
+
+### `User`
+
+- `userid`
+- `username`
+- `firstname`
+- `lastname`
+- `roleType` — One of three: `ADMIN`, `TEACHER`, and `STUDENT`
+- List of `Course` — Any `Course` this user is attached to
+
+### `Course`
+
+- `courseid`
+- `coursename`
+- `coursedescription`
+- List of `Module` — All the `Module` entities nested within this `Course`
+- List of `User` — All the `Users` this course is attached to
+
+### `Modules`
+
+- `moduleid`
+- `modulename`
+- `Course` — The `Course` wherein this `Module` resides
+
+## Actions & Permissions
+
+The interesting part of this example is that the `User` class is fairly flexible. Every single person in our system is
+actually a `User`. Their abilities come from what `roleType` they have.
+
+### `ADMIN` users can...
+
+- Create a `User` of any role — `ADMIN`, `STUDENT`, or `TEACHER`
+- Change the `roleType` of any `TEACHER` or `STUDENT` to any `roleType` — `ADMIN`, `STUDENT`, or `TEACHER`
+    - Note that `ADMIN` users cannot change the `roleType` of OTHER `ADMIN` users
+- Delete `User` of roleType `STUDENT` or `TEACHER`
+- Attach and detach `TEACHER` and `STUDENT` users to and from any `Course`
+- Create new `Course`
+
+### `TEACHER` and `ADMIN` users can...
+
+- Edit `Course` information
+- Add/Edit/Delete any `Module` inside of a `Course` that they teach (if `TEACHER`) or own (if `ADMIN`).
+- Attach and Detach `STUDENT` users from any `Course` over which they have ownership
+
+### `STUDENT` and `TEACHER` and `ADMIN` users can...
+
+- View all the `Course` entities that they are attached to or have ownership over.
+- View all the `Module` entities inside each `Course` to which they (the user) are attached.
+
+## Endpoints
+
+### User Controller
+
+- Get all Users
+  - `GET "/users"`
+- Get User
+  - `GET "/users/{userid}"`
+- Create New User
+  - `POST "/users/user"`
+- Replace User
+  - `PUT "/users/user/{userid}"`
+- Edit User
+  - `PATCH "/users/user/{userid}"`
+- Delete User
+  - `DELETE "/users/user/{userid}"`
+- Replace User's Role
+  - `PUT "/users/user/{userid}/role/{newRoleType}"`
+- Attach User to Course
+  - `PUT "/users/user/{userid}/course/{courseid}"`
+- Detach User from Course 
+  - `DELETE "/users/user/{userid}/course/{courseid}"`
+- Get all Users associated with a Course 
+  - `GET "/users/enrolled-in/{courseid}"`
+- Get any users NOT associated with a Course 
+  - `GET "/users/not-enrolled-in/{courseid}"`
+
+### Course Controller
+
+- `GET "/courses"`
+- `GET "/courses/course/{courseid}"`
+- `GET "/courses/course/name/{coursename}"`
+- `POST "/courses/course"`
+- `PUT "/courses/course/{courseid}"`
+- `PATCH "/courses/course/{courseid}"`
+- `DELETE "/courses/course/{courseid}"`
+
+### Module Controller
+- `GET "/modules"`
+- `GET "/modules/module/{moduleid}`
+- `GET "/modules/by-course/{courseid}`
+- `POST "modules/to-course/{courseid}"` 
+- `DELETE "/modules/module/{moduleid}`
+
+
+--- 
+
+# Resources
 
 - Spring HATEOAS (v1.2.4)
     - [Reference Docs](https://docs.spring.io/spring-hateoas/docs/1.2.4/reference/html/#reference)
