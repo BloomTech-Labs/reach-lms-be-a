@@ -17,6 +17,20 @@
     - [Models](#models)
     - [Actions & Permissions](#actions--permissions)
     - [Endpoints](#endpoints)
+    - [Code for Models](#code-for-models)
+        - [RoleType Enum](#modelsroletypejava--roletype-enum)
+        - [User Model](#modelsuserjava--user-entity-class)
+        - [Course Model](#modelscoursejava--course-entity)
+        - [Module Model](#modelsmodulejava--module-entity)
+    - [Quick Look at Repo & Service Layer](#quick-look-at-the-repo--service-layer)
+    - [Code for Controllers](#code-for-controllers)
+        - [User Controller]()
+        - [Course Controller]()
+        - [Module Controller]()
+    - [Code for Model Assemblers](#code-for-model-assemblers)
+        - [User Model Assembler]()
+        - [Course Model Assembler]()
+        - [Module Model Assembler]()
 
 - [Resources](#resources)
 
@@ -298,10 +312,14 @@ actually a `User`. Their abilities come from what `roleType` they have.
 - `POST "modules/to-course/{courseid}"`
 - `DELETE "/modules/module/{moduleid}`
 
+---
+
 ## Code for Models
 
 Now that we know a bit more about what we're building, let's look at the entity class for each model. This is the same
 goodness that you all have seen since the first week of Unit 4
+
+--- 
 
 ### `/models/RoleType.java` — RoleType Enum
 
@@ -310,6 +328,8 @@ simply a special data type allows for pre-defined groups of constants.
 
 This is really convenient for little collections of data that (1.) don't change throughout our application and (2.) are
 referenced a lot. That makes the `enum` a PERFECT choice for our user's `role`!!!
+
+Unfold the following to see some comparisons between `enum` and alternative methods
 
 <details>
 
@@ -438,7 +458,7 @@ public class UsingEnumExample {
 }
 ```
 
-</details>
+</details>  
 
 
 I left our `RoleType` enum as the most primitive version of a Java `enum` possible.
@@ -610,6 +630,252 @@ public class Module {
 ```
 
 --- 
+
+## Quick Look at the Repo & Service Layer
+
+One of the best parts of these model assemblers and the HATEOAS framework is the fact that it allows us to build AROUND
+all of the same code we all know and love.
+
+The repository layer doesn't change at all. Nor do the services. The model-assemblers are simply one additional layer
+in-between the service-layer and the controller. But I will cover the details of how this works in the following
+controller section.
+
+I will attach each Service interface below in case it's helpful to see what the methods are. Don't worry about the
+implementation, though — the `_ServiceImpl.java` & `_Repository.java` for each entity is unaffected by HATEOAS.
+
+### UserService Interface
+
+<details>
+
+<summary>Unfold to See Code</summary>
+
+```java
+package com.lambdaschool.oktafoundation.services;
+
+
+import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.models.User;
+
+import java.util.List;
+import java.util.Optional;
+
+
+/**
+ * The Service that works with User Model.
+ * <p>
+ * Note: Emails are added through the add user process
+ * Roles are added through the add user process
+ * No way to delete an assigned role
+ */
+public interface UserService {
+
+	/**
+	 * Returns a list of all the Users
+	 *
+	 * @return List of Users. If no users, empty list.
+	 */
+	List<User> findAll();
+
+	List<User> search(String query);
+
+	/**
+	 * A list of all users whose username contains the given substring
+	 *
+	 * @param username The substring (String) of the username of the Users you seek
+	 *
+	 * @return List of users whose username contains the given substring
+	 */
+	List<User> findByNameContaining(String username);
+
+	/**
+	 * Returns the user with the given primary key.
+	 *
+	 * @param id The primary key (long) of the user you seek.
+	 *
+	 * @return The given User or throws an exception if not found.
+	 */
+	User findUserById(long id);
+
+	Optional<User> findByEmail(String email);
+
+	/**
+	 * Returns the user with the given name
+	 *
+	 * @param name The full name (String) of the User you seek.
+	 *
+	 * @return The User with the given name or throws an exception if not found.
+	 */
+	User findByName(String name);
+
+	/**
+	 * Deletes the user record and its useremail items from the database based off of the provided primary key
+	 *
+	 * @param id id The primary key (long) of the user you seek.
+	 */
+	void delete(long id);
+
+	/**
+	 * Given a complete user object, saves that user object in the database.
+	 * If a primary key is provided, the record is completely replaced
+	 * If no primary key is provided, one is automatically generated and the record is added to the database.
+	 *
+	 * @param user the user object to be saved
+	 *
+	 * @return the saved user object including any automatically generated fields
+	 */
+	User save(User user);
+
+	/**
+	 * Updates the provided fields in the user record referenced by the primary key.
+	 * <p>
+	 * Regarding Role and Useremail items, this process only allows adding those. Deleting and editing those lists
+	 * is done through a separate endpoint.
+	 *
+	 * @param user just the user fields to be updated.
+	 * @param id   The primary key (long) of the user to update
+	 *
+	 * @return the complete user object that got updated
+	 */
+	User update(
+			User user,
+			long id
+	);
+
+	/**
+	 * Deletes all record and their associated records from the database
+	 */
+	void deleteAll();
+
+	/**
+	 * Updates the role on this user
+	 *
+	 * @param user     The user for which we will reassign role
+	 * @param roleType The new role
+	 *
+	 * @return The newly updated user
+	 */
+	User updateRole(
+			User user,
+			RoleType roleType
+	);
+
+}
+
+```
+
+</details>
+
+### CourseService Interface
+
+<details>
+
+<summary>Unfold to see Code</summary>
+
+```java
+package com.lambdaschool.oktafoundation.services;
+
+
+import com.lambdaschool.oktafoundation.models.Course;
+
+import java.util.List;
+
+
+public interface CourseService {
+
+	List<Course> findAll();
+
+	List<Course> findRelevant(String query);
+
+	List<Course> findByUser(long userid);
+
+	Course findCourseById(long courseId);
+
+	Course get(long courseid);
+	Course get(String coursename);
+
+	List<Course> findByTag(String tagTitle);
+
+	Course save(Course course);
+	Course save(
+			Course course,
+			long programid
+	);
+
+	Course save(
+			long programId,
+			Course course
+	);
+
+	Course update(
+			long courseId,
+			Course course
+	);
+
+	void delete(long courseId);
+
+
+}
+
+```
+
+</details>
+
+### ModuleService Interface
+
+<details>
+
+<summary>Unfold to see code</summary>
+
+
+```java
+package com.lambdaschool.oktafoundation.services;
+
+
+import com.lambdaschool.oktafoundation.models.Module;
+
+import java.util.List;
+
+
+public interface ModuleService {
+
+	List<Module> findAll();
+
+	Module find(long moduleId);
+
+	Module find(String name);
+
+
+	Module findModulesById(long id);
+
+	void replaceMarkdown(Long moduleid, String markdown);
+
+	Module save(
+			long id,
+			Module module
+	);
+
+	Module update(
+			long id,
+			Module module
+	);
+
+	void delete(long id);
+
+}
+
+```
+
+</details>
+
+## Code for Controllers
+
+In the past, all controller classes `@Autowire` in any necessary `Service` classes (or `interfaces`, rather) needed to
+get each collection or view of data to send in a response body. This remains true in our implementation.
+
+The "new" part is we're going to receive whatever the `Service` responds with, then we're going to transform that view
+into a Relational Representation by UTILIZING our
+
+## Code for Model Assemblers
 
 # Resources
 
