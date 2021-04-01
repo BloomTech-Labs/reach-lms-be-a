@@ -660,100 +660,29 @@ import java.util.List;
 import java.util.Optional;
 
 
-/**
- * The Service that works with User Model.
- * <p>
- * Note: Emails are added through the add user process
- * Roles are added through the add user process
- * No way to delete an assigned role
- */
 public interface UserService {
 
-	/**
-	 * Returns a list of all the Users
-	 *
-	 * @return List of Users. If no users, empty list.
-	 */
 	List<User> findAll();
 
-	List<User> search(String query);
+	User find(long userId);
 
-	/**
-	 * A list of all users whose username contains the given substring
-	 *
-	 * @param username The substring (String) of the username of the Users you seek
-	 *
-	 * @return List of users whose username contains the given substring
-	 */
+	Optional<User> find(String email);
+
 	List<User> findByNameContaining(String username);
 
-	/**
-	 * Returns the user with the given primary key.
-	 *
-	 * @param id The primary key (long) of the user you seek.
-	 *
-	 * @return The given User or throws an exception if not found.
-	 */
-	User findUserById(long id);
-
-	Optional<User> findByEmail(String email);
-
-	/**
-	 * Returns the user with the given name
-	 *
-	 * @param name The full name (String) of the User you seek.
-	 *
-	 * @return The User with the given name or throws an exception if not found.
-	 */
 	User findByName(String name);
 
-	/**
-	 * Deletes the user record and its useremail items from the database based off of the provided primary key
-	 *
-	 * @param id id The primary key (long) of the user you seek.
-	 */
-	void delete(long id);
+	void delete(long userId);
 
-	/**
-	 * Given a complete user object, saves that user object in the database.
-	 * If a primary key is provided, the record is completely replaced
-	 * If no primary key is provided, one is automatically generated and the record is added to the database.
-	 *
-	 * @param user the user object to be saved
-	 *
-	 * @return the saved user object including any automatically generated fields
-	 */
 	User save(User user);
 
-	/**
-	 * Updates the provided fields in the user record referenced by the primary key.
-	 * <p>
-	 * Regarding Role and Useremail items, this process only allows adding those. Deleting and editing those lists
-	 * is done through a separate endpoint.
-	 *
-	 * @param user just the user fields to be updated.
-	 * @param id   The primary key (long) of the user to update
-	 *
-	 * @return the complete user object that got updated
-	 */
 	User update(
 			User user,
 			long id
 	);
 
-	/**
-	 * Deletes all record and their associated records from the database
-	 */
 	void deleteAll();
 
-	/**
-	 * Updates the role on this user
-	 *
-	 * @param user     The user for which we will reassign role
-	 * @param roleType The new role
-	 *
-	 * @return The newly updated user
-	 */
 	User updateRole(
 			User user,
 			RoleType roleType
@@ -826,7 +755,6 @@ public interface CourseService {
 
 <summary>Unfold to see code</summary>
 
-
 ```java
 package com.lambdaschool.oktafoundation.services;
 
@@ -847,7 +775,10 @@ public interface ModuleService {
 
 	Module findModulesById(long id);
 
-	void replaceMarkdown(Long moduleid, String markdown);
+	void replaceMarkdown(
+			Long moduleid,
+			String markdown
+	);
 
 	Module save(
 			long id,
