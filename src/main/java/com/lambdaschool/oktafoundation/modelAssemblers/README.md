@@ -1,5 +1,29 @@
 # Representational Model Assemblers
 
+---
+
+# Table of Contents
+
+- [Overview](#overview)
+    - [Why?](#why?)
+    - [How?](#how?)
+
+- [General Example](#general-example)
+    - [Before Model Assembler](#before-implementing-the-model-assembler--get-entitiesentityentityid)
+    - [Writing Model Assembler](#now-lets-write-the-model-assembler-itself)
+    - [After Implementing](#after-implementing-the-model-assembler--get-entitiesentityentityid)
+
+- [Full Implementation Example](#full-implementation)
+    - [Models](#models)
+    - [Actions & Permissions](#actions--permissions)
+    - [Endpoints](#endpoints)
+
+- [Resources](#resources)
+
+---
+
+# Overview
+
 ## Why?
 
 These Representational Model assemblers are essentially helper components that allow us to represent any domain type (
@@ -234,27 +258,27 @@ actually a `User`. Their abilities come from what `roleType` they have.
 ### User Controller
 
 - Get all Users
-  - `GET "/users"`
+    - `GET "/users"`
 - Get User
-  - `GET "/users/{userid}"`
+    - `GET "/users/{userid}"`
 - Create New User
-  - `POST "/users/user"`
+    - `POST "/users/user"`
 - Replace User
-  - `PUT "/users/user/{userid}"`
+    - `PUT "/users/user/{userid}"`
 - Edit User
-  - `PATCH "/users/user/{userid}"`
+    - `PATCH "/users/user/{userid}"`
 - Delete User
-  - `DELETE "/users/user/{userid}"`
+    - `DELETE "/users/user/{userid}"`
 - Replace User's Role
-  - `PUT "/users/user/{userid}/role/{newRoleType}"`
+    - `PUT "/users/user/{userid}/role/{newRoleType}"`
 - Attach User to Course
-  - `PUT "/users/user/{userid}/course/{courseid}"`
-- Detach User from Course 
-  - `DELETE "/users/user/{userid}/course/{courseid}"`
-- Get all Users associated with a Course 
-  - `GET "/users/enrolled-in/{courseid}"`
-- Get any users NOT associated with a Course 
-  - `GET "/users/not-enrolled-in/{courseid}"`
+    - `PUT "/users/user/{userid}/course/{courseid}"`
+- Detach User from Course
+    - `DELETE "/users/user/{userid}/course/{courseid}"`
+- Get all Users associated with a Course
+    - `GET "/users/enrolled-in/{courseid}"`
+- Get any users NOT associated with a Course
+    - `GET "/users/not-enrolled-in/{courseid}"`
 
 ### Course Controller
 
@@ -267,12 +291,323 @@ actually a `User`. Their abilities come from what `roleType` they have.
 - `DELETE "/courses/course/{courseid}"`
 
 ### Module Controller
+
 - `GET "/modules"`
 - `GET "/modules/module/{moduleid}`
 - `GET "/modules/by-course/{courseid}`
-- `POST "modules/to-course/{courseid}"` 
+- `POST "modules/to-course/{courseid}"`
 - `DELETE "/modules/module/{moduleid}`
 
+## Code for Models
+
+Now that we know a bit more about what we're building, let's look at the entity class for each model. This is the same
+goodness that you all have seen since the first week of Unit 4
+
+### `/models/RoleType.java` — RoleType Enum
+
+I know some of you aren't going to be familiar with Enums. For anone unfamiliar with the concept of enums, they are
+simply a special data type allows for pre-defined groups of constants.
+
+This is really convenient for little collections of data that (1.) don't change throughout our application and (2.) are
+referenced a lot. That makes the `enum` a PERFECT choice for our user's `role`!!!
+
+<details>
+
+  <summary>Examples of why we're using an Enum class as opposed to the alternative approaches </summary>
+
+  ---
+
+### Why Use Enums??? Just take a look at the alternatives...
+
+### Using a plain `String`
+
+Imagine trying to check to see if a user was an `ADMIN`... if we used a plain `String`, it would look like this:
+
+  ```java
+  public class UserRoleWithString { // don't worry bout this line
+
+	public static void main(String[] args) { // don't worry bout this line
+
+
+		User user = new User();
+		user.setRole("ADMIN");
+
+		// Here's what it might look like to check to see if our user was an ADMIN
+		if (user.getRole()
+				.equals("ADMIN")) {
+			System.out.println("User is an ADMIN!!");
+		} //
+		else if (user.getRole()
+				.equals("TEACHER")) {
+			System.out.println("User is a TEACHER!!");
+		} //
+		else {
+			System.out.println("User must be a STUDENT!");
+		}
+	}
+
+}
+  ```
+
+### Using the `UserRoles` join class
+
+And if we used the `UserRoles` that we've usually used, it would be even grosser:
+
+  ```java
+  public class UserRoleWithUserRolesJoin {
+
+	public static void main(String[] args) {
+
+		// in this case, role would be Set<UserRoles> roles = new HashSet<>();
+		User user      = new User();
+		Role adminRole = new Role("ADMIN");
+		adminRole = roleService.save(adminRole);
+		user.getRoles()
+				.add(new UserRoles(user, adminRole));
+		user = userService.save(user);
+
+		// this is what it might look like to check our user's role
+		// note that this could be ANYWHERE in our application... NOT just in Seed Data 
+		// so we would not have access to the 'adminRole' declared above
+		// we'd have to find the role
+		Role adminRole   = roleService.findByName("ROLE_ADMIN");
+		Role teacherRole = roleService.findByName("ROLE_TEACHER");
+		Role studentRole = roleService.findByName("ROLE_STUDENT");
+
+		// then, to check if our User's Set of roles contained a specific one, we'd
+		// have to take advantage of native HashSet methods (like 'contains') and the 'equals' method
+		// defined in UserRoles.java
+		boolean containsAdminRole = user.getRoles()
+				.contains(new UserRoles(user.getUserid(), adminRole.getRoleid()));
+		boolean containsTeacherRole = user.getRoles()
+				.contains(new UserRoles(user.getUserid(), teacherRole.getRoleid()));
+		boolean containsStudentRole = user.getRoles()
+				.contains(new UserRoles(user.getUserid(), studentRole.getRoleid()));
+
+		if (containsAdminRole) {
+			System.out.println("The user is an ADMIN");
+		}
+		if (containsTeacherRole) {
+			System.out.println("The user is a TEACHER");
+		}
+		if (containsStudentRole) {
+			System.out.println("The user is a STUDENT");
+		}
+	}
+
+}
+  ```
+
+  ---
+
+### Enum Stuff
+
+```java
+
+import com.lambdaschool.oktafoundation.models.RoleType;
+
+
+public class UsingEnumExample {
+
+	public static void main(String[] args) {
+
+		System.out.println(RoleType.ADMIN); // prints "ADMIN"
+		System.out.println(RoleType.TEACHER); // prints "TEACHER"
+		System.out.println(RoleType.STUDENT); // prints "STUDENT"
+
+		System.out.println(RoleType.ADMIN.name()); // prints "ADMIN"
+
+		System.out.println(RoleType.ADMIN.ordinal()); // prints 0
+		System.out.println(RoleType.TEACHER.ordinal()); // prints 1
+		System.out.println(RoleType.STUDENT.ordinal()); // prints 2
+
+		// !!! ERROR --- RoleType.ADMIN is of type RoleType, not String
+		String this_is_an_error = RoleType.ADMIN; // THIS WOULD NOT COMPILE
+
+		// .name() will return the name of the member (ADMIN) as a String
+		String adminRoleString = RoleType.ADMIN.name();
+
+		// .ordinal() returns the value associated with that member
+		int adminRoleOrdinal = RoleType.ADMIN.ordinal();
+
+		// ALWAYS false -- but this is to show that you can COMPARE
+		// the members of an Enum with double equals.
+		boolean adminIsTeacher = RoleType.ADMIN == RoleType.TEACHER;
+	}
+
+}
+```
+
+</details>
+
+
+I left our `RoleType` enum as the most primitive version of a Java `enum` possible.
+
+***NOTE**—For anyone interested in learning more about enums, the Java `enum` is actually incredibly capable and
+powerful. (Far more so than enums in I've encountered in any other language.) If this sparks any curiosity whatsoever,
+I'd totally encourage you to [learn more about them](https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html)*
+
+```java
+/**
+ * Enum representation of our RoleTypes.
+ *
+ * Each member of the enum will have 
+ */
+public enum RoleType {
+	ADMIN,
+	TEACHER,
+	STUDENT
+}
+```
+
+Some example code for how we can USE that `RoleType` enum
+
+```java
+import com.lambdaschool.oktafoundation.models.RoleType;
+
+
+public class UsingEnumExample {
+
+	public static void main(String[] args) {
+
+		// this would happen in Seed Data
+		User user      = new User();
+		Role adminRole = roleService.findByName(RoleType.ADMIN.name());
+		user.getRoles()
+				.add(new UserRoles(user, adminRole));
+
+		// But now look at how easy it is to check RoleType for a User!!
+		// We can use regular If, Else If, Else Branching
+		if (user.getRole() == RoleType.ADMIN) {
+			System.out.println("User is an ADMIN!");
+		} else if (user.getRole() == RoleType.TEACHER) {
+			System.out.println("User is a TEACHER!");
+		} else {
+			System.out.println("User is a STUDENT!");
+		}
+
+		// Or, even cleaner, we can use Java's Switch Statement
+		switch (user.getRole()) {
+			case ADMIN:
+				System.out.println("User is an ADMIN!");
+				break;
+			case TEACHER:
+				System.out.println("User is an TEACHER!");
+				break;
+			case STUDENT:
+				System.out.println("User is a STUDENT!");
+				break;
+			default:
+				throw new IllegalArgumentException("Unknown role " + user.getRole() + ".");
+				break;
+		}
+	}
+
+} 
+```
+
+### `/models/User.java` — User Entity Class
+
+```java
+
+// package and imports excluded for brevity
+
+
+@Entity
+@Table(name = "users")
+public class User {
+
+	private long   userid;
+	private String username;
+	private String firstname;
+	private String lastname;
+
+	/**
+	 * The role that this user holds. This drives permissions on what this user can and cannot do!
+	 * 'RoleType' is simply an Enum class with three members: ADMIN, TEACHER, or STUDENT
+	 */
+	private RoleType roleType; // either ADMIN, TEACHER, or STUDENT
+
+	/**
+	 * Every Course that this user is attached to. 
+	 * - STUDENT users would exist in "private Set<User> users" in Course.java
+	 * - TEACHER users would exist in "private Set<User> users" in Course.java 
+	 * - ADMIN users would be assigned as the `private User owner` in Course.java
+	 */
+	private Set<Course> courses = new HashSet<>();
+
+
+	public User() {}
+
+	// getters and setters
+}
+
+```
+
+### `/models/Course.java` — Course Entity
+
+```java
+
+// package and imports excluded for brevity
+
+
+@Entity
+@Table(name = "courses")
+public class Course {
+
+	private long   courseid;
+	private String coursename;
+	private String coursedescription;
+
+	/**
+	 * The ADMIN user who "owns" this course, so to speak.
+	 */
+	private User owner;
+
+	/**
+	 * Every 'User' that belongs to this course.
+	 * This HashSet will contain both TEACHER and STUDENT users 
+	 */
+	private Set<User> users = new HashSet<>();
+
+	/**
+	 * Every 'Module' that belongs to this course.
+	 */
+	private Set<Module> modules = new HashSet<>();
+
+
+	public Course() {}
+
+	// getters and setters
+
+}
+```
+
+### `/models/Module.java` — Module Entity
+
+```java
+
+// package and imports excluded for brevity
+
+
+@Entity
+@Table(name = "modules")
+public class Module {
+
+	private long   moduleid;
+	private String modulename;
+	/**
+	 * The Course that this Module belongs to
+	 */
+	private Course course;
+
+
+	public Module() {}
+
+	// getters and setters
+
+}
+```
 
 --- 
 
