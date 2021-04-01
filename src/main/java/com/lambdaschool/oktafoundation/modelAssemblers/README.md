@@ -23,14 +23,18 @@
         - [Course Model](#modelscoursejava--course-entity)
         - [Module Model](#modelsmodulejava--module-entity)
     - [Quick Look at Repo & Service Layer](#quick-look-at-the-repo--service-layer)
-    - [Code for Controllers](#code-for-controllers)
-        - [User Controller]()
-        - [Course Controller]()
-        - [Module Controller]()
+    - [Code for Controllers (BEFORE Model-Assembler)](#code-for-controllers--before-model-assemblers)
+        - [User Controller](#usercontrollerjava-before-model-assembler)
+        - [Course Controller](#coursecontrollerjava-before-model-assembler)
+        - [Module Controller](#modulecontrollerjava-before-model-assembler)
     - [Code for Model Assemblers](#code-for-model-assemblers)
-        - [User Model Assembler]()
-        - [Course Model Assembler]()
-        - [Module Model Assembler]()
+        - [User Model Assembler]
+        - [Course Model Assembler]
+        - [Module Model Assembler]
+    - [Code for Controllers (AFTER Model-Assembler)](#code-for-controllers----after-model-assembler)
+        - [User Controller](#usercontrollerjava-after-model-assembler)
+        - [Course Controller]
+        - [Module Controller]
 
 - [Resources](#resources)
 
@@ -810,15 +814,17 @@ into a Relational Representation by UTILIZING our Model Assemblers.
 
 Let's first look at what these controllers would look like without the Model Assemblers in place.
 
-### User Controller (Before Model Assembler)
+### `UserController.java` (Before Model Assembler)
 
 <details>
 
+
 <summary>Unfold to see code...</summary>
+
 
 ---
 
-### A Simple User Controller without any HATEOAS  
+### A Simple User Controller without any HATEOAS
 
 ```java
 package com.lambdaschool.oktafoundation.controllers;
@@ -944,69 +950,84 @@ public class UserController {
 
 </details>
 
-### Course Controller (Before Model Assembler)
+### `CourseController.java` (Before Model Assembler)
 
-<details>
+[comment]: <> (<details>)
 
-<summary>Unfold to see code...</summary>
+[comment]: <> (<summary>Unfold to see code...</summary>)
 
-```java
+[comment]: <> (```java)
 
-```
+[comment]: <> (```)
 
-</details>
+[comment]: <> (</details>)
 
-### Module Controller (Before Model Assembler)
+### `ModuleController.java` (Before Model Assembler)
 
-<details>
+[comment]: <> (<details>)
 
-<summary>Unfold to see code...</summary>
+[comment]: <> (<summary>Unfold to see code...</summary>)
 
-```java
+[comment]: <> (```java)
 
-```
+[comment]: <> (```)
 
-</details>
+[comment]: <> (</details>)
+
+---
 
 ## Code for Model Assemblers
 
-### Code for Controllers -- After Model Assembler
+---
 
-### User Controller (Before Model Assembler)
+## Code for Controllers -- After Model Assembler
+
+### `UserController.java` (After Model Assembler)
 
 <details>
 
 <summary>Unfold to see code...</summary>
+
+--- 
+
+### What do we have to change in our User Controller to use this assembler?
+
+So, realistically, the only purpose of any Model Assembler is to format our entities in this fancy, relational way. The
+only time we ever need to DO that is when we're sending information in the body of our
+`ResponseEntity`. For the sake of this tutorial, we only ever sent data in GET Requests (`@GetMapping`).
+
+The good news is that our `UserController` currently has only two `GET` endpoints.
+
+> All that changes in our controller classes is that we will USE the `_ModelAssembler` classes to transform whatever our `_Service` classes give us into hypermedia-rich views before sending that data to the client.
+
+
+
+First things first — let's import the various classes and methods we need to use the Assembler. Here are the new imports
+that we need to add into the mix:
 
 ```java
 package com.lambdaschool.oktafoundation.controllers;
 
+// repeated imports excluded
 
-import com.lambdaschool.oktafoundation.exceptions.RoleNotSufficientException;
 import com.lambdaschool.oktafoundation.modelAssemblers.UserModelAssembler;
-import com.lambdaschool.oktafoundation.models.*;
-import com.lambdaschool.oktafoundation.services.HelperFunctions;
-import com.lambdaschool.oktafoundation.services.OktaSDKService;
 import com.lambdaschool.oktafoundation.services.RoleService;
-import com.lambdaschool.oktafoundation.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+```
 
+Perfect! Now we need to find each `GET` request and transform any plain data models into EntityModel.
+
+In the `UserController` class, we only have two GET requests! One of which is a `GET user by userid` and the other is
+a `GET ALL users`. What's the big difference here? One is a single entity; the other is a COLLECTION of entities.
+
+```java
 
 @RestController
 public class UserController {
@@ -1014,11 +1035,9 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	// We Autowire in the UserModelAssembler so that we can use it!! 
 	@Autowired
 	private UserModelAssembler userModelAssembler;
-
-	@Autowired
-	private RoleService roleService;
 
 	@Autowired
 	private HelperFunctions helperFunctions;
@@ -1026,19 +1045,31 @@ public class UserController {
 	// GET All Users
 	@GetMapping(value = "/users", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<User>>> listAllUsers() {
-		// we need to take our List<User> and transform each user into 
-		// a EntityModel<User> 
+		List<User> users = userService.findAll(); // this is what we used to put in our response body
+
+		// we need to take our List<User> that was returned from userService.findAll()' and 
+		// transform each user into a EntityModel<User> 
 		// .stream() is one of the most frequently used methods for functional-style operations
 		//
 		// the line of code below is about as close to JavaScript's array.map(some_fn) as you could hit in Java
 		List<EntityModel<User>> userEntities = userService.findAll()
-				.stream() // start
-				.map(userModelAssembler::toModel) // calls userModelAssembler.toModel(User) for each entity in the list
+				.stream() // start stream
+				.map(userModelAssembler::toModel) // calls userModelAssembler.toModel(User) for each entity in the stream
+				// .map() actually returns a NEW Stream. So we need to collect that stream and turn it into a List
 				.collect(Collectors.toList()); // collects our stream into a List
 
 		// now that we've made our List<User> into a List<EntityModel<User>>, we can 
-		// make a CollectionModel<EntityModel<User>>. This is how HATEOAS allows us to display 
-		// a LIST or COLLECTION of those RESTful entities.  
+		// make a CollectionModel<EntityModel<User>>. 
+		// This is how HATEOAS allows us to display a LIST or COLLECTION of those RESTful entities.
+		//
+		// CollectionModel.of(__COLLECTION__, __LINKS___) will take in a collection and any links you want to attach!
+		// It's almost exactly the same as our 'toModel' function except for the fact that it takes in a 
+		// COLLECTION of EntityModel<Data> instead of a singular Data.
+		// 
+		// The response body will have two properties: '_embedded' and '_links'.
+		// _embedded will store the collection of entities 
+		// _links will store any links we want to store FOR THE COLLECTION CALL.
+		// note: each EntityModel<User> inside of the '_embedded' collection will STILL HAVE ALL OF IT'S REPRESENTATIONAL DATA 
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
 				linkTo(methodOn(UserController.class).listAllUsers(query)).withSelfRel()
 		);
@@ -1063,84 +1094,17 @@ public class UserController {
 		return new ResponseEntity<>(entityModel, HttpStatus.OK);
 	}
 
-	// CREATE new user
-	@PostMapping(value = "/users/user", consumes = "application/json")
-	public ResponseEntity<?> addNewUser(
-			@Valid
-			@RequestBody
-					User newUser
-	) {
-		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
-		if (callingUserRole != RoleType.ADMIN) {
-			throw new RoleNotSufficientException("Your role is not sufficient to create a new user");
-		}
-		newUser.setUserid(0);
-		userService.save(newUser);
-		return new ResponseEntity<>(HttpStatus.CREATED);
-	}
-
-	// REPLACE full existing user
-	@PutMapping(value = "/users/user/{userid}", consumes = "application/json")
-	public ResponseEntity<?> updateFullUser(
-			@Valid
-			@RequestBody
-					User updateUser,
-			@PathVariable
-					long userid
-	) {
-		updateUser.setUserid(userid);
-		userService.save(updateUser);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	// EDIT/UPDATE partial existing user
-	@PatchMapping(value = "/users/user/{userid}", consumes = "application/json")
-	public ResponseEntity<?> updateUser(
-			@RequestBody
-					User updateUser,
-			@PathVariable
-					long userid
-	) {
-		userService.update(updateUser, userid);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	// REPLACE User's role
-	@PatchMapping(value = "/users/user/{userid}/{roleType}")
-	public ResponseEntity<?> updateUserRole(
-			@PathVariable
-					Long userid,
-			@Valid
-			@PathVariable
-					RoleType roleType
-	) {
-		RoleType callingUserRole = helperFunctions.getCurrentPriorityRole();
-		User     userToEdit      = userService.findUserById(userid);
-		if (callingUserRole != RoleType.ADMIN) {
-			throw new RoleNotSufficientException("You are not an ADMIN. You may not update another user's role");
-		} else if (userToEdit.getRole() == RoleType.ADMIN) {
-			throw new RoleNotSufficientException("ADMIN users cannot edit other ADMIN users");
-		} else {
-			userService.updateRole(userToEdit, roleType);
-		}
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
-	// DELETE a user
-	@DeleteMapping(value = "/users/user/{userid}")
-	public ResponseEntity<?> deleteUserById(
-			@PathVariable
-					long userid
-	) {
-		userService.delete(userid);
-		return new ResponseEntity<>(HttpStatus.OK);
-	}
-
+	// All other operations did not change
+	// All other operations did not change
+	// All other operations did not change
 }
 
 ```
 
 </details>
+
+
+---
 
 # Resources
 
