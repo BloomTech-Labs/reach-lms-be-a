@@ -124,7 +124,7 @@ public class SeedData
 
 
 		String cs39_description = //
-				"#Welcome to Computer Science!\n" + "\n" +
+				"Welcome to Computer Science!\n" + "\n" +
 				"We're here to practice one skill: ***problem-solving*** (without looking up the " +
 				"answers on the Internet).\n" + "\n>That's it!\n\n" +
 				"To accomplish this, we'll look at various techniques, data structures, and algorithms and use them to attack problems relentlessly. Most importantly, we'll utilize a problem-solving framework called U.P.E.R. This defines a process you can follow to solve any problem without looking up the answer.\n" +
@@ -137,7 +137,8 @@ public class SeedData
 				"\n" + "Remember that as you go through the program: if you have no idea how to solve a " +
 				"problem when you first look at it, that's by design. You're in good company. Start relentlessly attacking!";
 
-		Program program_cs39 = new Program("CS39--Lambda Computer Science", "Computer Science", cs39_description);
+		String cs39_shorter = "Welcome to Computer Science! We're here to practice one skill: problem-solving";
+		Program program_cs39 = new Program("CS39--Lambda Computer Science", "Computer Science", cs39_shorter);
 
 
 		String csFundamentals_description = //

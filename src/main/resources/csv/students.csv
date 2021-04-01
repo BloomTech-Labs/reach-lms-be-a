@@ -1,0 +1,6 @@
+email,firstname,lastname,phonenumber,role
+reach.lms.test+product_rev_1@gmail.com,csv_01_first,csv_01_last,123456789,TEACHER
+reach.lms.test+product_rev_2@gmail.com,csv_02_first,csv_02_last,123456789,STUDENT
+reach.lms.test+product_rev_3@gmail.com,csv_03_first,csv_03_last,123456789,STUDENT
+reach.lms.test+product_rev_4@gmail.com,csv_04_first,csv_04_last,123456789,STUDENT
+reach.lms.test+product_rev_5@gmail.com,csv_05_first,csv_05_last,123456789,STUDENT
