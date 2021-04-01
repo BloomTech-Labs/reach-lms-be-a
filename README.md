@@ -4,21 +4,43 @@
 
 - [Introduction](#introduction)
 
-- [RESTful Design](#RESTful design)
+- [RESTful Design](#RESTful-design)
   - [HATEOAS](#hateoas)
     
-- [Sample Endpoint Calls](#sample endpoint calls)
+- [Sample Endpoint Calls](#sample-endpoint-calls)
 
 <a name="introduction"></a>
 
 ## Introduction
 
-This is database schema which included users, user emails, user roles, program, course, module, admin, student, teacher
-models. This Java Spring REST API application will provide endpoints for users to read various data sets contained in
-the application's data. This application will also form the basis for a user authentication with okta and resource
+Reach LMS is an open-source learning management system designed for the developing world. Reach lets organizations offer education and training to anyone—whether they're working from a laptop in a city center or a solar-charged flip phone in a remote village.
+
+This repository contains the source code for the RESTful Java Spring Boot backend application that drives the creation, storage, and access of data that drive this product. 
+
+### What does it do? This backend can...
+
+- Authenticate users with Okta, Spring Security, and JWTs
+- Authorize resources dependent on the Roles, Scopes, and/or Okta Groups that the user belongs to
+- Send resources through various endpoints 
+- Attach relational links to resources based on (1.) who requested it and (2.) what the resource is 
+
+
+### What do we value? This backend strives to...
+
+- Maintain 
+
+
+
+This Java Spring REST API application will provide endpoints for users to read various data sets contained in
+the application's database. This application will also form the basis for a user authentication with okta and resource
 authorization to allow only specific featuresets depending on the user role.
 
-### Database Layout
+
+
+## Database Design
+
+This is database schema which included users, user emails, user roles, program, course, module, admin, student, teacher
+models. 
 
 The table layout is similar to the common @ManyToMany annotation but with the following exceptions:
 
@@ -56,14 +78,18 @@ The table layout is as follows
 
 ---
 
-## HATEOAS
+<a name="RESTful-design"></a>
+
+## RESTful Design
 
 <a name="hateoas"></a>
+
+### HATEOAS
 
 
 ---
 
-<a name="sampleEndpointCalls"></a>
+<a name="sample-endpoint-calls"></a>
 
 ## Sample Endpoint Calls
 
