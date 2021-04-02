@@ -978,6 +978,114 @@ public class UserController {
 
 ## Code for Model Assemblers
 
+### `UserModelAssembler.java`
+
+<details>
+
+<summary>Unfold to see code...</summary>
+
+```java
+package com.lambdaschool.oktafoundation.modelAssemblers;
+
+
+import com.lambdaschool.oktafoundation.controllers.CourseController;
+import com.lambdaschool.oktafoundation.controllers.ProgramController;
+import com.lambdaschool.oktafoundation.controllers.UserController;
+import com.lambdaschool.oktafoundation.models.RoleType;
+import com.lambdaschool.oktafoundation.models.User;
+import com.lambdaschool.oktafoundation.services.HelperFunctions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.RepresentationModelAssembler;
+import org.springframework.stereotype.Component;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
+
+@Component
+public class UserModelAssembler
+		implements RepresentationModelAssembler<User, EntityModel<User>> {
+
+	@Autowired
+	HelperFunctions helperFunctions;
+
+	@Override
+	public EntityModel<User> toModel(User user) {
+		EntityModel<User> userEntityModel = EntityModel.of(user,
+				// Link to SELF --- GET /users/user/{userid}
+				linkTo(methodOn(UserController.class).getUserById(user.getUserid())).withSelfRel(),
+				// Link to self by name --- GET /users/user/name/{username}
+				linkTo(methodOn(UserController.class).getUserByName(user.getUsername())).withRel("self_by_name")
+		);
+
+		// this will hold the role of the CALLING USER -- whomever is hitting this endpoint should have a role
+		RoleType callingUser = helperFunctions.getCurrentPriorityRole();
+
+		// this will hold the role of the user to be converted into a model
+		RoleType usersRole = user.getRole();
+
+		// if the user to convert to a model is a STUDENT, add the following links
+		if (usersRole == RoleType.STUDENT) {
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getStudentCourses(user.getUserid())).withRel("courses"));
+
+			if (callingUser == RoleType.ADMIN) {
+				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserid())).withRel(
+						"available_courses"),
+						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserid())).withRel(
+								"mappified_courses")
+				);
+			}
+		}
+
+		// if the user to convert to a model is a TEACHER, add the following links
+		if (usersRole == RoleType.TEACHER) {
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getTeacherCourses(user.getUserid())).withRel("courses"));
+			if (callingUser == RoleType.ADMIN) {
+				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserid())).withRel(
+						"available_courses"),
+						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserid())).withRel(
+								"mappified_courses")
+				);
+			}
+		}
+
+		// if the user to convert to a model is an ADMIN, add the following links
+		if (usersRole == RoleType.ADMIN) {
+			// Link to GET Programs by User.userid
+			userEntityModel.add( //
+					linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserid())).withRel("programs"));
+		}
+
+		// if the calling user is an admin and the user in question is NOT an admin
+		if (callingUser == RoleType.ADMIN && user.getRole() != RoleType.ADMIN) {
+			userEntityModel.add(
+					// Link to DELETE User by User.userid
+					linkTo(methodOn(UserController.class).deleteUserById(user.getUserid())).withRel("delete_user"),
+					// Link to PUT "/users/user/{userid}"
+					linkTo(methodOn(UserController.class).updateFullUser(null, user.getUserid())).withRel("replace_user"),
+					// Link to PATCH "/users/user/{userid}"
+					linkTo(methodOn(UserController.class).updateUser(null, user.getUserid())).withRel("edit_user"),
+					// Link to PATCH "/users/user/{userid}/STUDENT"
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.STUDENT)).withRel(
+							"make_student"),
+					// Link to PATCH "/users/user/{userid}/ADMIN"
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.ADMIN)).withRel("make_admin"),
+					// Link to PATCH "/users/user/{userid}/TEACHER"
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.TEACHER)).withRel(
+							"make_teacher")
+			);
+		}
+
+		return userEntityModel;
+	}
+
+}
+
+```
+
+</details>
+
 ---
 
 ## Code for Controllers -- After Model Assembler
@@ -1011,7 +1119,6 @@ package com.lambdaschool.oktafoundation.controllers;
 // repeated imports excluded
 
 import com.lambdaschool.oktafoundation.modelAssemblers.UserModelAssembler;
-import com.lambdaschool.oktafoundation.services.RoleService;
 
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -1069,7 +1176,7 @@ public class UserController {
 		// The response body will have two properties: '_embedded' and '_links'.
 		// _embedded will store the collection of entities 
 		// _links will store any links we want to store FOR THE COLLECTION CALL.
-		// note: each EntityModel<User> inside of the '_embedded' collection will STILL HAVE ALL OF IT'S REPRESENTATIONAL DATA 
+		// note: each EntityModel<User> inside of the '_embedded' collection will STILL HAVE ALL OF ITS REPRESENTATIONAL DATA 
 		CollectionModel<EntityModel<User>> collectionModel = CollectionModel.of(userEntities,
 				linkTo(methodOn(UserController.class).listAllUsers(query)).withSelfRel()
 		);
