@@ -28,15 +28,15 @@
         - [Course Controller](#coursecontrollerjava-before-model-assembler)
         - [Module Controller](#modulecontrollerjava-before-model-assembler)
     - [Code for Model Assemblers](#code-for-model-assemblers)
-        - [User Model Assembler]
-        - [Course Model Assembler]
-        - [Module Model Assembler]
+        - [User Model Assembler](#usermodelassemblerjava)
+        - [Course Model Assembler] — Not Included
+        - [Module Model Assembler] — Not Included
     - [Code for Controllers (AFTER Model-Assembler)](#code-for-controllers----after-model-assembler)
         - [User Controller](#usercontrollerjava-after-model-assembler)
-        - [Course Controller]
-        - [Module Controller]
+        - [Course Controller] — Not Included
+        - [Module Controller] — Not Included
 
-- [Resources](#resources)
+- [Additional Resources](#resources)
 
 ---
 
