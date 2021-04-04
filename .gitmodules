@@ -1,0 +1,3 @@
+[submodule "reach-lms-be-a.wiki"]
+	path = reach-lms-be-a.wiki
+	url = https://github.com/Lambda-School-Labs/reach-lms-be-a.wiki.git
