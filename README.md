@@ -1,805 +1,224 @@
 # Reach LMS Backend — Java | Spring Boot | REST
 
-## Table of Contents
-
-- [Introduction](#introduction)
-
-- [RESTful Design](#RESTful-design)
-  - [HATEOAS](#hateoas)
+- [Reach LMS Backend — Java | Spring Boot | REST](#reach-lms-backend--java--spring-boot--rest)
+    * [Introduction](#introduction)
+    * [Understanding the Product](#understanding-the-product)
+        + [Big Picture](#big-picture)
+        + [Current Development](#current-development)
+        + [Curriculum Hierarchy](#curriculum-hierarchy)
+            - [Programs](#programs)
+            - [Courses](#courses)
+            - [Modules](#modules)
+            - [Tags](#tags)
+        + [Types of Users and their Permissions](#types-of-users-and-their-permissions)
+            - [ADMIN](#admin)
+            - [TEACHER](#teacher)
+            - [STUDENT](#student)
+    * [Understanding this Backend](#understanding-this-backend)
+        + [What does it do? This backend can...](#what-does-it-do-this-backend-can)
+        + [What do we value? This backend strives to...](#what-do-we-value-this-backend-strives-to)
+    * [Database Design](#database-design)
+        + [Database Schema](#database-schema)
+        + [Models](#models)
+        + [Tables](#tables)
+    * [RESTful Design](#restful-design)
+        + [HATEOAS](#hateoas)
     
-- [Sample Endpoint Calls](#sample-endpoint-calls)
-
-<a name="introduction"></a>
+---
 
 ## Introduction
 
-Reach LMS is an open-source learning management system designed for the developing world. Reach lets organizations offer education and training to anyone—whether they're working from a laptop in a city center or a solar-charged flip phone in a remote village.
+Reach LMS is an open-source learning management system designed for the developing world. Reach lets organizations offer
+education and training to anyone—whether they're working from a laptop in a city center or a solar-charged flip phone in
+a remote village.
 
-This repository contains the source code for the RESTful Java Spring Boot backend application that drives the creation, storage, and access of data that drive this product. 
+This repository contains the source code for the RESTful Java Spring Boot backend application that drives the creation,
+storage, and access of data that drive this product.
+
+---
+
+## Understanding the Product
+
+### Big Picture
+
+Reach LMS is intended to serve as a general-purpose, open-source Learning Management Systems for various educational
+circumstances. Our goal is to provide users with an infrastructure wherein they can design curriculum however they see
+fit and serve that curriculum to any sort of student body. Whether it be an online school for coders across the US or a
+training program aimed to enable women in rural Africa to trade legally, safely, and profitably... Reach LMS aims to
+provide the backbone for any organization to create, manage, and distribute educational curricula of every shape and
+size.
+
+Long-term, we hope to provide users with the following:
+
+1. Complete agency over how their content is organized, formatted, and shipped; this would hopefully include large-scale
+   control over the hierarchy of various resources
+1. Flexible control over groups of users all the way down to granular permissions for what each user specifically can
+   and cannot do to any content in the system
+1. Support for Assignments, Grades, and Graduation Lifecycles
+1. Support for User Management Lifecycles from user on-boarding to editing user's roles or outright blocking user access
+1. Incredibly fast response times of all media from the Database to the End-User, whether that user is on a desktop or
+   solar-charged mobile phone.
+
+### Current Development
+
+This product has spent the last two months building up, breaking down, and refining an incredible foundation for future
+developers to build upon.
+
+The last two months have focused on developing a powerful foundation for the following broad-strokes features:
+
+- Building a base-level hierarchy for educational content
+- User Authentication: Sign-Up, Log-In, Deletion, Profile-Updates; integration with Okta
+- Designing role-based interaction with educational content that grants various operations and resources to users based
+  on their role. This includes the creation, editing, deleting, or viewing of any content in the curriculum hierarchy.
+- Coherent and flexible relationships between any users and any entities in the curriculum hierarchy.
+
+### Curriculum Hierarchy
+
+We have designed the following hierarchy to define what educational curriculum should look like to start out:
+
+#### Programs
+
+Programs should contain the following fields:
+
+- `programname` — The name of the program
+- `programtype` — K-12, Higher Education, Training, etc.
+- `programdescription` — A description of this program's focus; what does it teach?, who is it for?, etc.
+- `user` — An ADMIN who claims "ownership" over this program.
+- `courses` — A collection of courses that belong to this program
+- `tags` — A collection of ADMIN-defined tags that represent the possible sub-categories for courses in this program.
+
+#### Courses
+
+Courses should contain the following fields:
+
+- `coursename` — The name of the course
+- `coursecode` — A natural identifier — a unique text field that allows creators to control how a course is identified
+- `coursedescription` — A description of this course—what does it teach? who does it teach?
+- `program` — The program to which this course belongs
+- `users` — A collection of users "enrolled" in this course. This set will include both TEACHER and STUDENT users
+    - TEACHER and STUDENT users are differentiated by their role, not a separate join table
+- `modules` — A collection of modules that belong to this course
+- `tag` — A tag selected from the list defined of available tags set by the ADMIN when creating the Program to which
+  this course belongs.
+
+#### Modules
+
+Each Module should contain the following fields:
+
+- `modulename` — The name of the module
+- `moduledescription` — A description that gives an overview of what this module focuses on
+- `modulecontent` — Markdown content that contains all the learning content in this module
+- `course` — The course to which this module belongs
+
+#### Tags
+
+The first step towards user-defined hierarchies... an ADMIN has the ability to define a group of Tags for a program.
+Each Tag will have a simple `title` and `hexCode` to represent the name of this tag and the associated color.
+
+For example, if I were to go create a program called "Web Development," I might opt to keep my number of tags slimmer:
+
+- Frontend
+- Backend
+- Computer Science
+
+Or, maybe I'd prefer to have a BUNCH of different tags, like so:
+
+- Frontend
+- Backend
+- Computer Science
+- React
+- State Management
+- Java
+- Spring Boot
+- NodeJS
+
+Either way I prefer it as the admin, I can make all these tags. Then, each course that belongs to this program could
+specify a tag with which it should be associated.
+
+### Types of Users and their Permissions
+
+#### ADMIN
+
+#### TEACHER
+
+#### STUDENT
+
+---
+
+## Understanding this Backend
 
 ### What does it do? This backend can...
 
 - Authenticate users with Okta, Spring Security, and JWTs
 - Authorize resources dependent on the Roles, Scopes, and/or Okta Groups that the user belongs to
-- Send resources through various endpoints 
-- Attach relational links to resources based on (1.) who requested it and (2.) what the resource is 
-
+- Send resources through various endpoints
+- Attach relational links to resources based on (1.) who requested it and (2.) the resource itself
 
 ### What do we value? This backend strives to...
 
-- Maintain 
+- Maintain backwards compatibility by thoughtfully evolving the API and supporting fields/operations/endpoints long-term
+  so that clients need not worry about updating code
+- Drive application state via hypermedia links
+- Keep response data nesting to a minimum to provide faster serialization
+- Clearly define relationships between entities through the use of hypermedia links rather than documentation alone or
+  knowledge of this source code
+- Organize user privileges and agency based upon their role
 
-
-
-This Java Spring REST API application will provide endpoints for users to read various data sets contained in
-the application's database. This application will also form the basis for a user authentication with okta and resource
-authorization to allow only specific featuresets depending on the user role.
-
-
+---
 
 ## Database Design
 
-This is database schema which included users, user emails, user roles, program, course, module, admin, student, teacher
-models. 
+### Database Schema
 
-The table layout is similar to the common @ManyToMany annotation but with the following exceptions:
+![Image of Database Layout](db_schema_reach_lms.png)
 
-* Join tables such as userroles, studentcourses, teachercourses is explicitly created. This allows us to add additional
-  columns to the join table
-* Since we are creating the join table ourselves, the Many to Many relationship that formed the join table is now two
-  Many to One relationships
-* All tables now have audit fields (CREATED BY, CREATED DATE, LASTMODIFIED BY, LASTMODIFIED DATE)
+### Models
 
-The table layout is as follows
+This database schema includes the following models:
 
-* User is the driving table.
-* Programs have a Many-To-One relationship with User. Each User (ADMIN) has many user programs combinations. Each user
-  program combination has only one User (ADMIN).
-* Roles have a Many-To-Many relationship with Users.
+- `User`
+- `Roles`
+- `Program`
+- `Course`
+- `Module`
+- `Tags`
+
+### Tables
+
+The aforementioned models are organized into the following tables:
+
+- `USERS`
+    - Every user in this system will be either an ADMIN, TEACHER, or STUDENT
+- `ROLES`
+    - ADMIN, TEACHER, or STUDENT are the primary role types for this application
+- `PROGRAMS`
+    - The parent of the Program > Course > Module curriculum hierarchy
+- `COURSES`
+    - The middle child of the Program > Course > Module curriculum hierarchy
+- `MODULES`
+    - The smallest child in the Program > Course > Module curriculum hierarchy
+- `TAGS`
+    - ADMIN users can create "tags" for any given Program that act as the possible sub-categories for that program
+    - Each course in that Program will then have the ability to "belong to" one specific Tag that exists in the
+      categories ("ProgramTags") defined for that Program
+- Explicit Join Tables:
+    - `PROGRAM_TAGS` — Joins Many PROGRAMS to Many TAGS in a MANY to ONE to MANY relationship
+        - Though not an explicit table, it's worth noting that Courses have a Many COURSES to One PROGRAM_TAG
+          relationship with this table
+    - `USER_COURSES` — Joins Many USERS to Many COURSES in a MANY to ONE to MANY relationship
+        - Users in this table belong to the role of TEACHER or STUDENT, as ADMINS are not attached at the course-level.
+    - `USER_ROLES` — Joins Many ROLES to Many USERS in a MANY to ONE to MANY relationship
+
+All tables will have the columns pictured in the schema above; additionally, each table will contain the following
+auditing fields:
+
+- `CREATED_BY` - The user that first created it
+- `CREATED_DATE` — The timestamp for when it was first created
+- `LAST_MODIFIED_BY` — The user that last edited it
+- `LAST_MODIFIED_DATE` — The timestamp for when it was first created
 
 ---
-
-* Student is the driving table.
-* Courses have Many-To-Many relationship with Student
-
----
-
-* Program is the driving table.
-* Courses have Many-To-One realtionship with Program. Each Program have many admin courses combinations. Each program
-  courses combination has only one program.
-
----
-
-* Course is the driving table.
-* Students have Many-To-Many relationship with Courses.
-* Teachers have Many-To-Many realtionship with Courses
-
-![Image of Database Layout](usersfinaldb.png)
-
----
-
-<a name="RESTful-design"></a>
 
 ## RESTful Design
 
-<a name="hateoas"></a>
-
 ### HATEOAS
-
-
----
-
-<a name="sample-endpoint-calls"></a>
-
-## Sample Endpoint Calls
-
-Using the provided data, expand each endpoint below to see the output it generates.
-
----
-
-<details>
-<summary>http://localhost:2019/roles/roles</summary>
-
-```JSON
-[
-  {
-    "roleid": 1,
-    "name": "ADMIN",
-    "users": [
-      {
-        "user": {
-          "userid": 4,
-          "username": "llama001@maildrop.cc",
-          "email": "llama001@email.com",
-          "firstname": "llama",
-          "lastname": "001",
-          "phonenumber": "(987)654-3210",
-          "programs": []
-        }
-      },
-      {
-        "user": {
-          "userid": 7,
-          "username": "llama007@maildrop.cc",
-          "email": null,
-          "firstname": null,
-          "lastname": null,
-          "phonenumber": null,
-          "programs": []
-        }
-      }
-    ]
-  },
-  {
-    "roleid": 2,
-    "name": "TEACHER",
-    "users": [
-      {
-        "user": {
-          "userid": 6,
-          "username": "barnbarn@maildrop.cc",
-          "email": "barnbarn@maildrop.cc",
-          "firstname": "barnbarn",
-          "lastname": "teacher",
-          "phonenumber": "(987)665-4423",
-          "programs": []
-        }
-      }
-    ]
-  },
-  {
-    "roleid": 3,
-    "name": "STUDENT",
-    "users": []
-  }
-]
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/roles/role/1</summary>
-
-```JSON
-{
-  "roleid": 1,
-  "name": "ADMIN",
-  "users": [
-    {
-      "user": {
-        "userid": 4,
-        "username": "llama001@maildrop.cc",
-        "email": "llama001@email.com",
-        "firstname": "llama",
-        "lastname": "001",
-        "phonenumber": "(987)654-3210",
-        "programs": []
-      }
-    },
-    {
-      "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "programs": []
-      }
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/roles/role/name/teacher</summary>
-
-```JSON
-{
-  "roleid": 2,
-  "name": "TEACHER",
-  "users": [
-    {
-      "user": {
-        "userid": 6,
-        "username": "barnbarn@maildrop.cc",
-        "email": "barnbarn@maildrop.cc",
-        "firstname": "barnbarn",
-        "lastname": "teacher",
-        "phonenumber": "(987)665-4423",
-        "programs": []
-      }
-    }
-  ]
-}
-```
-
-</details>
-
-<details>
-<summary>POST http://localhost:2019/roles/role</summary>
-
-DATA
-
-```JSON
-{
-  "name": "ANewRole"
-}
-```
-
-OUTPUT
-
-```TEXT
-Status CREATED
-
-Location Header: http://localhost:2019/roles/role/16
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/roles/role/name/anewrole</summary>
-
-```JSON
-{
-  "roleid": 16,
-  "name": "ANEWROLE",
-  "users": []
-}
-```
-
-</details>
-
-<details>
-<summary>PUT http://localhost:2019/roles/role/16</summary>
-
-DATA
-
-```JSON
-{
-  "name": "ANewRole"
-}
-```
-
-OUTPUT
-
-```TEXT
-Status OK
-```
-
-</details>
-
----
-
-<details>
-<summary>http://localhost:2019/programs</summary>
-
-```JSON
-[
-  {
-    "programid": 11,
-    "programname": "FOR A NEW WAY",
-    "programtype": "K13",
-    "programdescription": "THERE IS A WAY",
-    "courses": [
-      {
-        "courseid": 12,
-        "coursename": "asdsadasa",
-        "coursecode": "adsasdassaa",
-        "coursedescription": "sdasdASAsdsd",
-        "students": [],
-        "teachers": [],
-        "modules": []
-      }
-    ],
-    "user": {
-      "userid": 10,
-      "username": "llama007@maildrop.cc",
-      "email": null,
-      "firstname": null,
-      "lastname": null,
-      "phonenumber": null,
-      "roles": [
-        {
-          "role": {
-            "roleid": 1,
-            "name": "ADMIN"
-          }
-        }
-      ]
-    }
-  }
-]
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/users/programs/program/8</summary>     [7 is the {programid}]
-
-```JSON
-{
-  "programid": 8,
-  "programname": "FOR A NEW WAY",
-  "programtype": "K13",
-  "programdescription": "THERE IS A WAY",
-  "courses": [
-    {
-      "courseid": 9,
-      "coursename": "asdsadasa",
-      "coursecode": "adsasdassaa",
-      "coursedescription": "sdasdASAsdsd",
-      "students": [],
-      "teachers": [],
-      "modules": []
-    },
-    {
-      "courseid": 10,
-      "coursename": "Eng_Course",
-      "coursecode": "ENG____12",
-      "coursedescription": "Practice english speaking, reading and writing skills",
-      "students": [],
-      "teachers": [],
-      "modules": []
-    }
-  ],
-  "user": {
-    "userid": 7,
-    "username": "llama007@maildrop.cc",
-    "email": null,
-    "firstname": null,
-    "lastname": null,
-    "phonenumber": null,
-    "roles": [
-      {
-        "role": {
-          "roleid": 1,
-          "name": "ADMIN"
-        }
-      }
-    ]
-  }
-}
-```
-
-</details>
-
-
-<details>
-<summary>http://localhost:2019/programs/7</summary>    (7 is the {userid})
-
-```JSON
-[
-  {
-    "programid": 8,
-    "programname": "FOR A NEW WAY",
-    "programtype": "K13",
-    "programdescription": "THERE IS A WAY",
-    "courses": [
-      {
-        "courseid": 9,
-        "coursename": "asdsadasa",
-        "coursecode": "adsasdassaa",
-        "coursedescription": "sdasdASAsdsd",
-        "students": [],
-        "teachers": [],
-        "modules": []
-      },
-      {
-        "courseid": 10,
-        "coursename": "Eng_Course",
-        "coursecode": "ENG____12",
-        "coursedescription": "Practice english speaking, reading and writing skills",
-        "students": [],
-        "teachers": [],
-        "modules": []
-      }
-    ],
-    "user": {
-      "userid": 7,
-      "username": "llama007@maildrop.cc",
-      "email": null,
-      "firstname": null,
-      "lastname": null,
-      "phonenumber": null,
-      "roles": [
-        {
-          "role": {
-            "roleid": 1,
-            "name": "ADMIN"
-          }
-        }
-      ]
-    }
-  }
-]
-```
-
-</details>
-
-<details>
-<summary>POST http://localhost:2019/programs/7/program</summary>      (7 being the userid)
-
-DATA
-
-```JSON
-{
-  "programname": "FOR A NEW WAY",
-  "programtype": "K12",
-  "programdescription": "THERE IS A WAY"
-}
-```
-
-OUTPUT
-
-```TEXT
-{
-    "programid": 8,
-    "programname": "FOR A NEW WAY",
-    "programtype": "K13",
-    "programdescription": "THERE IS A WAY",
-    "courses": [],
-    "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "roles": [
-            {
-                "role": {
-                    "roleid": 1,
-                    "name": "ADMIN"
-                }
-            }
-        ]
-    }
-}
-
-Location Header: http://localhost:2019/users/user/9
-Status 201 Created
-```
-
-</details>
-
-
-<details>
-<summary>PUT http://localhost:2019/programs/program/8</summary>    (8 being the programid)
-
-DATA
-
-```JSON
-{
-  "programname": "programname-changed"
-}
-```
-
-OUTPUT
-
-```TEXT
-No Body Data
-
-Status OK
-```
-
-</details>
-
-
-</details>
-
-<details>
-
-<summary>DELETE http://localhost:2019/programs/program/8</summary>   (8 being the programid)
-
-```TEXT
-No Body Data
-
-Status No Content (204)
-```
-
-</details>
-
-----
-
-<details>
-<summary>http://localhost:2019/courses</summary>
-
-```JSON
-[
-  {
-    "courseid": 12,
-    "coursename": "Eng_Course",
-    "coursecode": "ENG____12",
-    "coursedescription": "Practice english speaking, reading and writing skills",
-    "program": {
-      "programid": 11,
-      "programname": "FOR A NEW WAY",
-      "programtype": "K13",
-      "programdescription": "THERE IS A WAY",
-      "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "roles": [
-          {
-            "role": {
-              "roleid": 1,
-              "name": "ADMIN"
-            }
-          }
-        ]
-      }
-    },
-    "students": [],
-    "teachers": [],
-    "modules": []
-  },
-  {
-    "courseid": 13,
-    "coursename": "Maths",
-    "coursecode": "Math____12",
-    "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
-    "program": {
-      "programid": 11,
-      "programname": "FOR A NEW WAY",
-      "programtype": "K13",
-      "programdescription": "THERE IS A WAY",
-      "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "roles": [
-          {
-            "role": {
-              "roleid": 1,
-              "name": "ADMIN"
-            }
-          }
-        ]
-      }
-    },
-    "students": [],
-    "teachers": [],
-    "modules": []
-  }
-]
-```
-
-</details>
-
-<details>
-<summary>http://localhost:2019/courses/11</summary>     [11 is the {programid}]
-
-```JSON
-[
-  {
-    "courseid": 12,
-    "coursename": "Eng_Course",
-    "coursecode": "ENG____12",
-    "coursedescription": "Practice english speaking, reading and writing skills",
-    "program": {
-      "programid": 11,
-      "programname": "FOR A NEW WAY",
-      "programtype": "K13",
-      "programdescription": "THERE IS A WAY",
-      "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "roles": [
-          {
-            "role": {
-              "roleid": 1,
-              "name": "ADMIN"
-            }
-          }
-        ]
-      }
-    },
-    "students": [],
-    "teachers": [],
-    "modules": []
-  },
-  {
-    "courseid": 13,
-    "coursename": "Maths",
-    "coursecode": "Math____12",
-    "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
-    "program": {
-      "programid": 11,
-      "programname": "FOR A NEW WAY",
-      "programtype": "K13",
-      "programdescription": "THERE IS A WAY",
-      "user": {
-        "userid": 7,
-        "username": "llama007@maildrop.cc",
-        "email": null,
-        "firstname": null,
-        "lastname": null,
-        "phonenumber": null,
-        "roles": [
-          {
-            "role": {
-              "roleid": 1,
-              "name": "ADMIN"
-            }
-          }
-        ]
-      }
-    },
-    "students": [],
-    "teachers": [],
-    "modules": []
-  }
-]
-```
-
-</details>
-
-
-<details>
-<summary>http://localhost:2019/courses/course/13</summary>    (13 is the {courseid})
-
-```JSON
-{
-  "courseid": 13,
-  "coursename": "Maths",
-  "coursecode": "Math____12",
-  "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
-  "program": {
-    "programid": 11,
-    "programname": "FOR A NEW WAY",
-    "programtype": "K13",
-    "programdescription": "THERE IS A WAY",
-    "user": {
-      "userid": 7,
-      "username": "llama007@maildrop.cc",
-      "email": null,
-      "firstname": null,
-      "lastname": null,
-      "phonenumber": null,
-      "roles": [
-        {
-          "role": {
-            "roleid": 1,
-            "name": "ADMIN"
-          }
-        }
-      ]
-    }
-  },
-  "students": [],
-  "teachers": [],
-  "modules": []
-}
-```
-
-</details>
-
-
-<details>
-<summary>POST http://localhost:2019/courses/11/course</summary>
-
-DATA
-
-```JSON
-{
-  "coursename": "Maths",
-  **REQUIRED**
-  "coursecode": "Math____12",
-  **REQUIRED**
-  "coursedescription": "Practice english algorithms, arithmetic expressions and geometry"
-}
-```
-
-OUTPUT
-
-```TEXT
-{
-    "courseid": 13,
-    "coursename": "Maths",
-    "coursecode": "Math____12",
-    "coursedescription": "Practice english algorithms, arithmetic expressions and geometry",
-    "program": {
-        "programid": 11,
-        "programname": "FOR A NEW WAY",
-        "programtype": "K13",
-        "programdescription": "THERE IS A WAY",
-        "user": {
-            "userid": 7,
-            "username": "llama007@maildrop.cc",
-            "email": null,
-            "firstname": null,
-            "lastname": null,
-            "phonenumber": null,
-            "roles": [
-                {
-                    "role": {
-                        "roleid": 1,
-                        "name": "ADMIN"
-                    }
-                }
-            ]
-        }
-    },
-    "students": [],
-    "teachers": [],
-    "modules": []
-}
-
-Location Header: http://localhost:2019/courses/11/course/13
-Status 201 Created
-```
-
-</details>
-
-
-<details>
-<summary>PUT http://localhost:2019/courses/13</summary>  (13 being the courseid)
-
-DATA
-
-```JSON
-{
-  "coursename": "coursename-changed"
-}
-```
-
-OUTPUT
-
-```TEXT
-No Body Data
-
-Status OK
-```
-
-</details>
-
-<details>
-<summary>PATCH http://localhost:2019/courses/13</summary>  (13 being the courseid)
-
-DATA
-
-```JSON
-{
-  "coursename": "coursenamewithpatch-changed"
-}
-```
-
-OUTPUT
-
-```TEXT
-No Body Data
-
-Status OK
-```
-
-</details>
-
-
-</details>
-
-<details>
-
-<summary>DELETE http://localhost:2019/courses/13</summary>   (7 being the programid)
-
-```TEXT
-No Body Data
-
-Status No Content (204)
-```
-
-</details>
-
