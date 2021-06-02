@@ -20,19 +20,19 @@ public class Course {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long             courseid;
+	private long             courseId;
 	//
 	@NotNull
-	private String           coursename;
+	private String           courseName;
 	//
 	@NotNull
-	private String           coursecode;
+	private String           courseCode;
 	//
 	@Size(max = 2000)
-	private String           coursedescription;
+	private String           courseDescription;
 	//
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "programid")
+	@JoinColumn(name = "programId")
 	@JsonIgnoreProperties(value = "courses")
 	private Program          program;
 	//
@@ -48,7 +48,7 @@ public class Course {
 	//
 	@ManyToOne(cascade = {CascadeType.ALL})
 	@JoinColumns({
-			@JoinColumn(name = "program_programid"), @JoinColumn(name = "tag_tagid")
+			@JoinColumn(name = "program_programId"), @JoinColumn(name = "tag_tagId")
 	})
 	@JsonIgnoreProperties(value = {"program"})
 	private ProgramTags      tag;
@@ -57,48 +57,75 @@ public class Course {
 	}
 
 	public Course(
-			@NotNull String coursename,
-			@NotNull String coursecode,
-			String coursedescription,
+			@NotNull String courseName,
+			@NotNull String courseCode,
+			String courseDescription,
 			Program program
 	) {
-		this.coursename        = coursename;
-		this.coursecode        = coursecode;
-		this.coursedescription = coursedescription;
+		this.courseName        = courseName;
+		this.courseCode        = courseCode;
+		this.courseDescription = courseDescription;
 		this.program           = program;
 	}
 
-	public long getCourseid() {
-		return courseid;
+	public long getCourseId() {
+		return courseId;
 	}
 
-	public void setCourseid(long courseid) {
-		this.courseid = courseid;
+	public void setCourseId(long courseId) {
+		this.courseId = courseId;
 	}
 
-	public String getCoursename() {
-		return coursename;
+
+	public String getCourseName() {
+		return courseName;
 	}
 
-	public void setCoursename(String coursename) {
-		this.coursename = coursename;
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
 	}
 
-	public String getCoursecode() {
-		return coursecode;
+	public String getCourseCode() {
+		return courseCode;
 	}
 
-	public void setCoursecode(String coursecode) {
-		this.coursecode = coursecode;
+	public void setCourseCode(String courseCode) {
+		this.courseCode = courseCode;
 	}
 
-	public String getCoursedescription() {
-		return coursedescription;
+	public String getCourseDescription() {
+		return courseDescription;
 	}
 
-	public void setCoursedescription(String coursedescription) {
-		this.coursedescription = coursedescription;
+	public void setCourseDescription(String courseDescription) {
+		this.courseDescription = courseDescription;
 	}
+
+
+	//	// supporting all lowers for reverse compatibility
+	//	public long getCourseid() {
+	//		return getCourseId();
+	//	}
+	//
+	//	// supporting all lowers for reverse compatibility
+	//	public String getCoursename() {
+	//		return getCourseName();
+	//	}
+	//
+	//	// supporting all lowers for reverse compatibility
+	//	public String getCoursedescription() {
+	//		return getCourseDescription();
+	//	}
+	//
+	//	// supporting all lowers for reverse compatibility
+	//	public String getCoursecode() {
+	//		return getCourseCode();
+	//	}
+	//
+	//	// supporting all lowers for reverse compatibility
+	//	public Tag getCoursetype() {
+	//		return getCourseType();
+	//	}
 
 	@JsonIgnore // JsonIgnore as to not serialize this to JSON
 	public ProgramTags getTag() {
@@ -107,8 +134,7 @@ public class Course {
 
 	// Regular Setter for setTag
 	public void setTag(ProgramTags tag) {
-		ProgramTags newTag = program.getTagIfPresent(tag.getTag()); // throws if no such tag in program
-		this.tag = newTag;
+		this.tag = program.getTagIfPresent(tag.getTag());
 	}
 
 	// Overload for ease of use -- this version accepts a regular Tag
@@ -126,13 +152,14 @@ public class Course {
 	 *
 	 * @return The {@link Tag tag} associated with this course if present, else just return null
 	 */
-	public Tag getCoursetype() {
+	public Tag getCourseType() {
 		if (tag != null) {
 			return tag.getTag();
 		} else {
 			return null;
 		}
 	}
+
 
 	public void removeTag(Tag tag) {
 		program.getTagIfPresent(tag); // throws if no such tag in program
@@ -178,7 +205,7 @@ public class Course {
 
 	public UserCourses getUserIfPresent(User user)
 	throws UserNotFoundException {
-		return findUser(user).orElseThrow(() -> new UserNotFoundException(user.getUserid(), this));
+		return findUser(user).orElseThrow(() -> new UserNotFoundException(user.getUserId(), this));
 	}
 
 	public void addUser(UserCourses userCourse) {
@@ -202,7 +229,7 @@ public class Course {
 
 	public void removeUser(User user) {
 		if (!containsUser(user)) {
-			throw new UserNotFoundException(user.getUserid(), this);
+			throw new UserNotFoundException(user.getUserId(), this);
 		}
 		Iterator<UserCourses> iterator = users.iterator();
 		while (iterator.hasNext()) {
@@ -222,7 +249,7 @@ public class Course {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getCourseid(), getCoursename(), getCoursecode(), getCoursedescription());
+		return Objects.hash(getCourseId(), getCourseName(), getCourseCode(), getCourseDescription());
 	}
 
 	@Override
@@ -232,9 +259,10 @@ public class Course {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Course course = (Course) o;
-		return getCourseid() == course.getCourseid() && getCoursename().equals(course.getCoursename()) &&
-		       Objects.equals(getCoursecode(), course.getCoursecode()) &&
-		       Objects.equals(getCoursedescription(), course.getCoursedescription());
+		return getCourseId() == course.getCourseId() && getCourseName().equals(course.getCourseName()) &&
+		       Objects.equals(getCourseCode(), course.getCourseCode()) &&
+		       Objects.equals(getCourseDescription(), course.getCourseDescription());
 	}
+
 
 }

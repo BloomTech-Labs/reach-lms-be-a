@@ -1,43 +1,50 @@
 package com.lambdaschool.oktafoundation.models;
 
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 import java.util.Objects;
 
 
 @Embeddable
-public class ProgramTagsId implements Serializable {
-	@Column(name="programid")
-	private Long programid;
-	@Column(name="tagid")
-	private Long tagid;
+public class ProgramTagsId
+		implements Serializable {
+
+//	@Column(name = "programId")
+	private Long programId;
+
+//	@Column(name = "tagId")
+	private Long tagId;
 
 	public ProgramTagsId() {}
 
 	public ProgramTagsId(
-			Long programid,
-			Long tagid
+			Long programId,
+			Long tagId
 	) {
-		this.programid = programid;
-		this.tagid     = tagid;
+		this.programId = programId;
+		this.tagId     = tagId;
 	}
 
-	public Long getProgramid() {
-		return programid;
+	public Long getProgramId() {
+		return programId;
 	}
 
-	public void setProgramid(Long programid) {
-		this.programid = programid;
+	public void setProgramId(Long programId) {
+		this.programId = programId;
 	}
 
-	public Long getTagid() {
-		return tagid;
+	public Long getTagId() {
+		return tagId;
 	}
 
-	public void setTagid(Long tagid) {
-		this.tagid = tagid;
+	public void setTagId(Long tagId) {
+		this.tagId = tagId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getProgramId(), getTagId());
 	}
 
 	@Override
@@ -47,17 +54,12 @@ public class ProgramTagsId implements Serializable {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		ProgramTagsId that = (ProgramTagsId) o;
-		return Objects.equals(getProgramid(), that.getProgramid()) && Objects.equals(getTagid(), that.getTagid());
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getProgramid(), getTagid());
+		return Objects.equals(getProgramId(), that.getProgramId()) && Objects.equals(getTagId(), that.getTagId());
 	}
 
 	@Override
 	public String toString() {
-		return "ProgramTagsId{" + "programid=" + programid + ", tagid=" + tagid + '}';
+		return "ProgramTagsId{" + "programId=" + programId + ", tagId=" + tagId + '}';
 	}
 
 }

@@ -16,17 +16,17 @@ public class Module
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long moduleid;
+	private long moduleId;
 
 	@Column(nullable = false)
-	private String modulename;
+	private String moduleName;
 
 	@Size(max=2000)
-	private String moduledescription;
+	private String moduleDescription;
 
 	@Column(nullable = false)
 	@Size(max=20000)
-	private String modulecontent;
+	private String moduleContent;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "courseid", nullable = false)
@@ -37,47 +37,47 @@ public class Module
 	}
 
 	public Module(
-			String modulename,
-			String moduledescription,
-			String modulecontent,
+			String moduleName,
+			String moduleDescription,
+			String moduleContent,
 			Course course
 	) {
-		this.modulename = modulename;
-		this.moduledescription = moduledescription;
-		this.modulecontent = modulecontent;
-		this.course = course;
+		this.moduleName        = moduleName;
+		this.moduleDescription = moduleDescription;
+		this.moduleContent     = moduleContent;
+		this.course            = course;
 	}
 
-	public long getModuleid() {
-		return moduleid;
+	public long getModuleId() {
+		return moduleId;
 	}
 
-	public void setModuleid(long moduleid) {
-		this.moduleid = moduleid;
+	public void setModuleId(long moduleid) {
+		this.moduleId = moduleid;
 	}
 
-	public String getModulename() {
-		return modulename;
+	public String getModuleName() {
+		return moduleName;
 	}
 
-	public void setModulename(String modulename) {
-		this.modulename = modulename;
+	public void setModuleName(String modulename) {
+		this.moduleName = modulename;
 	}
 
-	public String getModuledescription() {
-		return moduledescription;
+	public String getModuleDescription() {
+		return moduleDescription;
 	}
 
-	public void setModuledescription(String moduledescription) {
-		this.moduledescription = moduledescription;
+	public void setModuleDescription(String moduledescription) {
+		this.moduleDescription = moduledescription;
 	}
 
-	public String getModulecontent() {
-		return modulecontent;
+	public String getModuleContent() {
+		return moduleContent;
 	}
 
-	public void setModulecontent(String modulecontent) {
-		this.modulecontent = modulecontent;
+	public void setModuleContent(String modulecontent) {
+		this.moduleContent = modulecontent;
 	}
 
 	public Course getCourse() {
@@ -90,7 +90,7 @@ public class Module
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getModuleid(), getModulename(), getModuledescription(), getModulecontent(), getCourse());
+		return Objects.hash(getModuleId(), getModuleName(), getModuleDescription(), getModuleContent(), getCourse());
 	}
 
 	@Override
@@ -100,16 +100,16 @@ public class Module
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Module module = (Module) o;
-		return getModuleid() == module.getModuleid() && Objects.equals(getModulename(), module.getModulename()) &&
-		       Objects.equals(getModuledescription(), module.getModuledescription()) &&
-		       Objects.equals(getModulecontent(), module.getModulecontent()) &&
+		return getModuleId() == module.getModuleId() && Objects.equals(getModuleName(), module.getModuleName()) &&
+		       Objects.equals(getModuleDescription(), module.getModuleDescription()) &&
+		       Objects.equals(getModuleContent(), module.getModuleContent()) &&
 		       Objects.equals(getCourse(), module.getCourse());
 	}
 
 	@Override
 	public String toString() {
-		return "Module{" + "moduleid=" + moduleid + ", modulename='" + modulename + '\'' + ", moduledescription='" +
-		       moduledescription + '\'' + ", modulecontent='" + modulecontent + '\'' + ", course=" + course + '}';
+		return "Module{" + "moduleid=" + moduleId + ", modulename='" + moduleName + '\'' + ", moduledescription='" +
+		       moduleDescription + '\'' + ", modulecontent='" + moduleContent + '\'' + ", course=" + course + '}';
 	}
 
 }

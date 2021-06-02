@@ -24,54 +24,54 @@ public class TagController {
 		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/tags/tag/{tagid}")
+	@GetMapping(value = "/tags/tag/{tagId}")
 	public ResponseEntity<?> get(
 			@PathVariable
-					Long tagid
+					Long tagId
 	) {
-		Tag tag = tagService.get(tagid);
+		Tag tag = tagService.get(tagId);
 		return new ResponseEntity<>(tag, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/tags/program/{programid}")
+	@GetMapping(value = "/tags/program/{programId}")
 	public ResponseEntity<?> getByProgram(
 			@PathVariable
-					Long programid
+					Long programId
 	) {
-		List<Tag> tags = tagService.getByProgram(programid);
+		List<Tag> tags = tagService.getByProgram(programId);
 		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/tags/program/name/{programname}")
+	@GetMapping(value = "/tags/program/name/{programName}")
 	public ResponseEntity<?> getByProgram(
 			@PathVariable
-					String programname
+					String programName
 	) {
-		List<Tag> tags = tagService.getByProgram(programname);
+		List<Tag> tags = tagService.getByProgram(programName);
 		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/tags/new-by-program/{programid}")
+	@PostMapping(value = "/tags/new-by-program/{programId}")
 	public ResponseEntity<?> post(
 			@PathVariable
-					Long programid,
+					Long programId,
 			@Valid
 			@RequestBody
 					Tag tag
 	) {
-		Tag savedTag = tagService.save(tag, programid);
+		Tag savedTag = tagService.save(tag, programId);
 		return new ResponseEntity<>(savedTag, HttpStatus.CREATED);
 	}
 
-	@PutMapping("/tags/tag/{tagid}")
+	@PutMapping("/tags/tag/{tagId}")
 	public ResponseEntity<?> replace(
 			@PathVariable
-					Long tagid,
+					Long tagId,
 			@Valid
 			@RequestBody
 					Tag tag
 	) {
-		Tag updatedTag = tagService.replace(tag, tagid);
+		Tag updatedTag = tagService.replace(tag, tagId);
 		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
 	}
 
@@ -94,23 +94,23 @@ public class TagController {
 		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
 	}
 
-	@PatchMapping(value = "/tags/tag/{tagid}")
+	@PatchMapping(value = "/tags/tag/{tagId}")
 	public ResponseEntity<?> edit(
 			@PathVariable
-					Long tagid,
+					Long tagId,
 			@RequestBody
 					Tag tag
 	) {
-		Tag updatedTag = tagService.update(tag, tagid);
+		Tag updatedTag = tagService.update(tag, tagId);
 		return new ResponseEntity<>(updatedTag, HttpStatus.OK);
 	}
 
-	@DeleteMapping("/tags/tag/{tagid}")
+	@DeleteMapping("/tags/tag/{tagId}")
 	public ResponseEntity<?> delete(
 			@PathVariable
-					Long tagid
+					Long tagId
 	) {
-		tagService.delete(tagid);
+		tagService.delete(tagId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

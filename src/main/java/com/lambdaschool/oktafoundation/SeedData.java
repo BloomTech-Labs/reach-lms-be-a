@@ -66,6 +66,10 @@ public class SeedData
 	@Override
 	public void run(String[] args)
 	throws Exception {
+		courseService.deleteAll();
+		moduleService.deleteAll();
+		programService.deleteAll();
+		userService.deleteAll();
 		roleService.deleteAll();
 		Role adminRole   = new Role(RoleType.ADMIN.name(), RoleType.ADMIN);
 		Role teacherRole = new Role(RoleType.TEACHER.name(), RoleType.TEACHER);
@@ -137,7 +141,7 @@ public class SeedData
 				"\n" + "Remember that as you go through the program: if you have no idea how to solve a " +
 				"problem when you first look at it, that's by design. You're in good company. Start relentlessly attacking!";
 
-		String cs39_shorter = "Welcome to Computer Science! We're here to practice one skill: problem-solving";
+		String  cs39_shorter = "Welcome to Computer Science! We're here to practice one skill: problem-solving";
 		Program program_cs39 = new Program("CS39--Lambda Computer Science", "Computer Science", cs39_shorter);
 
 
@@ -268,9 +272,9 @@ public class SeedData
 		program_cs39.addTag(tag_dataStructures);
 		program_cs39.addTag(tag_python);
 
-		program1     = programService.save(reachRoot.getUserid(), program1);
-		program2     = programService.save(reachRoot.getUserid(), program2);
-		program_cs39 = programService.save(reachRoot.getUserid(), program_cs39);
+		program1     = programService.save(reachRoot.getUserId(), program1);
+		program2     = programService.save(reachRoot.getUserId(), program2);
+		program_cs39 = programService.save(reachRoot.getUserId(), program_cs39);
 
 		Course course1 = new Course("Course1", "COURSE_1", "This course1", program1);
 		Course course2 = new Course("Course2", "COURSE_2", "This is course #2", program1);
@@ -293,12 +297,12 @@ public class SeedData
 		course2.setTag(tag_higherEd);
 
 		course1                    = courseService.save(course1.getProgram()
-				.getProgramid(), course1);
+				.getProgramId(), course1);
 		course2                    = courseService.save(course2.getProgram()
-				.getProgramid(), course2);
+				.getProgramId(), course2);
 		course3                    = courseService.save(course3.getProgram()
-				.getProgramid(), course3);
-		course_cs39_1_fundamentals = courseService.save(program_cs39.getProgramid(), course_cs39_1_fundamentals);
+				.getProgramId(), course3);
+		course_cs39_1_fundamentals = courseService.save(program_cs39.getProgramId(), course_cs39_1_fundamentals);
 
 		Module module1 = new Module("Module1", "This is module #1", "Content for module #1", course1);
 		Module module2 = new Module("Module2", "This is module #2", "Content for module #2", course1);
@@ -306,13 +310,13 @@ public class SeedData
 		Module module4 = new Module("Module4", "This is module #4", "Content for module #4", course2);
 
 		module1 = moduleService.save(module1.getCourse()
-				.getCourseid(), module1);
+				.getCourseId(), module1);
 		module2 = moduleService.save(module2.getCourse()
-				.getCourseid(), module2);
+				.getCourseId(), module2);
 		module3 = moduleService.save(module3.getCourse()
-				.getCourseid(), module3);
+				.getCourseId(), module3);
 		module4 = moduleService.save(module4.getCourse()
-				.getCourseid(), module4);
+				.getCourseId(), module4);
 		Module pythonBasics = new Module("Python Basics",
 				pythonBasics_description,
 				pythonBasics_content,
@@ -326,9 +330,9 @@ public class SeedData
 		);
 
 		pythonBasics = moduleService.save(pythonBasics.getCourse()
-				.getCourseid(), pythonBasics);
+				.getCourseId(), pythonBasics);
 
-		listComprehensions = moduleService.save(course_cs39_1_fundamentals.getCourseid(), listComprehensions);
+		listComprehensions = moduleService.save(course_cs39_1_fundamentals.getCourseId(), listComprehensions);
 	}
 
 }

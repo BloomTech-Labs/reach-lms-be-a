@@ -53,27 +53,27 @@ public class ModuleController {
 		return new ResponseEntity<>(entityModules, HttpStatus.OK);
 	}
 
-	@GetMapping("/modules/markdown/{moduleid}")
+	@GetMapping("/modules/markdown/{moduleId}")
 	public ResponseEntity<?> getMarkdownByModuleId(
 			@PathVariable
-					Long moduleid
+					Long moduleId
 	) {
-		Module module = moduleService.findModulesById(moduleid);
-		return new ResponseEntity<>(module.getModulecontent(), HttpStatus.OK);
+		Module module = moduleService.findModulesById(moduleId);
+		return new ResponseEntity<>(module.getModuleContent(), HttpStatus.OK);
 	}
 
-	@PutMapping("/modules/markdown/{moduleid}")
-	public ResponseEntity<?> replaceMarkdownByModuleId(@PathVariable Long moduleid, @RequestBody String markdown) {
-		moduleService.replaceMarkdown(moduleid, markdown);
+	@PutMapping("/modules/markdown/{moduleId}")
+	public ResponseEntity<?> replaceMarkdownByModuleId(@PathVariable Long moduleId, @RequestBody String markdown) {
+		moduleService.replaceMarkdown(moduleId, markdown);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/modules/module/{moduleid}", produces = "application/json")
+	@GetMapping(value = "/modules/module/{moduleId}", produces = "application/json")
 	public ResponseEntity<EntityModel<Module>> getModuleById(
 			@PathVariable
-					Long moduleid
+					Long moduleId
 	) {
-		Module module = moduleService.findModulesById(moduleid);
+		Module module = moduleService.findModulesById(moduleId);
 		return new ResponseEntity<>(moduleModelAssembler.toModel(module), HttpStatus.OK);
 	}
 
@@ -82,7 +82,7 @@ public class ModuleController {
 			@PathVariable
 					Long courseId
 	) {
-		List<EntityModel<Module>> allModules = modulerepos.findModulesByCourse_Courseid(courseId)
+		List<EntityModel<Module>> allModules = modulerepos.findModulesByCourse_CourseId(courseId)
 				.stream()
 				.map(moduleModelAssembler::toModel)
 				.collect(Collectors.toList());
@@ -104,13 +104,13 @@ public class ModuleController {
 					Module newModule
 	)
 	throws URISyntaxException {
-		newModule.setModuleid(0);
+		newModule.setModuleId(0);
 		newModule = moduleService.save(courseId, newModule);
 
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newModuleURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
-				.path("/{moduleid}")
-				.buildAndExpand(newModule.getModuleid())
+				.path("/{moduleId}")
+				.buildAndExpand(newModule.getModuleId())
 				.toUri();
 		responseHeaders.setLocation(newModuleURI);
 
@@ -125,7 +125,7 @@ public class ModuleController {
 			@RequestBody
 					Module newModule
 	) {
-		newModule.setModuleid(moduleId);
+		newModule.setModuleId(moduleId);
 		moduleService.update(moduleId, newModule);
 
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -139,7 +139,7 @@ public class ModuleController {
 			@RequestBody
 					Module newModule
 	) {
-		newModule.setModuleid(moduleId);
+		newModule.setModuleId(moduleId);
 		moduleService.update(moduleId, newModule);
 
 		return new ResponseEntity<>(HttpStatus.OK);

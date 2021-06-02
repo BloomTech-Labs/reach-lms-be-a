@@ -52,11 +52,11 @@ public class CsvHelper {
 			User newUser = new User();
 			newUser.setEmail(email);
 			newUser.setUsername(email);
-			newUser.setFirstname(firstName);
-			newUser.setLastname(lastName);
-			newUser.setPhonenumber(phoneNumber);
+			newUser.setFirstName(firstName);
+			newUser.setLastName(lastName);
+			newUser.setPhoneNumber(phoneNumber);
 
-			newUser.setUserid(0);
+			newUser.setUserId(0);
 			userToCreate.add(newUser);
 		}
 

@@ -31,11 +31,14 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class ProgramController {
 
 	@Autowired
-	TagRepository tagRepository;
+	private TagRepository tagRepository;
+
 	@Autowired
-	private ProgramService        programService;
+	private ProgramService programService;
+
 	@Autowired
-	private ProgramRepository     programRepos;
+	private ProgramRepository programRepos;
+
 	@Autowired
 	private ProgramModelAssembler programModelAssembler;
 
@@ -51,12 +54,12 @@ public class ProgramController {
 		return new ResponseEntity<>(programs, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/programs/program/{programid}/tags")
+	@GetMapping(value = "/programs/program/{programId}/tags")
 	public ResponseEntity<?> listTagsByProgramId(
 			@PathVariable
-					Long programid
+					Long programId
 	) {
-		List<Tag> tags = tagService.getByProgram(programid);
+		List<Tag> tags = tagService.getByProgram(programId);
 		return new ResponseEntity<>(tags, HttpStatus.OK);
 	}
 
@@ -94,97 +97,97 @@ public class ProgramController {
 	}
 
 
-	@GetMapping(value = "/programs/{userid}", produces = "application/json")
+	@GetMapping(value = "/programs/{userId}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Program>>> getProgramsByUserId(
 			@PathVariable
-					long userid
+					long userId
 	) {
-		List<EntityModel<Program>> programEntities = programRepos.findProgramsByUserid(userid)
+		List<EntityModel<Program>> programEntities = programRepos.findProgramsByUserId(userId)
 				.stream()
 				.map(programModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Program>> collectionModel = CollectionModel.of(programEntities,
-				linkTo(methodOn(ProgramController.class).getProgramsByUserId(userid)).withSelfRel()
+				linkTo(methodOn(ProgramController.class).getProgramsByUserId(userId)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/programs/{userid}/program", consumes = {"application/json"}, produces = "application/json")
+	@PostMapping(value = "/programs/{userId}/program", consumes = {"application/json"}, produces = "application/json")
 	public ResponseEntity<?> addNewProgram(
 			@PathVariable
-					long userid,
+					long userId,
 			@Valid
 			@RequestBody
 					Program newProgram
 	) {
-		newProgram.setProgramid(0);
-		newProgram = programService.save(userid, newProgram);
+		newProgram.setProgramId(0);
+		newProgram = programService.save(userId, newProgram);
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newProgramURI = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{programid}")
-				.buildAndExpand(newProgram.getProgramid())
+				.path("/{programId}")
+				.buildAndExpand(newProgram.getProgramId())
 				.toUri();
 		responseHeaders.setLocation(newProgramURI);
 		return new ResponseEntity<>(newProgram, responseHeaders, HttpStatus.CREATED);
 	}
 
-	@PostMapping(value = "/programs/{userid}/program-in", consumes = {"application/json"}, produces = "application/json")
+	@PostMapping(value = "/programs/{userId}/program-in", consumes = {"application/json"}, produces = "application/json")
 	public ResponseEntity<?> addNewProgram(
 			@PathVariable
-					long userid,
+					long userId,
 			@Valid
 			@RequestBody
 					ProgramIn program
 	) {
 		program.setProgramid(0);
-		Program newProgram = programService.save(userid, program);
+		Program newProgram = programService.save(userId, program);
 		return new ResponseEntity<>(newProgram, HttpStatus.CREATED);
 	}
 
-	@PutMapping(value = "/programs/program/{programid}", consumes = "application/json")
+	@PutMapping(value = "/programs/program/{programId}", consumes = "application/json")
 	public ResponseEntity<?> editEntireProgram(
 			@Valid
 			@RequestBody
 					Program editProgram,
 			@PathVariable
-					Long programid
+					Long programId
 	) {
-		editProgram.setProgramid(programid);
-		Program newProgram = programService.update(editProgram, programid);
+		editProgram.setProgramId(programId);
+		Program newProgram = programService.update(editProgram, programId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PatchMapping(value = "/programs/program/{programid}", consumes = "application/json")
+	@PatchMapping(value = "/programs/program/{programId}", consumes = "application/json")
 	public ResponseEntity<?> editPartialProgram(
 			@RequestBody
 					Program editPartialProgram,
 			@PathVariable
-					Long programid
+					Long programId
 	) {
-		programService.update(editPartialProgram, programid);
+		programService.update(editPartialProgram, programId);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PatchMapping("/programs/program-in/{programid}")
+	@PatchMapping("/programs/program-in/{programId}")
 	public ResponseEntity<?> editPartialProgram(
 			@RequestBody
 					ProgramIn programIn,
 			@PathVariable
-					Long programid
+					Long programId
 	) {
-		programIn.setProgramid(programid);
-		Program saved = programService.update(programIn, programid);
+		programIn.setProgramid(programId);
+		Program saved = programService.update(programIn, programId);
 		return new ResponseEntity<>(saved, HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/programs/program/{programid}")
+	@DeleteMapping(value = "/programs/program/{programId}")
 	public ResponseEntity<?> deleteProgram(
 			@PathVariable
-					long programid
+					long programId
 	) {
-		programService.delete(programid);
+		programService.delete(programId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

@@ -26,23 +26,23 @@ public class User
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long     userid;
+	private long   userId;
 	/**
 	 * The username (String). Cannot be null and must be unique
 	 */
 	@NotNull
 	@Column(unique = true)
-	private String   username;
+	private String username;
 	//
 	@NotNull
 	@Column(unique = true)
-	private String   email;
+	private String email;
 	//
-	private String   firstname;
+	private String firstName;
 	//
-	private String   lastname;
+	private String   lastName;
 	//
-	private String   phonenumber;
+	private String   phoneNumber;
 	//
 	private RoleType roleType;
 	//
@@ -72,15 +72,15 @@ public class User
 	public User(
 			@NotNull String username,
 			@NotNull String email,
-			String firstname,
-			String lastname,
-			String phonenumber
+			String firstName,
+			String lastName,
+			String phoneNumber
 	) {
 		this.username    = username;
-		this.firstname   = firstname;
+		this.firstName   = firstName;
 		this.email       = email;
-		this.lastname    = lastname;
-		this.phonenumber = phonenumber;
+		this.lastName    = lastName;
+		this.phoneNumber = phoneNumber;
 	}
 
 
@@ -95,20 +95,20 @@ public class User
 		setUsername(username);
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstname) {
+		this.firstName = firstname;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastname) {
+		this.lastName = lastname;
 	}
 
 	public String getEmail() {
@@ -119,12 +119,12 @@ public class User
 		this.email = email;
 	}
 
-	public String getPhonenumber() {
-		return phonenumber;
+	public String getPhoneNumber() {
+		return phoneNumber;
 	}
 
-	public void setPhonenumber(String phonenumber) {
-		this.phonenumber = phonenumber;
+	public void setPhoneNumber(String phonenumber) {
+		this.phoneNumber = phonenumber;
 	}
 
 	public Set<Program> getPrograms() {
@@ -140,8 +140,8 @@ public class User
 	 *
 	 * @return the userid (long) of the user
 	 */
-	public long getUserid() {
-		return userid;
+	public long getUserId() {
+		return userId;
 	}
 
 	/**
@@ -149,8 +149,8 @@ public class User
 	 *
 	 * @param userid the new userid (long) of the user
 	 */
-	public void setUserid(long userid) {
-		this.userid = userid;
+	public void setUserId(long userid) {
+		this.userId = userid;
 	}
 
 	/**
@@ -201,9 +201,9 @@ public class User
 	@JsonIgnore
 	public void setName(String name) {
 		String[] splitName = name.split(" ");
-		this.firstname = splitName[0];
+		this.firstName = splitName[0];
 		if (splitName.length > 1) {
-			this.lastname = splitName[1];
+			this.lastName = splitName[1];
 		}
 	}
 
@@ -312,19 +312,19 @@ public class User
 		if (o == null || getClass() != o.getClass())
 			return false;
 		User user = (User) o;
-		return getUserid() == user.getUserid() && getUsername().equals(user.getUsername()) &&
+		return getUserId() == user.getUserId() && getUsername().equals(user.getUsername()) &&
 		       getEmail().equals(user.getEmail());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getUserid(), getUsername(), getEmail());
+		return Objects.hash(getUserId(), getUsername(), getEmail());
 	}
 
 	@Override
 	public String toString() {
-		return "User{" + "userid=" + userid + ", username='" + username + '\'' + ", email='" + email + '\'' +
-		       ", firstname='" + firstname + '\'' + ", lastname='" + lastname + '\'' + ", phonenumber='" + phonenumber +
+		return "User{" + "userid=" + userId + ", username='" + username + '\'' + ", email='" + email + '\'' +
+		       ", firstname='" + firstName + '\'' + ", lastname='" + lastName + '\'' + ", phonenumber='" + phoneNumber +
 		       '\'' + ", roleType=" + roleType + " courses=" + courses + '}';
 	}
 

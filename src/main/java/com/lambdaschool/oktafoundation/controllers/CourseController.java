@@ -1,7 +1,7 @@
 package com.lambdaschool.oktafoundation.controllers;
 
 
-import com.lambdaschool.oktafoundation.exceptions.ResourceNotFoundException;
+import com.lambdaschool.oktafoundation.exceptions.CourseNotFoundException;
 import com.lambdaschool.oktafoundation.modelAssemblers.CourseModelAssembler;
 import com.lambdaschool.oktafoundation.models.Course;
 import com.lambdaschool.oktafoundation.repository.CourseRepository;
@@ -67,7 +67,7 @@ public class CourseController {
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
 				linkTo(methodOn(CourseController.class).getRelevantCourses(query)).withSelfRel()
 		);
-		
+
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
@@ -80,49 +80,49 @@ public class CourseController {
 		return new ResponseEntity<>(courses, HttpStatus.OK);
 	}
 
-	@GetMapping("/courses/user/{userid}")
+	@GetMapping("/courses/user/{userId}")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getUserCourses(
 			@PathVariable
-					long userid
+					long userId
 	) {
-		List<EntityModel<Course>> courses = courseService.findByUser(userid)
+		List<EntityModel<Course>> courses = courseService.findByUser(userId)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getUserCourses(userid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getUserCourses(userId)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping("/courses/anti-user/{userid}")
+	@GetMapping("/courses/anti-user/{userId}")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getUserAntiCourses(
 			@PathVariable
-					long userid
+					long userId
 	) {
-		List<EntityModel<Course>> courses = courserepos.findAntiCoursesByUserId(userid)
+		List<EntityModel<Course>> courses = courserepos.findAntiCoursesByUserId(userId)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getUserAntiCourses(userid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getUserAntiCourses(userId)).withSelfRel()
 		);
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping("/courses/mappify-by-user/{userid}")
+	@GetMapping("/courses/mappify-by-user/{userId}")
 	public ResponseEntity<?> getMappifiedCoursesByUser(
 			@PathVariable
-					long userid
+					long userId
 	) {
 		List<Course> enrolledCourses = new ArrayList<>();
-		courserepos.findCoursesByUserid(userid)
+		courserepos.findCoursesByUserId(userId)
 				.iterator()
 				.forEachRemaining(enrolledCourses::add);
 		List<Course> availableCourses = new ArrayList<>();
-		courserepos.findAntiCoursesByUserId(userid)
+		courserepos.findAntiCoursesByUserId(userId)
 				.iterator()
 				.forEachRemaining(availableCourses::add);
 		Map<String, List<Course>> mappedCourses = new HashMap<>();
@@ -131,120 +131,120 @@ public class CourseController {
 		return new ResponseEntity<>(mappedCourses, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/student/{userid}", produces = "application/json")
+	@GetMapping(value = "/courses/student/{userId}", produces = "application/json")
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getStudentCourses(
 			@PathVariable
-					long userid
+					long userId
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
+		List<EntityModel<Course>> courses = courserepos.findCoursesByUserId(userId)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getStudentCourses(userid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getStudentCourses(userId)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/teacher/{userid}", produces = "application/json")
+	@GetMapping(value = "/courses/teacher/{userId}", produces = "application/json")
 	public ResponseEntity<?> getTeacherCourses(
 			@PathVariable
-					long userid
+					long userId
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByUserid(userid)
+		List<EntityModel<Course>> courses = courserepos.findCoursesByUserId(userId)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getTeacherCourses(userid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getTeacherCourses(userId)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/course/{courseid}", produces = {"application/json"})
+	@GetMapping(value = "/courses/course/{courseId}", produces = {"application/json"})
 	public ResponseEntity<EntityModel<Course>> getCourseByCourseId(
 			@PathVariable
-					long courseid
+					long courseId
 	) {
-		EntityModel<Course> course = courseModelAssembler.toModel(courseService.findCourseById(courseid));
+		EntityModel<Course> course = courseModelAssembler.toModel(courseService.findCourseById(courseId));
 		return new ResponseEntity<>(course, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/courses/{programid}", produces = {"application/json"})
+	@GetMapping(value = "/courses/{programId}", produces = {"application/json"})
 	public ResponseEntity<CollectionModel<EntityModel<Course>>> getCoursesByProgramid(
 			@PathVariable
-					long programid
+					long programId
 	) {
-		List<EntityModel<Course>> courses = courserepos.findCoursesByProgram_Programid(programid)
+		List<EntityModel<Course>> courses = courserepos.findCoursesByProgram_ProgramId(programId)
 				.stream()
 				.map(courseModelAssembler::toModel)
 				.collect(Collectors.toList());
 
 		CollectionModel<EntityModel<Course>> collectionModel = CollectionModel.of(courses,
-				linkTo(methodOn(CourseController.class).getCoursesByProgramid(programid)).withSelfRel()
+				linkTo(methodOn(CourseController.class).getCoursesByProgramid(programId)).withSelfRel()
 		);
 
 		return new ResponseEntity<>(collectionModel, HttpStatus.OK);
 	}
 
-	@PostMapping(value = "/courses/{programid}/course", produces = "application/json", consumes = "application/json")
+	@PostMapping(value = "/courses/{programId}/course", produces = "application/json", consumes = "application/json")
 	public ResponseEntity<?> addNewCourse(
 			@PathVariable
-					long programid,
+					long programId,
 			@Valid
 			@RequestBody
 					Course newCourse
 	) {
-		newCourse.setCourseid(0);
-		newCourse = courseService.save(programid, newCourse);
+		newCourse.setCourseId(0);
+		newCourse = courseService.save(programId, newCourse);
 		// location header for the newly created course
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newCourseURI = ServletUriComponentsBuilder.fromCurrentRequestUri()
-				.path("/{courseid}")
-				.buildAndExpand(newCourse.getCourseid())
+				.path("/{courseId}")
+				.buildAndExpand(newCourse.getCourseId())
 				.toUri();
 		responseHeaders.setLocation(newCourseURI);
 		return new ResponseEntity<>(newCourse, responseHeaders, HttpStatus.CREATED);
 	}
 
-	@PatchMapping(value = "/courses/{courseid}", consumes = "application/json")
+	@PatchMapping(value = "/courses/{courseId}", consumes = "application/json")
 	public ResponseEntity<?> updateCourse(
 			@PathVariable
-					long courseid,
+					long courseId,
 			@RequestBody
 					Course newCourse
 	) {
-		newCourse.setCourseid(courseid);
-		courseService.update(courseid, newCourse);
+		newCourse.setCourseId(courseId);
+		courseService.update(courseId, newCourse);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PutMapping(value = "/courses/{courseid}", consumes = "application/json")
+	@PutMapping(value = "/courses/{courseId}", consumes = "application/json")
 	public ResponseEntity<?> updateFullCourse(
 			@PathVariable
-					long courseid,
+					long courseId,
 			@RequestBody
 					Course newCourse
 	) {
-		newCourse.setCourseid(courseid);
-		courseService.update(courseid, newCourse);
+		newCourse.setCourseId(courseId);
+		courseService.update(courseId, newCourse);
 
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@DeleteMapping(value = "/courses/{courseid}")
+	@DeleteMapping(value = "/courses/{courseId}")
 	public ResponseEntity<?> deleteCourseById(
 			@PathVariable
-					long courseid
+					long courseId
 	) {
-		courserepos.findById(courseid)
-				.orElseThrow(() -> new ResourceNotFoundException("Course with id " + courseid + " Not Found!"));
-		courseService.delete(courseid);
+		courserepos.findById(courseId)
+				.orElseThrow(() -> new CourseNotFoundException(courseId));
+		courseService.delete(courseId);
 
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}

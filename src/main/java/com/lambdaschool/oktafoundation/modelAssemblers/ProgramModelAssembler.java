@@ -27,13 +27,13 @@ public class ProgramModelAssembler
 	public EntityModel<Program> toModel(Program program) {
 		EntityModel<Program> programEntity = EntityModel.of(program,
 				// Link to SELF --- GET /programs/program/{programid}
-				linkTo(methodOn(ProgramController.class).getProgramById(program.getProgramid())).withSelfRel(),
+				linkTo(methodOn(ProgramController.class).getProgramById(program.getProgramId())).withSelfRel(),
 				// Link to self_by_name --- GET /programs/program/{programname}
-				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramname())).withRel("self_by_name"),
+				linkTo(methodOn(ProgramController.class).getProgramByName(program.getProgramName())).withRel("self_by_name"),
 				// Link to associated courses
-				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramid())).withRel("courses"),
+				linkTo(methodOn(CourseController.class).getCoursesByProgramid(program.getProgramId())).withRel("courses"),
 				// Link to GET all tags associated with this program
-				linkTo(methodOn(TagController.class).getByProgram(program.getProgramid())).withRel("tags")
+				linkTo(methodOn(TagController.class).getByProgram(program.getProgramId())).withRel("tags")
 		);
 
 		RoleType currentRole = helperFunctions.getCurrentPriorityRole();
@@ -42,20 +42,20 @@ public class ProgramModelAssembler
 			programEntity.add(
 					// Link to GET all programs by this program's admin
 					linkTo(methodOn(ProgramController.class).getProgramsByUserId(program.getUser()
-							.getUserid())).withRel("admin_programs"),
+							.getUserId())).withRel("admin_programs"),
 					// Link to GET all programs
 					linkTo(methodOn(ProgramController.class).listAllPrograms()).withRel("all_programs"),
 					// Link to DELETE self
-					linkTo(methodOn(ProgramController.class).deleteProgram(program.getProgramid())).withRel("delete_program"),
+					linkTo(methodOn(ProgramController.class).deleteProgram(program.getProgramId())).withRel("delete_program"),
 					// Link to PATCH self
-					linkTo(methodOn(ProgramController.class).editPartialProgram(program, program.getProgramid())).withRel(
+					linkTo(methodOn(ProgramController.class).editPartialProgram(program, program.getProgramId())).withRel(
 							"edit_program"),
 					// Link to PUT self
-					linkTo(methodOn(ProgramController.class).editEntireProgram(program, program.getProgramid())).withRel(
+					linkTo(methodOn(ProgramController.class).editEntireProgram(program, program.getProgramId())).withRel(
 							"replace_program"),
 					// Link to POST new program (with the same admin that is associated with this course)
 					linkTo(methodOn(ProgramController.class).addNewProgram(program.getUser()
-							.getUserid(), program)).withRel("add_program")
+							.getUserId(), program)).withRel("add_program")
 			);
 		}
 

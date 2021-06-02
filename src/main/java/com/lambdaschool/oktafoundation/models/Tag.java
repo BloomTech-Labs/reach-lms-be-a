@@ -21,20 +21,20 @@ public class Tag
 	//
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private              long             tagid;
+	private              long             tagId;
 	//
 	@NotNull
 	private              String           title;
 	//
 	@NotNull
-	private              String           hexcode;
+	private              String           hexCode;
 	//
 	@OneToMany(mappedBy = "tag", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private              Set<ProgramTags> programs         = new HashSet<>();
 	//
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "courseid")
+//	@JoinColumn(name = "course_id")
 	@JsonIgnoreProperties(value = "tags")
 	private              Set<ProgramTags> courses          = new HashSet<>();
 
@@ -42,23 +42,23 @@ public class Tag
 
 	public Tag(
 			@NotNull String title,
-			@NotNull String hexcode
+			@NotNull String hexCode
 	) {
 		this.title   = title;
-		this.hexcode = hexcode;
+		this.hexCode = hexCode;
 	}
 
 	public Tag(@NotNull String title) {
 		this.title   = title;
-		this.hexcode = DEFAULT_HEX_CODE;
+		this.hexCode = DEFAULT_HEX_CODE;
 	}
 
-	public long getTagid() {
-		return tagid;
+	public long getTagId() {
+		return tagId;
 	}
 
-	public void setTagid(long tagId) {
-		this.tagid = tagId;
+	public void setTagId(long tagId) {
+		this.tagId = tagId;
 	}
 
 	public String getTitle() {
@@ -69,12 +69,12 @@ public class Tag
 		this.title = title;
 	}
 
-	public String getHexcode() {
-		return hexcode;
+	public String getHexCode() {
+		return hexCode;
 	}
 
-	public void setHexcode(String hexCode) {
-		this.hexcode = hexCode;
+	public void setHexCode(String hexCode) {
+		this.hexCode = hexCode;
 	}
 
 	public Set<ProgramTags> getPrograms() {
@@ -95,7 +95,7 @@ public class Tag
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getTagid(), getTitle());
+		return Objects.hash(getTagId(), getTitle());
 	}
 
 	@Override
@@ -105,12 +105,12 @@ public class Tag
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Tag tag = (Tag) o;
-		return getTagid() == tag.getTagid() && getTitle().equals(tag.getTitle());
+		return getTagId() == tag.getTagId() && getTitle().equals(tag.getTitle());
 	}
 
 	@Override
 	public String toString() {
-		return "Tag{" + "tagId=" + tagid + ", title='" + title + '\'' + ", hexCode='" + hexcode + '\'' + '}';
+		return "Tag{" + "tagId=" + tagId + ", title='" + title + '\'' + ", hexCode='" + hexCode + '\'' + '}';
 	}
 
 }

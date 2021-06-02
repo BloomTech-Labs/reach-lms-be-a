@@ -19,17 +19,17 @@ public class Program
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long             programid;
+	private long             programId;
 	//
-	private String           programname;
+	private String           programName;
 	//
-	private String           programtype;
+	private String           programType;
 	//
-	@Size(max=2000)
-	private String           programdescription;
+	@Size(max = 2000)
+	private String           programDescription;
 	//
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "userid", nullable = false)
+	@JoinColumn(name = "user_id", nullable = false)
 	@JsonIgnoreProperties(value = "programs")
 	private User             user;
 	//
@@ -47,45 +47,45 @@ public class Program
 	}
 
 	public Program(
-			String programname,
-			String programtype,
-			String programdescription
+			String programName,
+			String programType,
+			String programDescription
 	) {
-		this.programname        = programname;
-		this.programtype        = programtype;
-		this.programdescription = programdescription;
+		this.programName        = programName;
+		this.programType        = programType;
+		this.programDescription = programDescription;
 	}
 
-	public long getProgramid() {
-		return programid;
+	public long getProgramId() {
+		return programId;
 	}
 
-	public void setProgramid(long programid) {
-		this.programid = programid;
+	public void setProgramId(long programId) {
+		this.programId = programId;
 	}
 
-	public String getProgramname() {
-		return programname;
+	public String getProgramName() {
+		return programName;
 	}
 
-	public void setProgramname(String programname) {
-		this.programname = programname;
+	public void setProgramName(String programName) {
+		this.programName = programName;
 	}
 
-	public String getProgramtype() {
-		return programtype;
+	public String getProgramType() {
+		return programType;
 	}
 
-	public void setProgramtype(String programtype) {
-		this.programtype = programtype;
+	public void setProgramType(String programType) {
+		this.programType = programType;
 	}
 
-	public String getProgramdescription() {
-		return programdescription;
+	public String getProgramDescription() {
+		return programDescription;
 	}
 
-	public void setProgramdescription(String programdescription) {
-		this.programdescription = programdescription;
+	public void setProgramDescription(String programDescription) {
+		this.programDescription = programDescription;
 	}
 
 	public User getUser() {
@@ -137,7 +137,7 @@ public class Program
 
 	public void removeTag(Tag tag) {
 		if (!containsTag(tag)) {
-			throw new TagNotFoundException(tag.getTitle(), programname);
+			throw new TagNotFoundException(tag.getTitle(), programName);
 		}
 		Iterator<ProgramTags> it = tags.iterator();
 		while (it.hasNext()) {
@@ -167,7 +167,7 @@ public class Program
 
 	public ProgramTags getTagIfPresent(Tag tag)
 	throws TagNotFoundException {
-		return findTag(tag).orElseThrow(() -> new TagNotFoundException(tag.getTitle(), programname));
+		return findTag(tag).orElseThrow(() -> new TagNotFoundException(tag.getTitle(), programName));
 	}
 
 }

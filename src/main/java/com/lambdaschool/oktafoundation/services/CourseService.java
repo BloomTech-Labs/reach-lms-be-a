@@ -12,19 +12,19 @@ public interface CourseService {
 
 	List<Course> findRelevant(String query);
 
-	List<Course> findByUser(long userid);
+	List<Course> findByUser(long userId);
 
 	Course findCourseById(long courseId);
 
-	Course get(long courseid);
-	Course get(String coursename);
+	Course get(long courseId);
+	Course get(String courseName);
 
 	List<Course> findByTag(String tagTitle);
 
 	Course save(Course course);
 	Course save(
 			Course course,
-			long programid
+			long programId
 	);
 
 	Course save(
@@ -39,5 +39,5 @@ public interface CourseService {
 
 	void delete(long courseId);
 
-
+	void deleteAll();
 }

@@ -33,7 +33,9 @@ public class UserCoursesId
 	}
 
 	@Override
-	public int hashCode() {return Objects.hash(user, course);}
+	public int hashCode() {
+		return Objects.hash(user, course);
+	}
 
 	public boolean equals(Object o) {
 		if (this == o) {

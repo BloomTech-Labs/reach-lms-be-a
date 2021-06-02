@@ -102,14 +102,14 @@ public class RolesController {
 					Role newRole
 	) {
 		// ids are not recognized by the Post method
-		newRole.setRoleid(0);
+		newRole.setRoleId(0);
 		newRole = roleService.save(newRole);
 
 		// set the location header for the newly created resource
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newRoleURI = ServletUriComponentsBuilder.fromCurrentRequest()
-				.path("/{roleid}")
-				.buildAndExpand(newRole.getRoleid())
+				.path("/{roleId}")
+				.buildAndExpand(newRole.getRoleId())
 				.toUri();
 		responseHeaders.setLocation(newRoleURI);
 
@@ -120,20 +120,20 @@ public class RolesController {
 	 * The process allows you to update a role name only!
 	 * <br>Example: <a href="http://localhost:2019/roles/role/3">http://localhost:2019/roles/role/3</a>
 	 *
-	 * @param roleid  The primary key (long) of the role you wish to update
+	 * @param roleId  The primary key (long) of the role you wish to update
 	 * @param newRole The new name (String) for the role
 	 *
 	 * @return Status of OK
 	 */
-	@PutMapping(value = "/role/{roleid}", consumes = {"application/json"})
+	@PutMapping(value = "/role/{roleId}", consumes = {"application/json"})
 	public ResponseEntity<?> putUpdateRole(
 			@PathVariable
-					long roleid,
+					long roleId,
 			@Valid
 			@RequestBody
 					Role newRole
 	) {
-		newRole = roleService.update(roleid, newRole);
+		roleService.update(roleId, newRole);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 

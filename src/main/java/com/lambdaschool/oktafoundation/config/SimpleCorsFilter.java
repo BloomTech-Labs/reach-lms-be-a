@@ -33,23 +33,13 @@ public class SimpleCorsFilter
 		// that would handled by our exception handler!
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		HttpServletRequest  request  = (HttpServletRequest) servletRequest;
-
-		// white list domains that can access this API. * says let everyone access it. To restrict access use something like
-		//                 response.setHeader("Access-Control-Allow-Origin",
-		//            "https://lambdaschool.com/");
+		// origins allowed to access this API
 		response.setHeader("Access-Control-Allow-Origin", "*");
-
-		// white list http methods that can be used with this API. * says lets them all work! To restrict access use something like
-		//        response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
+		// http methods that can be used with this API.
 		response.setHeader("Access-Control-Allow-Methods", "*");
-
-		// while list access headers that can be used with this API. * says lets them all work! To restrict access use something like
-		//        response.setHeader("Access-Control-Allow-Headers", "x-requested-with, authorization, content-type, access_token");
+		// access headers that can be used with this API
 		response.setHeader("Access-Control-Allow-Headers", "*");
-
 		// maximum seconds results can be cached
-		//        response.setHeader("Access-Control-Max-Age",
-		//            "3600");
 		response.setHeader("Access-Control-Max-Age", "3600");
 
 		if (HttpMethod.OPTIONS.name()

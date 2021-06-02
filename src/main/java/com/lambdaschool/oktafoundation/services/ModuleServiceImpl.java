@@ -44,7 +44,7 @@ public class ModuleServiceImpl
 	@Override
 	public Module find(String moduleName)
 	throws ModuleNotFoundException {
-		return moduleRepository.findByModulenameIgnoreCase(moduleName)
+		return moduleRepository.findByModuleNameIgnoreCase(moduleName)
 				.orElseThrow(() -> new ModuleNotFoundException(moduleName));
 	}
 
@@ -56,11 +56,11 @@ public class ModuleServiceImpl
 
 	@Override
 	public void replaceMarkdown(
-			Long moduleid,
+			Long moduleId,
 			String markdown
 	) {
-		Module module = find(moduleid); // throws if no such module
-		module.setModulecontent(markdown);
+		Module module = find(moduleId); // throws if no such module
+		module.setModuleContent(markdown);
 		moduleRepository.save(module);
 	}
 
@@ -71,13 +71,13 @@ public class ModuleServiceImpl
 	)
 	throws ModuleNotFoundException, CourseNotFoundException {
 		Module newModule = new Module();
-		if (module.getModuleid() != 0) {
-			find(module.getModuleid()); // throws if no such module
-			newModule.setModuleid(module.getModuleid());
+		if (module.getModuleId() != 0) {
+			find(module.getModuleId()); // throws if no such module
+			newModule.setModuleId(module.getModuleId());
 		}
-		newModule.setModulename(module.getModulename());
-		newModule.setModuledescription(module.getModuledescription());
-		newModule.setModulecontent(module.getModulecontent());
+		newModule.setModuleName(module.getModuleName());
+		newModule.setModuleDescription(module.getModuleDescription());
+		newModule.setModuleContent(module.getModuleContent());
 
 		Course course = courseService.get(courseId); // throws if no such course
 		if (course != null) {
@@ -88,30 +88,36 @@ public class ModuleServiceImpl
 
 	@Override
 	public Module update(
-			long id,
+			long moduleId,
 			Module module
-	) throws ModuleNotFoundException {
-		Module newModule = find(id); // throws if no such module
+	)
+	throws ModuleNotFoundException {
+		Module newModule = find(moduleId); // throws if no such module
 
-		if (module.getModulename() != null) {
-			newModule.setModulename(module.getModulename());
+		if (module.getModuleName() != null) {
+			newModule.setModuleName(module.getModuleName());
 		}
 
-		if (module.getModuledescription() != null) {
-			newModule.setModuledescription(module.getModuledescription());
+		if (module.getModuleDescription() != null) {
+			newModule.setModuleDescription(module.getModuleDescription());
 		}
 
-		if (module.getModulecontent() != null) {
-			newModule.setModulecontent(module.getModulecontent());
+		if (module.getModuleContent() != null) {
+			newModule.setModuleContent(module.getModuleContent());
 		}
 		return moduleRepository.save(newModule);
 	}
 
 	@Override
-	public void delete(long id)
+	public void delete(long moduleId)
 	throws ModuleNotFoundException {
-		find(id); // throws if no such module
-		moduleRepository.deleteById(id);
+		find(moduleId); // throws if no such module
+		moduleRepository.deleteById(moduleId);
+	}
+
+	@Override
+	public void deleteAll() {
+		moduleRepository.deleteAll();
 	}
 
 }

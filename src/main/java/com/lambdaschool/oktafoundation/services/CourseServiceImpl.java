@@ -54,11 +54,11 @@ public class CourseServiceImpl
 			case TEACHER: // stacking case statements is how you merge cases in Java
 			case STUDENT: // stacking case statements is how you merge cases in Java
 				if (query != null) {
-					courseRepository.search(callingUser.getUserid(), query)
+					courseRepository.search(callingUser.getUserId(), query)
 							.iterator()
 							.forEachRemaining(courses::add);
 				} else {
-					return findByUser(callingUser.getUserid());
+					return findByUser(callingUser.getUserId());
 				}
 				break;
 			// if the calling user is an ADMIN, we want to return all courses in the system.
@@ -82,28 +82,28 @@ public class CourseServiceImpl
 	}
 
 	@Override
-	public List<Course> findByUser(long userid) {
-		return new ArrayList<>(courseRepository.findCoursesByUserid(userid));
+	public List<Course> findByUser(long userId) {
+		return new ArrayList<>(courseRepository.findCoursesByUserId(userId));
 	}
 
 	@Override
-	public Course findCourseById(long courseid)
+	public Course findCourseById(long courseId)
 	throws CourseNotFoundException {
-		return get(courseid);
+		return get(courseId);
 	}
 
 	@Override
-	public Course get(long courseid)
+	public Course get(long courseId)
 	throws CourseNotFoundException {
-		return courseRepository.findById(courseid)
-				.orElseThrow(() -> new CourseNotFoundException(courseid));
+		return courseRepository.findById(courseId)
+				.orElseThrow(() -> new CourseNotFoundException(courseId));
 	}
 
 	@Override
-	public Course get(String coursename)
+	public Course get(String courseName)
 	throws CourseNotFoundException {
-		return courseRepository.findByCoursename(coursename)
-				.orElseThrow(() -> new CourseNotFoundException(coursename));
+		return courseRepository.findByCourseName(courseName)
+				.orElseThrow(() -> new CourseNotFoundException(courseName));
 	}
 
 	@Override
@@ -122,7 +122,7 @@ public class CourseServiceImpl
 	throws ProgramNotFoundException {
 		if (course.getProgram() != null) {
 			return save(course.getProgram()
-					.getProgramid(), course);
+					.getProgramId(), course);
 		} else {
 			throw new ProgramNotFoundException("Anonymous/Null Program");
 		}
@@ -132,33 +132,33 @@ public class CourseServiceImpl
 	@Override
 	public Course save(
 			Course course,
-			long programid
+			long programId
 	)
 	throws ProgramNotFoundException {
-		return save(programid, course);
+		return save(programId, course);
 	}
 
 	@Override
 	public Course save(
-			long programid,
+			long programId,
 			Course course
 	)
 	throws ProgramNotFoundException, CourseNotFoundException {
 		Course newCourse = new Course();
-		if (course.getCourseid() != 0) {
-			findCourseById(course.getCourseid()); // throws if course not found
-			newCourse.setCourseid(course.getCourseid());
+		if (course.getCourseId() != 0) {
+			findCourseById(course.getCourseId()); // throws if course not found
+			newCourse.setCourseId(course.getCourseId());
 		}
-		newCourse.setCoursename(course.getCoursename());
-		newCourse.setCoursedescription(course.getCoursedescription());
-		newCourse.setCoursecode(course.getCoursecode());
+		newCourse.setCourseName(course.getCourseName());
+		newCourse.setCourseDescription(course.getCourseDescription());
+		newCourse.setCourseCode(course.getCourseCode());
 		newCourse.getModules()
 				.clear();
 		for (Module module : course.getModules()) {
 			newCourse.getModules()
-					.add(new Module(module.getModulename(), module.getModuledescription(), module.getModulecontent(), newCourse));
+					.add(new Module(module.getModuleName(), module.getModuleDescription(), module.getModuleContent(), newCourse));
 		}
-		Program program = programService.findProgramsById(programid); // throws if program not found
+		Program program = programService.findProgramsById(programId); // throws if program not found
 		if (program != null) {
 			newCourse.setProgram(program);
 		}
@@ -176,28 +176,33 @@ public class CourseServiceImpl
 
 	@Override
 	public Course update(
-			long courseid,
+			long courseId,
 			Course course
 	) {
-		Course newCourse = findCourseById(courseid); // throws if Course not found
+		Course newCourse = findCourseById(courseId); // throws if Course not found
 
-		if (course.getCoursename() != null) {
-			newCourse.setCoursename(course.getCoursename());
+		if (course.getCourseName() != null) {
+			newCourse.setCourseName(course.getCourseName());
 		}
-		if (course.getCoursedescription() != null) {
-			newCourse.setCoursedescription(course.getCoursedescription());
+		if (course.getCourseDescription() != null) {
+			newCourse.setCourseDescription(course.getCourseDescription());
 		}
-		if (course.getCoursecode() != null) {
-			newCourse.setCoursecode(course.getCoursecode());
+		if (course.getCourseCode() != null) {
+			newCourse.setCourseCode(course.getCourseCode());
 		}
 		return courseRepository.save(newCourse);
 	}
 
 	@Override
-	public void delete(long courseid)
+	public void delete(long courseId)
 	throws CourseNotFoundException {
-		findCourseById(courseid); // throws if Course not found
-		courseRepository.deleteById(courseid);
+		findCourseById(courseId); // throws if Course not found
+		courseRepository.deleteById(courseId);
+	}
+
+	@Override
+	public void deleteAll() {
+		courseRepository.deleteAll();
 	}
 
 }

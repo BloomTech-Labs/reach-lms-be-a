@@ -15,19 +15,19 @@ import java.util.Optional;
 public interface ProgramRepository
 		extends CrudRepository<Program, Long> {
 
-	Optional<Program> findByProgramnameIgnoreCase(String name);
+	Optional<Program> findByProgramNameIgnoreCase(String name);
 
 	List<Program> findByTags_tag_titleIgnoreCase(String name);
 
 	List<Program> findByTags_tag_titleLikeIgnoreCase(String name);
 
-	List<Program> findByTags_tag_tagid(long tagid);
+	List<Program> findByTags_tag_tagId(long tagId);
 
-	@Query(value = "SELECT * FROM PROGRAMS p WHERE p.userid = :userid\n", nativeQuery = true)
-	List<Program> findProgramsByUserid(long userid);
+	@Query(value = "SELECT * FROM programs p WHERE p.user_id = :userId\n", nativeQuery = true)
+	List<Program> findProgramsByUserId(long userId);
 
 	@Modifying
-	@Query(value = "DELETE FROM PROGRAMS WHERE PROGRAMID = :programid", nativeQuery = true)
-	void deleteById(long programid);
+	@Query(value = "DELETE FROM programs WHERE program_id = :programId", nativeQuery = true)
+	void deleteById(long programId);
 
 }

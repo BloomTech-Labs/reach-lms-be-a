@@ -70,11 +70,11 @@ public class UserControllerUnitTestNoDB
         userList = new ArrayList<>();
 
         Role r1 = new Role("admin");
-        r1.setRoleid(1);
+        r1.setRoleId(1);
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
         Role r3 = new Role("data");
-        r3.setRoleid(3);
+        r3.setRoleId(3);
 
         // admin, data, user
         u1 = new User("admin");
@@ -89,7 +89,7 @@ public class UserControllerUnitTestNoDB
                 r3));
 
 
-        u1.setUserid(101);
+        u1.setUserId(101);
         userList.add(u1);
 
         // data, user
@@ -111,7 +111,7 @@ public class UserControllerUnitTestNoDB
                 r1));
 
 
-        u3.setUserid(103);
+        u3.setUserId(103);
         userList.add(u3);
 
         User u4 = new User("testingcat");
@@ -119,7 +119,7 @@ public class UserControllerUnitTestNoDB
             .add(new UserRoles(u4,
                 r2));
 
-        u4.setUserid(104);
+        u4.setUserId(104);
         userList.add(u4);
 
         User u5 = new User("testingdog");
@@ -127,13 +127,13 @@ public class UserControllerUnitTestNoDB
             .add(new UserRoles(u5,
                 r2));
 
-        u5.setUserid(105);
+        u5.setUserId(105);
         userList.add(u5);
 
         System.out.println("\n*** Seed Data ***");
         for (User u : userList)
         {
-            System.out.println(u.getUserid() + " " + u.getUsername());
+            System.out.println(u.getUserId() + " " + u.getUsername());
         }
         System.out.println("*** Seed Data ***\n");
 

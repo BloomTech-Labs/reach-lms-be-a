@@ -26,13 +26,13 @@ public class RoleServiceImpl
 	 * Connects this service to the Role Model
 	 */
 	@Autowired
-	RoleRepository rolerepos;
+	RoleRepository roleRepo;
 
 	/**
 	 * Connect this service to the User Model
 	 */
 	@Autowired
-	UserRepository userrepos;
+	UserRepository userRepo;
 
 	/**
 	 * Connects this service to the auditing service in order to get current user name
@@ -47,16 +47,16 @@ public class RoleServiceImpl
 		 * findAll returns an iterator set.
 		 * iterate over the iterator set and add each element to an array list.
 		 */
-		rolerepos.findAll()
+		roleRepo.findAll()
 				.iterator()
 				.forEachRemaining(list::add);
 		return list;
 	}
 
 	@Override
-	public Role findRoleById(long id) {
-		return rolerepos.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Role id " + id + " not found!"));
+	public Role findRoleById(long roleId) {
+		return roleRepo.findById(roleId)
+				.orElseThrow(() -> new ResourceNotFoundException("Role id " + roleId + " not found!"));
 	}
 
 	@Transactional
@@ -67,12 +67,12 @@ public class RoleServiceImpl
 			throw new ResourceFoundException("User Roles are not updated through Role.");
 		}
 
-		return rolerepos.save(role);
+		return roleRepo.save(role);
 	}
 
 	@Override
 	public Role findByName(String name) {
-		Role rr = rolerepos.findByNameIgnoreCase(name);
+		Role rr = roleRepo.findByNameIgnoreCase(name);
 
 		if (rr != null) {
 			return rr;
@@ -84,13 +84,13 @@ public class RoleServiceImpl
 	@Transactional
 	@Override
 	public void deleteAll() {
-		rolerepos.deleteAll();
+		roleRepo.deleteAll();
 	}
 
 	@Transactional
 	@Override
 	public Role update(
-			long id,
+			long roleId,
 			Role role
 	) {
 		if (role.getName() == null) {
@@ -103,11 +103,11 @@ public class RoleServiceImpl
 					"User Roles are not updated through Role. See endpoint POST: users/user/{userid}/role/{roleid}");
 		}
 
-		Role newRole = findRoleById(id); // see if id exists
+		Role newRole = findRoleById(roleId); // see if roleId exists
 
-		rolerepos.updateRoleName(userAuditing.getCurrentAuditor()
-				.get(), id, role.getName());
-		return findRoleById(id);
+		roleRepo.updateRoleName(userAuditing.getCurrentAuditor()
+				.get(), roleId, role.getName());
+		return findRoleById(roleId);
 	}
 
 }

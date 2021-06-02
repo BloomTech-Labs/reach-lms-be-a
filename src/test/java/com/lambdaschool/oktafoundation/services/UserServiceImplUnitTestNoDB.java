@@ -55,11 +55,11 @@ public class UserServiceImplUnitTestNoDB
         userList = new ArrayList<>();
 
         Role r1 = new Role("admin");
-        r1.setRoleid(1);
+        r1.setRoleId(1);
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
         Role r3 = new Role("data");
-        r3.setRoleid(3);
+        r3.setRoleId(3);
 
         // admin, data, user
         User u1 = new User("testadmin");
@@ -75,7 +75,7 @@ public class UserServiceImplUnitTestNoDB
 
 
 
-        u1.setUserid(101);
+        u1.setUserId(101);
         userList.add(u1);
 
         // data, user
@@ -91,7 +91,7 @@ public class UserServiceImplUnitTestNoDB
 
 
 
-        u2.setUserid(102);
+        u2.setUserId(102);
         userList.add(u2);
 
         // user
@@ -101,7 +101,7 @@ public class UserServiceImplUnitTestNoDB
                 r1));
 
 
-        u3.setUserid(103);
+        u3.setUserId(103);
         userList.add(u3);
 
         User u4 = new User("testingcat");
@@ -109,7 +109,7 @@ public class UserServiceImplUnitTestNoDB
             .add(new UserRoles(u4,
                 r2));
 
-        u4.setUserid(104);
+        u4.setUserId(104);
         userList.add(u4);
 
         User u5 = new User("testingdog");
@@ -117,13 +117,13 @@ public class UserServiceImplUnitTestNoDB
             .add(new UserRoles(u5,
                 r2));
 
-        u5.setUserid(105);
+        u5.setUserId(105);
         userList.add(u5);
 
         System.out.println("\n*** Seed Data ***");
         for (User u : userList)
         {
-            System.out.println(u.getUserid() + " " + u.getUsername());
+            System.out.println(u.getUserId() + " " + u.getUsername());
         }
         System.out.println("*** Seed Data ***\n");
 
@@ -235,7 +235,7 @@ public class UserServiceImplUnitTestNoDB
     public void save()
     {
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
 
         User u2 = new User("tiger");
         u2.getRoles()
@@ -258,14 +258,14 @@ public class UserServiceImplUnitTestNoDB
     public void savePut()
     {
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
 
         User u2 = new User("tiger");
         u2.getRoles()
             .add(new UserRoles(u2,
                 r2));
 
-        u2.setUserid(103L);
+        u2.setUserId(103L);
 
         Mockito.when(userrepos.findById(103L))
             .thenReturn(Optional.of(u2));
@@ -278,14 +278,14 @@ public class UserServiceImplUnitTestNoDB
 
         assertEquals(103L,
             userService.save(u2)
-                .getUserid());
+                .getUserId());
     }
 
     @Test
     public void update()
     {
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
 
         User u2 = new User("cinnamon");
         u2.getRoles()
@@ -313,7 +313,7 @@ public class UserServiceImplUnitTestNoDB
     public void updateNotFound()
     {
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
 
         User u2 = new User("cinnamon");
         u2.getRoles()
@@ -341,7 +341,7 @@ public class UserServiceImplUnitTestNoDB
     public void updateAuthorizedToMakeChange()
     {
         Role r2 = new Role("user");
-        r2.setRoleid(2);
+        r2.setRoleId(2);
 
         User u2 = new User("cinnamon");
         u2.getRoles()

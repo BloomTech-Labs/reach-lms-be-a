@@ -72,10 +72,10 @@ public class UserServiceImpl
 	}
 
 	@Override
-	public User findUserById(long id)
+	public User findUserById(long userId)
 	throws UserNotFoundException {
-		return userRepository.findById(id)
-				.orElseThrow(() -> new UserNotFoundException(id));
+		return userRepository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException(userId));
 	}
 
 	@Override
@@ -95,10 +95,10 @@ public class UserServiceImpl
 
 	@Transactional
 	@Override
-	public void delete(long id)
+	public void delete(long userId)
 	throws UserNotFoundException {
-		findUserById(id); // this will throw if user not found
-		userRepository.deleteById(id);
+		findUserById(userId); // this will throw if user not found
+		userRepository.deleteById(userId);
 	}
 
 	@Transactional
@@ -107,16 +107,16 @@ public class UserServiceImpl
 
 		User newUser = new User();
 
-		if (user.getUserid() != 0) {
-			findUserById(user.getUserid()); // throws if user not found
-			newUser.setUserid(user.getUserid());
+		if (user.getUserId() != 0) {
+			findUserById(user.getUserId()); // throws if user not found
+			newUser.setUserId(user.getUserId());
 		}
 		newUser.setUsername(user.getUsername()
 				.toLowerCase());
 		newUser.setEmail(user.getEmail());
-		newUser.setFirstname(user.getFirstname());
-		newUser.setLastname(user.getLastname());
-		newUser.setPhonenumber(user.getPhonenumber());
+		newUser.setFirstName(user.getFirstName());
+		newUser.setLastName(user.getLastName());
+		newUser.setPhoneNumber(user.getPhoneNumber());
 
 		newUser.getRoles()
 				.clear();
@@ -142,7 +142,7 @@ public class UserServiceImpl
 				.clear();
 		for (UserCourses userCourses : user.getCourses()) {
 			Course course = courseService.findCourseById(userCourses.getCourse()
-					.getCourseid());
+					.getCourseId());
 			newUser.getCourses()
 					.add(new UserCourses(newUser, course));
 		}
@@ -154,9 +154,9 @@ public class UserServiceImpl
 	@Override
 	public User update(
 			User userIn,
-			long id
+			long userId
 	) {
-		User currentUser = findUserById(id);
+		User currentUser = findUserById(userId);
 		// update own thing OR the calling user is ADMIN
 		if (helperFunctions.getCurrentPriorityRole() == RoleType.ADMIN ||
 		    helperFunctions.isAuthorizedToMakeChange(currentUser.getUsername())) {
@@ -180,7 +180,7 @@ public class UserServiceImpl
 			User user,
 			RoleType newRole
 	) {
-		User userToUpdate = findUserById(user.getUserid()); // throws if user not found
+		User userToUpdate = findUserById(user.getUserId()); // throws if user not found
 		if (userToUpdate.getRole() == RoleType.ADMIN) {
 			throw new RoleNotSufficientException("ADMIN users cannot be changed from ADMIN");
 		} else {
@@ -206,15 +206,15 @@ public class UserServiceImpl
 					.toLowerCase());
 		}
 
-		if (userIn.getFirstname() != null) {
-			currentUser.setFirstname(userIn.getFirstname());
+		if (userIn.getFirstName() != null) {
+			currentUser.setFirstName(userIn.getFirstName());
 		}
 
-		if (userIn.getLastname() != null) {
-			currentUser.setLastname(userIn.getLastname());
+		if (userIn.getLastName() != null) {
+			currentUser.setLastName(userIn.getLastName());
 		}
-		if (userIn.getPhonenumber() != null) {
-			currentUser.setPhonenumber(userIn.getPhonenumber());
+		if (userIn.getPhoneNumber() != null) {
+			currentUser.setPhoneNumber(userIn.getPhoneNumber());
 		}
 
 		if (userIn.getRole() != null) {
@@ -241,7 +241,7 @@ public class UserServiceImpl
 					.clear();
 			for (UserCourses userCourses : userIn.getCourses()) {
 				Course course = courseService.findCourseById(userCourses.getCourse()
-						.getCourseid());
+						.getCourseId());
 				currentUser.getCourses()
 						.add(new UserCourses(currentUser, course));
 			}

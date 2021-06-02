@@ -16,8 +16,8 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
-@Profile("production")
-public class OktaAuthSecurityConfig
+@Profile("local")
+public class OktaAuthSecurityConfigLocal
 		extends WebSecurityConfigurerAdapter {
 
 	@Bean
@@ -35,28 +35,35 @@ public class OktaAuthSecurityConfig
 	throws Exception {
 		http.sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
+		http.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests()
-				.antMatchers("/", "/h2-console/**", "/webjars/**")
+				.antMatchers("/",
+						"/h2-console/**",
+						"/v2/api-docs",
+						"/webjars/**",
+						"/users/**",
+						"/useremails/**",
+						"/modules/**",
+						"/programs/**",
+						"/courses/**",
+						"/students/**",
+						"/teachers/**",
+						"/okta/**",
+						"/upload/**",
+						"/tags/**"
+				)
 				.permitAll()
-				// *** NOTE AUTHENTICATED CAN READ USERS!!! PATCHES are handled in UserService
-				.antMatchers("/users/**")
-				.authenticated()
-				.antMatchers("/modules/**", "/programs/**", "/courses/**", "/students/**", "/tags/**")
-				.authenticated()
-				.antMatchers("/teachers/**")
-				.authenticated()
 				.antMatchers(HttpMethod.GET, "/courses/**", "/modules/**", "/students/**", "/users/**", "/tags/**")
-				.authenticated()
+				.permitAll()
 				.antMatchers(HttpMethod.POST, "/courses/**", "modules/**", "/teachers/**", "/upload/**", "/tags/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.PATCH, "/courses/**", "/modules/**", "/upload/**", "/tags/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.PUT, "/courses/**", "/modules/**", "/students/**", "/upload/**", "/tags/**")
-				.hasAnyRole("ADMIN", "TEACHER")
+				.permitAll()
 				.antMatchers(HttpMethod.DELETE, "/courses/**", "/modules/**", "/students/**", "/teachers/**", "/tags/**")
-				.hasAnyRole("ADMIN", "TEACHER")
-				// *** Endpoints not specified above are automatically denied
+				.permitAll()
 				.anyRequest()
 				.denyAll()
 				.and()
@@ -64,6 +71,7 @@ public class OktaAuthSecurityConfig
 				.and()
 				.oauth2ResourceServer()
 				.jwt();
+
 
 		// process CORS annotations
 		// http.cors();

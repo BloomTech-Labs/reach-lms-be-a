@@ -9,23 +9,23 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "programtags")
+@Table(name = "programTags")
 @JsonIgnoreProperties(value = {"id", "program"})
 public class ProgramTags
 		extends Auditable
 		implements Serializable {
 
 	@EmbeddedId
-	@Column(name = "program_tag_id")
+//	@Column(name = "program_tag_id")
 	private ProgramTagsId id;
 	//
 	@ManyToOne
-	@MapsId("programid")
+	@MapsId("programId")
 	@JsonIgnoreProperties(value = "tags", allowSetters = true)
 	private Program       program;
 	//
 	@ManyToOne
-	@MapsId("tagid")
+	@MapsId("tagId")
 	@JsonIgnoreProperties(value = "programs", allowSetters = true)
 	private Tag           tag;
 
@@ -35,7 +35,7 @@ public class ProgramTags
 			Program program,
 			Tag tag
 	) {
-		this.id      = new ProgramTagsId(program.getProgramid(), tag.getTagid());
+		this.id      = new ProgramTagsId(program.getProgramId(), tag.getTagId());
 		this.program = program;
 		this.tag     = tag;
 	}
@@ -89,7 +89,7 @@ public class ProgramTags
 
 	@Override
 	public String toString() {
-		return "ProgramTags{" + "id=" + id + ", program=" + program.getProgramid() + ", tag=" + tag + '}';
+		return "ProgramTags{" + "id=" + id + ", program=" + program.getProgramId() + ", tag=" + tag + '}';
 	}
 
 }

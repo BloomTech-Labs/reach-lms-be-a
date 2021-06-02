@@ -40,19 +40,19 @@ public class ProgramIn {
 
 	public Program toProgram(Program existingProgram) {
 		if (hasProgramid) {
-			existingProgram.setProgramid(programid);
+			existingProgram.setProgramId(programid);
 		}
 		if (hasProgramid) {
-			existingProgram.setProgramid(programid);
+			existingProgram.setProgramId(programid);
 		}
 		if (programname != null) {
-			existingProgram.setProgramname(programname);
+			existingProgram.setProgramName(programname);
 		}
 		if (programtype != null) {
-			existingProgram.setProgramtype(programtype);
+			existingProgram.setProgramType(programtype);
 		}
 		if (programdescription != null) {
-			existingProgram.setProgramdescription(programdescription);
+			existingProgram.setProgramDescription(programdescription);
 		}
 
 		return existingProgram;

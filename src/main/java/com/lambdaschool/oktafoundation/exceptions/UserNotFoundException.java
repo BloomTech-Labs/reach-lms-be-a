@@ -16,11 +16,11 @@ public class UserNotFoundException
 	}
 
 	public UserNotFoundException(long id, Course course) {
-		super("User with id " + id + " is not part of course with id " + course.getCourseid());
+		super("User with id " + id + " is not part of course with id " + course.getCourseId());
 	}
 
 	public UserNotFoundException(String name, Course course) {
-		super("User with name " + name + " is not part of the course with name " + course.getCoursename());
+		super("User with name " + name + " is not part of the course with name " + course.getCourseName());
 	}
 
 }

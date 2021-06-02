@@ -150,7 +150,7 @@ public class UserController {
 			throw new RoleNotSufficientException("Your role is not sufficient to create a new user");
 		}
 		User newUser = new User();
-		newUser.setUserid(0);
+		newUser.setUserId(0);
 		Role role = roleService.findByName(minimumUser.getRoleType()
 				.name());
 		newUser.getRoles()
@@ -161,21 +161,21 @@ public class UserController {
 		} else {
 			newUser.setUsername(minimumUser.getEmail());
 		}
-		if (minimumUser.getFirstname() != null) {
-			newUser.setFirstname(minimumUser.getFirstname());
+		if (minimumUser.getFirstName() != null) {
+			newUser.setFirstName(minimumUser.getFirstName());
 		} else {
-			newUser.setFirstname(minimumUser.getEmail());
+			newUser.setFirstName(minimumUser.getEmail());
 		}
-		if (minimumUser.getLastname() != null) {
-			newUser.setLastname(minimumUser.getLastname());
+		if (minimumUser.getLastName() != null) {
+			newUser.setLastName(minimumUser.getLastName());
 		} else {
-			newUser.setLastname(minimumUser.getEmail());
+			newUser.setLastName(minimumUser.getEmail());
 		}
 		newUser = userService.save(newUser);
 
 		com.okta.sdk.resource.user.User oktaUser = okta.createOktaUser(newUser.getEmail(),
-				newUser.getFirstname(),
-				newUser.getLastname(),
+				newUser.getFirstName(),
+				newUser.getLastName(),
 				newUser.getRole()
 						.name()
 		);
@@ -183,7 +183,7 @@ public class UserController {
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{userid}")
-				.buildAndExpand(newUser.getUserid())
+				.buildAndExpand(newUser.getUserId())
 				.toUri();
 		responseHeaders.setLocation(newUserURI);
 		return new ResponseEntity<>(newUser, responseHeaders, HttpStatus.CREATED);
@@ -207,13 +207,13 @@ public class UserController {
 			@RequestBody
 					User newuser
 	) {
-		newuser.setUserid(0);
+		newuser.setUserId(0);
 		newuser = userService.save(newuser);
 		// set the location header for the newly created resource
 		HttpHeaders responseHeaders = new HttpHeaders();
 		URI newUserURI = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{userid}")
-				.buildAndExpand(newuser.getUserid())
+				.buildAndExpand(newuser.getUserId())
 				.toUri();
 		responseHeaders.setLocation(newUserURI);
 		return new ResponseEntity<>(null, responseHeaders, HttpStatus.CREATED);
@@ -242,7 +242,7 @@ public class UserController {
 			@PathVariable
 					long userid
 	) {
-		updateUser.setUserid(userid);
+		updateUser.setUserId(userid);
 		userService.save(updateUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

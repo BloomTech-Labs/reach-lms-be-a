@@ -29,7 +29,7 @@ public class ModuleModelAssembler
 
 				// Link to SELF
 				// GET /modules/module/{moduleid}
-				linkTo(methodOn(ModuleController.class).getModuleById(module.getModuleid())).withSelfRel(),
+				linkTo(methodOn(ModuleController.class).getModuleById(module.getModuleId())).withSelfRel(),
 
 				// Link to all_modules
 				// GET /modules/modules
@@ -38,17 +38,17 @@ public class ModuleModelAssembler
 				// Link to associated course
 				// GET /courses/course/{courseid}
 				linkTo(methodOn(CourseController.class).getCourseByCourseId(module.getCourse()
-						.getCourseid())).withRel("course"),
+						.getCourseId())).withRel("course"),
 
 				// Link to associated program
 				// GET /programs/program/{programid}
 				linkTo(methodOn(ProgramController.class).getProgramById(module.getCourse()
 						.getProgram()
-						.getProgramid())).withRel("program"),
+						.getProgramId())).withRel("program"),
 
 				// Link to the Markdown content for this module
 				// GET /modules/markdown/{moduleid}
-				linkTo(methodOn(ModuleController.class).getMarkdownByModuleId(module.getModuleid())).withRel("markdown")
+				linkTo(methodOn(ModuleController.class).getMarkdownByModuleId(module.getModuleId())).withRel("markdown")
 		);
 
 		// get the calling user's role!!
@@ -59,13 +59,13 @@ public class ModuleModelAssembler
 
 			moduleEntity.add(
 					// link to DELETE self
-					linkTo(methodOn(ModuleController.class).deleteModuleById(module.getModuleid())).withRel("delete_module"),
+					linkTo(methodOn(ModuleController.class).deleteModuleById(module.getModuleId())).withRel("delete_module"),
 					// link to PATCH self
-					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleid(), null)).withRel("edit_module"),
+					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleId(), null)).withRel("edit_module"),
 					// Link to PUT self
-					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleid(), null)).withRel("replace_module"),
+					linkTo(methodOn(ModuleController.class).updateModule(module.getModuleId(), null)).withRel("replace_module"),
 					// Link to Replace markdown
-					linkTo(methodOn(ModuleController.class).replaceMarkdownByModuleId(module.getModuleid(), null)).withRel(
+					linkTo(methodOn(ModuleController.class).replaceMarkdownByModuleId(module.getModuleId(), null)).withRel(
 							"replace_markdown")
 			);
 
@@ -73,7 +73,7 @@ public class ModuleModelAssembler
 				moduleEntity.add(//
 						// link to POST module to the same course that this module belongs to
 						linkTo(methodOn(ModuleController.class).addNewModule(module.getCourse()
-								.getCourseid(), null)).withRel("add_module_sibling")
+								.getCourseId(), null)).withRel("add_module_sibling")
 				);
 			} catch (Exception ignored) {}
 		}

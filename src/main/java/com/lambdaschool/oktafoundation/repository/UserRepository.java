@@ -35,16 +35,17 @@ public interface UserRepository
 	 */
 	List<User> findByUsernameContainingIgnoreCase(String name);
 
-	@Query(value = "SELECT * FROM usercourses uc JOIN users u ON uc.userid = u.userid WHERE courseid = :courseid",
+	@Query(value = "SELECT * FROM user_courses uc JOIN users u ON uc.user_id = u.user_id WHERE course_id = :courseId",
 			nativeQuery = true)
-	List<User> findEnrolledUsers(long courseid);
+	List<User> findEnrolledUsers(long courseId);
 
-	@Query(value = "SELECT * FROM users WHERE userid NOT IN (SELECT userid FROM usercourses WHERE courseid=:courseid)",
+	@Query(
+			value = "SELECT * FROM users WHERE user_id NOT IN (SELECT user_id FROM user_courses WHERE course_id=:courseId)",
 			nativeQuery = true)
-	List<User> findNotEnrolledUsers(long courseid);
+	List<User> findNotEnrolledUsers(long courseId);
 
-	@Query(value = "SELECT * FROM users u WHERE CONCAT(u.username, ' ', u.firstname, ' ', u.lastname, ' ', u.email) " +
-	               "ILIKE %:query% ", nativeQuery = true)
+	@Query(value = "SELECT * FROM users u WHERE CONCAT(u.username, ' ', u.first_name, ' ', u.last_name, ' ', u.email) " +
+	               "ILIKE :query ", nativeQuery = true)
 	List<User> search(String query);
 
 }

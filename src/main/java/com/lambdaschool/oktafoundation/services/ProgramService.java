@@ -29,6 +29,8 @@ public interface ProgramService {
 
 	void delete(long id);
 
+	void deleteAll();
+
 	Program update(
 			ProgramIn programIn,
 			long programId

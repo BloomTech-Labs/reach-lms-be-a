@@ -55,8 +55,8 @@ public class OktaController {
 					MinimumUser newUser
 	) {
 		return okta.createOktaUser(newUser.getEmail(),
-				newUser.getFirstname(),
-				newUser.getLastname(),
+				newUser.getFirstName(),
+				newUser.getLastName(),
 				newUser.getRoleType()
 						.name()
 		);

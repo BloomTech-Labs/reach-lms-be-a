@@ -17,7 +17,10 @@ public interface ModuleService {
 
 	Module findModulesById(long id);
 
-	void replaceMarkdown(Long moduleid, String markdown);
+	void replaceMarkdown(
+			Long moduleId,
+			String markdown
+	);
 
 	Module save(
 			long id,
@@ -30,5 +33,7 @@ public interface ModuleService {
 	);
 
 	void delete(long id);
+
+	void deleteAll();
 
 }

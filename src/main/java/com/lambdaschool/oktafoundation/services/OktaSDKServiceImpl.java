@@ -77,8 +77,8 @@ public class OktaSDKServiceImpl
 	@Override
 	public User createOktaUser(com.lambdaschool.oktafoundation.models.User reachUser) {
 		return createOktaUser(reachUser.getEmail(),
-				reachUser.getFirstname(),
-				reachUser.getLastname(),
+				reachUser.getFirstName(),
+				reachUser.getLastName(),
 				reachUser.getRole()
 						.name()
 		);

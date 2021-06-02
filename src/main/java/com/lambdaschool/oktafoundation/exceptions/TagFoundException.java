@@ -15,7 +15,7 @@ public class TagFoundException
 			String title,
 			Program program
 	) {
-		super("Tag with title " + title + " already exists in program " + program.getProgramname());
+		super("Tag with title " + title + " already exists in program " + program.getProgramName());
 	}
 
 	public TagFoundException(long tagId) {
@@ -26,7 +26,7 @@ public class TagFoundException
 			long tagId,
 			Program program
 	) {
-		super("Tag with id " + tagId + " already exists in program with id " + program.getProgramid());
+		super("Tag with id " + tagId + " already exists in program with id " + program.getProgramId());
 	}
 
 }

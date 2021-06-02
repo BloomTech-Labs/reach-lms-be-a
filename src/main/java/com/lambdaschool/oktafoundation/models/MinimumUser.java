@@ -11,8 +11,8 @@ public class MinimumUser {
 	@NotNull
 	private RoleType roleType;
 	private String   username;
-	private String   firstname;
-	private String   lastname;
+	private String   firstName;
+	private String   lastName;
 
 	public MinimumUser() {}
 
@@ -24,24 +24,24 @@ public class MinimumUser {
 		this.username = email;
 		this.email    = email;
 		String[] splitName = name.split(" ");
-		this.firstname = splitName[0];
+		this.firstName = splitName[0];
 		if (splitName.length > 1) {
-			this.lastname = splitName[1];
+			this.lastName = splitName[1];
 		} else {
-			this.lastname = firstname;
+			this.lastName = firstName;
 		}
 	}
 
 	public MinimumUser(
 			String username,
 			String email,
-			String firstname,
-			String lastname
+			String firstName,
+			String lastName
 	) {
 		this.username  = username;
 		this.email     = email;
-		this.firstname = firstname;
-		this.lastname  = lastname;
+		this.firstName = firstName;
+		this.lastName  = lastName;
 		this.roleType  = RoleType.STUDENT;
 	}
 
@@ -61,21 +61,31 @@ public class MinimumUser {
 		this.email = email;
 	}
 
-	public String getFirstname() {
-		return firstname;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLastname() {
-		return lastname;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
+
+	//	// supporting all lowers for reverse compatibility
+	//	public String getFirstname() {
+	//		return getFirstName();
+	//	}
+	//
+	//	// supporting all lowers for reverse compatibility
+	//	public String getLastname() {
+	//		return getLastName();
+	//	}
 
 	public RoleType getRoleType() {
 		return roleType;

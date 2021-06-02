@@ -23,7 +23,7 @@ public class Role
 	 */
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long roleid;
+	private long roleId;
 
 	/**
 	 * The name (String) of the role. Cannot be null and must be unique.
@@ -71,17 +71,17 @@ public class Role
 	 *
 	 * @return the role id, primary key, (long) of this role
 	 */
-	public long getRoleid() {
-		return roleid;
+	public long getRoleId() {
+		return roleId;
 	}
 
 	/**
 	 * Setter for role id, used for seeding data
 	 *
-	 * @param roleid the new role id, primary key, (long) for this role
+	 * @param roleId the new role id, primary key, (long) for this role
 	 */
-	public void setRoleid(long roleid) {
-		this.roleid = roleid;
+	public void setRoleId(long roleId) {
+		this.roleId = roleId;
 	}
 
 	/**

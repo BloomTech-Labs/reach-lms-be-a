@@ -835,10 +835,8 @@ import com.lambdaschool.oktafoundation.models.*;
 import com.lambdaschool.oktafoundation.services.HelperFunctions;
 import com.lambdaschool.oktafoundation.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -882,7 +880,7 @@ public class UserController {
 		if (callingUserRole != RoleType.ADMIN) {
 			throw new RoleNotSufficientException("Your role is not sufficient to create a new user");
 		}
-		newUser.setUserid(0);
+		newUser.setUserId(0);
 		userService.save(newUser);
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
@@ -896,7 +894,7 @@ public class UserController {
 			@PathVariable
 					long userid
 	) {
-		updateUser.setUserid(userid);
+		updateUser.setUserId(userid);
 		userService.save(updateUser);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -1014,7 +1012,7 @@ public class UserModelAssembler
 	public EntityModel<User> toModel(User user) {
 		EntityModel<User> userEntityModel = EntityModel.of(user,
 				// Link to SELF --- GET /users/user/{userid}
-				linkTo(methodOn(UserController.class).getUserById(user.getUserid())).withSelfRel(),
+				linkTo(methodOn(UserController.class).getUserById(user.getUserId())).withSelfRel(),
 				// Link to self by name --- GET /users/user/name/{username}
 				linkTo(methodOn(UserController.class).getUserByName(user.getUsername())).withRel("self_by_name")
 		);
@@ -1027,12 +1025,12 @@ public class UserModelAssembler
 
 		// if the user to convert to a model is a STUDENT, add the following links
 		if (usersRole == RoleType.STUDENT) {
-			userEntityModel.add(linkTo(methodOn(CourseController.class).getStudentCourses(user.getUserid())).withRel("courses"));
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getStudentCourses(user.getUserId())).withRel("courses"));
 
 			if (callingUser == RoleType.ADMIN) {
-				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserid())).withRel(
+				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserId())).withRel(
 						"available_courses"),
-						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserid())).withRel(
+						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserId())).withRel(
 								"mappified_courses")
 				);
 			}
@@ -1040,11 +1038,11 @@ public class UserModelAssembler
 
 		// if the user to convert to a model is a TEACHER, add the following links
 		if (usersRole == RoleType.TEACHER) {
-			userEntityModel.add(linkTo(methodOn(CourseController.class).getTeacherCourses(user.getUserid())).withRel("courses"));
+			userEntityModel.add(linkTo(methodOn(CourseController.class).getTeacherCourses(user.getUserId())).withRel("courses"));
 			if (callingUser == RoleType.ADMIN) {
-				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserid())).withRel(
+				userEntityModel.add(linkTo(methodOn(CourseController.class).getUserAntiCourses(user.getUserId())).withRel(
 						"available_courses"),
-						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserid())).withRel(
+						linkTo(methodOn(CourseController.class).getMappifiedCoursesByUser(user.getUserId())).withRel(
 								"mappified_courses")
 				);
 			}
@@ -1054,25 +1052,25 @@ public class UserModelAssembler
 		if (usersRole == RoleType.ADMIN) {
 			// Link to GET Programs by User.userid
 			userEntityModel.add( //
-					linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserid())).withRel("programs"));
+					linkTo(methodOn(ProgramController.class).getProgramsByUserId(user.getUserId())).withRel("programs"));
 		}
 
 		// if the calling user is an admin and the user in question is NOT an admin
 		if (callingUser == RoleType.ADMIN && user.getRole() != RoleType.ADMIN) {
 			userEntityModel.add(
 					// Link to DELETE User by User.userid
-					linkTo(methodOn(UserController.class).deleteUserById(user.getUserid())).withRel("delete_user"),
+					linkTo(methodOn(UserController.class).deleteUserById(user.getUserId())).withRel("delete_user"),
 					// Link to PUT "/users/user/{userid}"
-					linkTo(methodOn(UserController.class).updateFullUser(null, user.getUserid())).withRel("replace_user"),
+					linkTo(methodOn(UserController.class).updateFullUser(null, user.getUserId())).withRel("replace_user"),
 					// Link to PATCH "/users/user/{userid}"
-					linkTo(methodOn(UserController.class).updateUser(null, user.getUserid())).withRel("edit_user"),
+					linkTo(methodOn(UserController.class).updateUser(null, user.getUserId())).withRel("edit_user"),
 					// Link to PATCH "/users/user/{userid}/STUDENT"
-					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.STUDENT)).withRel(
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserId(), RoleType.STUDENT)).withRel(
 							"make_student"),
 					// Link to PATCH "/users/user/{userid}/ADMIN"
-					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.ADMIN)).withRel("make_admin"),
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserId(), RoleType.ADMIN)).withRel("make_admin"),
 					// Link to PATCH "/users/user/{userid}/TEACHER"
-					linkTo(methodOn(UserController.class).updateUserRole(user.getUserid(), RoleType.TEACHER)).withRel(
+					linkTo(methodOn(UserController.class).updateUserRole(user.getUserId(), RoleType.TEACHER)).withRel(
 							"make_teacher")
 			);
 		}

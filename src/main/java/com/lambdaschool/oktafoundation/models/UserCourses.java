@@ -10,7 +10,7 @@ import java.util.Objects;
 
 
 @Entity
-@Table(name = "usercourses")
+@Table(name = "userCourses")
 @IdClass(UserCoursesId.class)
 public class UserCourses
 		extends Auditable
@@ -19,14 +19,14 @@ public class UserCourses
 	@Id
 	@ManyToOne
 	@NotNull
-	@JoinColumn(name = "userid")
+	@JoinColumn(name = "userId")
 	@JsonIgnoreProperties(value = "courses", allowSetters = true)
 	private User user;
 
 	@Id
 	@ManyToOne
 	@NotNull
-	@JoinColumn(name = "courseid")
+	@JoinColumn(name = "courseId")
 	@JsonIgnoreProperties(value = "users", allowSetters = true)
 	private Course course;
 
@@ -75,13 +75,13 @@ public class UserCourses
 			return false;
 		}
 		UserCourses that = (UserCourses) o;
-		return ((user == null) ? 0 : user.getUserid()) == ((that.user == null) ? 0 : that.user.getUserid()) &&
-		       ((course == null) ? 0 : course.getCourseid()) == ((that.course == null) ? 0 : that.course.getCourseid());
+		return ((user == null) ? 0 : user.getUserId()) == ((that.user == null) ? 0 : that.user.getUserId()) &&
+		       ((course == null) ? 0 : course.getCourseId()) == ((that.course == null) ? 0 : that.course.getCourseId());
 	}
 
 	@Override
 	public String toString() {
-		return "UserCourses{" + "user=" + user.getUserid() + ", course=" + course.getCourseid() + '}';
+		return "UserCourses{" + "user=" + user.getUserId() + ", course=" + course.getCourseId() + '}';
 	}
 
 }

@@ -6,44 +6,45 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Objects;
 
 
 /**
- * The entity allowing interaction with the userroles table.
+ * The entity allowing interaction with the userRoles table.
  * The join table between users and roles.
  * <p>
- * Table enforces a unique constraint of the combination of userid and roleid.
+ * Table enforces a unique constraint of the combination of userid and roleId.
  * These two together form the primary key.
  * <p>
  * When you have a compound primary key, you must implement Serializable for Hibernate
  * When you implement Serializable you must implement equals and hash code
  */
 @Entity
-@Table(name = "userroles")
+@Table(name = "userRoles")
 @IdClass(UserRolesId.class)
 public class UserRoles
 		extends Auditable
 		implements Serializable {
 
 	/**
-	 * 1/2 of the primary key (long) for userroles.
+	 * 1/2 of the primary key (long) for userRoles.
 	 * Also is a foreign key into the users table
 	 */
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull
-	@JoinColumn(name = "userid")
+	@JoinColumn(name = "userId")
 	@JsonIgnoreProperties(value = "roles", allowSetters = true)
 	private User user;
 
 	/**
-	 * 1/2 of the primary key (long) for userroles.
+	 * 1/2 of the primary key (long) for userRoles.
 	 * Also is a foreign key into the roles table
 	 */
 	@Id
 	@ManyToOne(fetch = FetchType.EAGER)
 	@NotNull
-	@JoinColumn(name = "roleid")
+	@JoinColumn(name = "roleId")
 	@JsonIgnoreProperties(value = "users", allowSetters = true)
 	private Role role;
 
@@ -105,7 +106,7 @@ public class UserRoles
 
 	@Override
 	public int hashCode() {
-		return 37;
+		return Objects.hash(getUser(), getRole());
 	}
 
 	@Override
@@ -117,8 +118,8 @@ public class UserRoles
 			return false;
 		}
 		UserRoles that = (UserRoles) o;
-		return ((user == null) ? 0 : user.getUserid()) == ((that.user == null) ? 0 : that.user.getUserid()) &&
-		       ((role == null) ? 0 : role.getRoleid()) == ((that.role == null) ? 0 : that.role.getRoleid());
+		return ((user == null) ? 0 : user.getUserId()) == ((that.user == null) ? 0 : that.user.getUserId()) &&
+		       ((role == null) ? 0 : role.getRoleId()) == ((that.role == null) ? 0 : that.role.getRoleId());
 	}
 
 }

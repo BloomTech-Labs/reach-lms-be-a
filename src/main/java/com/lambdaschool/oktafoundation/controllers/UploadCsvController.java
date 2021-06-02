@@ -6,7 +6,10 @@ import com.lambdaschool.oktafoundation.utils.CsvHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 
@@ -16,17 +19,17 @@ public class UploadCsvController {
 	@Autowired
 	CsvService csvService;
 
-	@PostMapping("/upload/csv/course-student-roster/{courseid}")
+	@PostMapping("/upload/csv/course-student-roster/{courseId}")
 	public ResponseEntity<?> uploadFile(
 			@PathVariable
-					Long courseid,
+					Long courseId,
 			@RequestParam("file")
 					MultipartFile file
 	) {
 		String message;
 		if (CsvHelper.hasCsvFormat(file)) {
 			try {
-				csvService.save(file, courseid);
+				csvService.save(file, courseId);
 				message = "Uploaded the file successfully: " + file.getOriginalFilename();
 				return new ResponseEntity<>(message, HttpStatus.CREATED);
 			} catch (Exception e) {
